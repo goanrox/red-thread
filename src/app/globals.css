@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ──────────────────────────────────────────────────────────── */
+
+@theme inline {
+  /* Color palette */
+  --color-void:          #07070e;
+  --color-abyss:         #0c0c17;
+  --color-surface:       #111120;
+  --color-surface2:      #181828;
+  --color-surface3:      #1f1f35;
+  --color-border:        #2a2a45;
+  --color-gold:          #c9a84c;
+  --color-gold-light:    #e8cc88;
+  --color-crimson:       #8b2232;
+  --color-crimson-light: #c13248;
+  --color-iris:          #6b63d4;
+  --color-parchment:     #f0ece0;
+  --color-mist:          #a8a5c0;
+  --color-shadow:        #5c5a78;
+
+  /* Typography */
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  'Inter', system-ui, sans-serif;
+
+  /* Easing */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #07070e;
+  color: #f0ece0;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography Utilities ───────────────────────────────────────────────────── */
+
+.font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+.text-narrative {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  color: #f0ece0;
+  line-height: 1.75;
+}
+
+.label-caps {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a8a5c0;
+}
+
+/* ─── Animation Keyframes ────────────────────────────────────────────────────── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulseGold {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes typing {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%            { opacity: 1;   transform: translateY(-4px); }
+}
+
+/* ─── Animation Classes ──────────────────────────────────────────────────────── */
+
+.animate-fade-up   { animation: fadeUp  500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in   { animation: fadeIn  400ms ease-out both; }
+.animate-scale-in  { animation: scaleIn 400ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-pulse-gold { animation: pulseGold 2s ease-in-out infinite; }
+
+/* Stagger delays */
+.stagger-1 { animation-delay:  80ms; }
+.stagger-2 { animation-delay: 160ms; }
+.stagger-3 { animation-delay: 240ms; }
+.stagger-4 { animation-delay: 320ms; }
+.stagger-5 { animation-delay: 400ms; }
+.stagger-6 { animation-delay: 480ms; }
+
+/* ─── Card Hover ─────────────────────────────────────────────────────────────── */
+
+.card-hover {
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 300ms ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.3);
+}
+
+/* ─── Glassmorphism ──────────────────────────────────────────────────────────── */
+
+.glass {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(17, 17, 32, 0.8);
+  border: 1px solid #2a2a45;
+}
+
+/* ─── Dividers ───────────────────────────────────────────────────────────────── */
+
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c9a84c, transparent);
+  opacity: 0.4;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar             { width: 6px; }
+::-webkit-scrollbar-track       { background: #0c0c17; }
+::-webkit-scrollbar-thumb       { background: #2a2a45; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #5c5a78; }
+
+/* ─── Selection ──────────────────────────────────────────────────────────────── */
+
+::selection {
+  background-color: rgba(201, 168, 76, 0.2);
+  color: #f0ece0;
+}
