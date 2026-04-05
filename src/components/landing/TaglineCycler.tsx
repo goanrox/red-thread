@@ -25,10 +25,11 @@ export function TaglineCycler() {
 
   return (
     <p
-      className="font-serif italic text-2xl md:text-3xl text-mist leading-relaxed"
+      className="font-serif italic text-3xl md:text-4xl leading-relaxed"
       style={{
         opacity: fading ? 0 : 1,
         transition: "opacity 400ms ease",
+        color: "rgba(240, 236, 224, 0.75)",
       }}
     >
       {TAGLINES[index]}

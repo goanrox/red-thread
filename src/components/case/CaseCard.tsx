@@ -39,7 +39,7 @@ function DifficultyDots({ level }: { level: Difficulty }) {
         <span
           key={i}
           className={cn(
-            "w-1.5 h-1.5 rounded-full transition-colors duration-200",
+            "w-2 h-2 rounded-full transition-colors duration-200",
             i < level ? "bg-gold" : "bg-[#2a2a45]"
           )}
         />
@@ -131,24 +131,29 @@ export function CaseCard({
   return (
     <div
       className={cn(
-        "relative flex flex-col bg-surface rounded-2xl overflow-hidden border",
+        "relative flex flex-col rounded-2xl overflow-hidden border",
         !isLocked && "card-hover cursor-pointer border-[#2a2a45]",
-        isLocked && !unlockedPreview && "opacity-70 border-[#2a2a45]",
+        isLocked && !unlockedPreview && "opacity-60 border-[#2a2a45]",
         unlockedPreview && "border-gold/20",
         className
       )}
+      style={!isLocked || unlockedPreview ? {
+        background: "linear-gradient(160deg, #181828 0%, #111120 40%)",
+      } : {
+        background: "#111120",
+      }}
     >
       {/* Lock overlay — only when locked AND not unlocked yet */}
       {isLocked && !unlockedPreview && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-void/50 backdrop-blur-[2px] rounded-2xl">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-void/40 rounded-2xl">
           <div className="text-center">
             <div
               className="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center border border-[#2a2a45]"
-              style={{ backgroundColor: "#111120" }}
+              style={{ backgroundColor: "#0c0c17" }}
             >
               <LockIcon />
             </div>
-            <p className="label-caps text-mist">Coming in Season 2</p>
+            <p className="label-caps text-shadow">Season 2</p>
           </div>
         </div>
       )}
@@ -255,8 +260,8 @@ export function CaseCard({
             className={cn(
               "w-full py-3 rounded-xl label-caps text-center block transition-colors duration-200",
               isComplete
-                ? "border border-[#2a2a45] text-mist hover:border-gold/50 hover:text-gold"
-                : "border border-gold/40 text-gold hover:bg-gold hover:text-void hover:border-gold"
+                ? "border border-[#2a2a45] text-mist hover:border-gold/60 hover:text-gold"
+                : "border border-gold/55 text-gold hover:bg-gold hover:text-void hover:border-gold"
             )}
           >
             {ctaLabel}

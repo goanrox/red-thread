@@ -52,10 +52,10 @@ export function CaseNav({ caseId }: CaseNavProps) {
           <Link
             href={`/cases/${caseId}/accuse`}
             className={cn(
-              "flex items-center gap-1.5 label-caps px-3 py-1.5 rounded-lg border transition-colors duration-200 shrink-0 text-[10px]",
+              "flex items-center gap-1.5 label-caps px-3 py-1.5 rounded-lg border transition-all duration-200 shrink-0 text-[10px]",
               canAccuse
-                ? "border-crimson/50 text-crimson-light hover:bg-crimson hover:text-parchment hover:border-crimson"
-                : "border-[#2a2a45] text-shadow cursor-not-allowed pointer-events-none opacity-50"
+                ? "border-crimson/60 text-crimson-light hover:bg-crimson hover:text-parchment hover:border-crimson hover:shadow-[0_0_12px_rgba(139,34,50,0.5)]"
+                : "border-[#2a2a45] text-shadow cursor-not-allowed pointer-events-none opacity-40"
             )}
           >
             <Crosshair size={11} />

@@ -172,13 +172,19 @@ export default function InvestigationHub({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="pointer-events-auto"
           >
             <Link
               href={`/cases/${caseId}/accuse`}
-              className="flex items-center gap-3 px-6 py-3 rounded-xl bg-crimson border border-crimson-light/40 text-parchment font-sans font-semibold text-sm shadow-2xl hover:bg-crimson-light transition-colors duration-200"
+              className="flex items-center gap-3 px-7 py-3.5 rounded-xl text-parchment font-sans font-semibold text-sm transition-all duration-200 hover:scale-[1.02]"
+              style={{
+                background: "linear-gradient(135deg, #8b2232 0%, #6b1a26 100%)",
+                border: "1px solid rgba(193,50,72,0.35)",
+                boxShadow: "0 8px 32px rgba(139,34,50,0.45), 0 2px 8px rgba(0,0,0,0.6)",
+              }}
             >
-              <Skull size={15} />
+              <Skull size={15} className="shrink-0" />
               The evidence is mounting. Make your accusation.
             </Link>
           </motion.div>
@@ -199,18 +205,19 @@ function DesktopTabBar({
 }) {
   return (
     <div className="hidden sm:block sticky top-28 z-30 glass border-b border-[#2a2a45] -mx-4 sm:-mx-6 px-4 sm:px-6 mb-2">
-      <div className="max-w-6xl mx-auto flex items-center gap-1">
-        {TABS.map(({ id, label }) => (
+      <div className="max-w-6xl mx-auto flex items-center gap-0.5">
+        {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
             onClick={() => onTabChange(id)}
             className={cn(
-              "label-caps px-4 py-3 border-b-2 whitespace-nowrap transition-colors duration-200 text-[10px]",
+              "flex items-center gap-1.5 label-caps px-4 py-3.5 border-b-2 whitespace-nowrap transition-colors duration-200 text-[10px]",
               activeTab === id
                 ? "border-gold text-gold"
                 : "border-transparent text-shadow hover:text-mist"
             )}
           >
+            <Icon size={12} />
             {label}
           </button>
         ))}
@@ -275,13 +282,19 @@ function OverviewTab({
       {/* Victim card */}
       <section>
         <SectionHeader label="The Victim" />
-        <div className="bg-surface border border-[#2a2a45] rounded-2xl p-6 flex gap-6 items-start">
-          <div className="w-16 h-16 rounded-full bg-[#2a2a45] flex items-center justify-center shrink-0">
-            <Skull size={24} className="text-shadow" />
+        <div
+          className="border border-[#2a2a45] rounded-2xl p-6 flex gap-6 items-start"
+          style={{ background: "linear-gradient(135deg, #181828 0%, #111120 60%)" }}
+        >
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center shrink-0 border border-crimson/20"
+            style={{ background: "radial-gradient(circle, rgba(139,34,50,0.18) 0%, #111120 70%)" }}
+          >
+            <Skull size={22} className="text-crimson-light/70" />
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="font-serif text-2xl text-parchment">{caseData.victim.name}</h2>
-            <p className="label-caps text-shadow mt-0.5">{caseData.victim.occupation}</p>
+            <h2 className="font-serif text-2xl text-parchment leading-tight">{caseData.victim.name}</h2>
+            <p className="label-caps text-shadow mt-1">{caseData.victim.occupation}</p>
             <p className="text-mist text-sm mt-3 leading-relaxed font-serif italic">
               {caseData.victim.description}
             </p>
@@ -469,7 +482,7 @@ function SuspectsTab({
               </span>
               <Link
                 href={`/cases/${caseId}/interrogate/${suspect.id}`}
-                className="label-caps text-gold border border-gold/40 hover:bg-gold hover:text-void px-3 py-1.5 rounded-lg text-[10px] transition-colors duration-200"
+                className="label-caps text-gold border border-gold/55 hover:bg-gold hover:text-void px-3 py-1.5 rounded-lg text-[10px] transition-colors duration-200"
               >
                 Interrogate
               </Link>

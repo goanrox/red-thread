@@ -77,10 +77,10 @@ export default function LandingPage() {
           style={{
             top: "35%",
             left: "15%",
-            width: "640px",
-            height: "640px",
+            width: "700px",
+            height: "700px",
             background:
-              "radial-gradient(circle, rgba(201,168,76,0.10) 0%, transparent 65%)",
+              "radial-gradient(circle, rgba(201,168,76,0.14) 0%, transparent 65%)",
             transform: "translate(-50%, -50%)",
             borderRadius: "50%",
           }}
@@ -92,13 +92,27 @@ export default function LandingPage() {
           style={{
             top: "65%",
             right: "10%",
-            width: "520px",
-            height: "520px",
+            width: "560px",
+            height: "560px",
             background:
-              "radial-gradient(circle, rgba(139,34,50,0.07) 0%, transparent 65%)",
+              "radial-gradient(circle, rgba(139,34,50,0.10) 0%, transparent 65%)",
             transform: "translate(50%, -50%)",
             borderRadius: "50%",
             animationDelay: "-3s",
+          }}
+          aria-hidden="true"
+        />
+        {/* Ambient glow — iris, center depth */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: "50%",
+            left: "50%",
+            width: "900px",
+            height: "600px",
+            background:
+              "radial-gradient(ellipse, rgba(107,99,212,0.04) 0%, transparent 60%)",
+            transform: "translate(-50%, -50%)",
           }}
           aria-hidden="true"
         />
@@ -106,14 +120,17 @@ export default function LandingPage() {
         {/* Hero content */}
         <div className="relative z-10 text-center max-w-2xl px-6 animate-fade-up">
           {/* Season label */}
-          <p className="label-caps text-gold mb-8 tracking-[0.3em]">
+          <p className="label-caps text-gold mb-6 tracking-[0.35em]">
             Season One · Case One
           </p>
 
+          {/* Thin gold accent line */}
+          <div className="divider-subtle max-w-[120px] mx-auto mb-8" />
+
           {/* Wordmark */}
           <h1
-            className="font-serif text-parchment leading-none tracking-[-0.02em] mb-8"
-            style={{ fontSize: "clamp(64px, 10vw, 100px)" }}
+            className="font-display text-parchment leading-none tracking-[-0.01em] mb-8"
+            style={{ fontSize: "clamp(72px, 11vw, 108px)" }}
           >
             Red Thread
           </h1>
@@ -122,7 +139,7 @@ export default function LandingPage() {
           <TaglineCycler />
 
           {/* Brand statement */}
-          <p className="font-serif text-mist text-xl leading-relaxed mt-6 max-w-lg mx-auto">
+          <p className="font-serif text-mist text-lg leading-relaxed mt-5 max-w-md mx-auto">
             The first premium narrative mystery platform. Investigate with
             discipline. Accuse with conviction.
           </p>
@@ -137,7 +154,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/cases/thornwood"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-gold/40 text-gold font-sans font-semibold text-sm tracking-widest uppercase transition-colors duration-200 hover:border-gold hover:bg-gold/10"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-gold/60 text-gold font-sans font-semibold text-sm tracking-widest uppercase transition-colors duration-200 hover:border-gold hover:bg-gold/12"
             >
               The Thornwood Affair
             </Link>
@@ -163,10 +180,10 @@ export default function LandingPage() {
       <section className="max-w-6xl mx-auto px-6 py-28">
         <div className="mb-14 animate-fade-up stagger-1">
           <p className="label-caps text-gold mb-3">Now Available</p>
-          <h2 className="font-serif text-5xl text-parchment leading-tight">
+          <h2 className="font-serif text-4xl md:text-5xl text-parchment leading-tight">
             The Current Investigation
           </h2>
-          <p className="font-serif italic text-mist text-lg mt-3 max-w-xl">
+          <p className="font-serif italic text-mist text-lg mt-3 max-w-xl leading-relaxed">
             One complete case. Fully playable. Every clue placed with intent.
           </p>
         </div>
@@ -216,7 +233,7 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {HOW_IT_WORKS.map((step, i) => (
               <div
                 key={step.numeral}
@@ -224,12 +241,13 @@ export default function LandingPage() {
               >
                 {/* Roman numeral */}
                 <p
-                  className="font-serif text-5xl leading-none mb-5"
-                  style={{ color: "rgba(201,168,76,0.25)" }}
+                  className="font-serif text-6xl leading-none mb-4"
+                  style={{ color: "rgba(201,168,76,0.38)" }}
                 >
                   {step.numeral}
                 </p>
-                <h3 className="font-serif text-xl text-parchment mb-3">
+                <div className="divider-subtle max-w-[48px] mb-4" />
+                <h3 className="font-serif text-2xl text-parchment mb-3 leading-snug">
                   {step.title}
                 </h3>
                 <p className="text-mist text-sm leading-relaxed font-sans">
@@ -263,22 +281,28 @@ export default function LandingPage() {
               <div
                 key={c.title}
                 className={cn(
-                  "border border-[#2a2a45] rounded-2xl p-6",
-                  "bg-surface opacity-60",
+                  "relative border border-[#2a2a45] rounded-2xl p-6 bg-surface",
                   `animate-fade-up stagger-${Math.min(i + 1, 6)}`
                 )}
               >
-                <p className="label-caps text-shadow mb-3">{c.category}</p>
-                <h3 className="font-serif text-xl text-parchment mb-1">
+                {/* Lock badge */}
+                <div className="absolute top-4 right-4">
+                  <span className="label-caps text-shadow border border-[#2a2a45] bg-void px-2 py-1 rounded-full text-[9px]">
+                    Season 2
+                  </span>
+                </div>
+
+                <p className="label-caps text-shadow mb-3 pr-16">{c.category}</p>
+                <h3 className="font-serif text-xl text-parchment/80 mb-1">
                   {c.title}
                 </h3>
-                <p className="font-serif italic text-mist text-sm leading-relaxed mb-4">
+                <p className="font-serif italic text-mist/70 text-sm leading-relaxed mb-4">
                   {c.subtitle}
                 </p>
                 <p className="label-caps text-shadow">{c.setting}</p>
                 <div className="mt-4 pt-4 border-t border-[#2a2a45]">
-                  <span className="label-caps text-[#2a2a45]">
-                    Coming Season 2
+                  <span className="label-caps text-shadow/60">
+                    In Production
                   </span>
                 </div>
               </div>
@@ -291,7 +315,7 @@ export default function LandingPage() {
       <footer className="border-t border-[#2a2a45] py-14">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <span className="font-serif text-lg text-parchment tracking-wider">
+            <span className="font-serif text-xl text-parchment tracking-wider" style={{ fontWeight: 500 }}>
               Red Thread
             </span>
             <span
@@ -329,18 +353,20 @@ function TeaserCard({
   return (
     <div
       className={cn(
-        "relative border border-[#2a2a45] rounded-2xl p-5 bg-surface overflow-hidden",
+        "relative border border-[#2a2a45] rounded-2xl p-5 bg-surface",
         `animate-fade-up stagger-${Math.min(stagger, 6)}`
       )}
     >
-      {/* Subtle lock overlay */}
-      <div className="absolute inset-0 bg-void/40 backdrop-blur-[1px] flex items-end p-5 rounded-2xl">
-        <span className="label-caps text-shadow">Coming in Season 2</span>
+      {/* Season 2 badge */}
+      <div className="absolute top-4 right-4">
+        <span className="label-caps text-shadow border border-[#2a2a45] bg-void px-2 py-1 rounded-full text-[9px]">
+          Season 2
+        </span>
       </div>
 
-      <p className="label-caps text-shadow mb-2">{c.category}</p>
-      <h3 className="font-serif text-xl text-parchment mb-1">{c.title}</h3>
-      <p className="font-serif italic text-mist text-sm leading-snug mb-3">
+      <p className="label-caps text-shadow mb-2 pr-16">{c.category}</p>
+      <h3 className="font-serif text-xl text-parchment/80 mb-1">{c.title}</h3>
+      <p className="font-serif italic text-mist/70 text-sm leading-snug mb-3">
         {c.subtitle}
       </p>
       <p className="label-caps text-shadow">{c.setting}</p>

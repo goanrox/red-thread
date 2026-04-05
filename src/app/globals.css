@@ -49,6 +49,12 @@ body {
 
 .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
 
+/* Display weight — use for large hero text; weight 300 reads more editorial at scale */
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+}
+
 .text-narrative {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-style: italic;
@@ -63,6 +69,11 @@ body {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #a8a5c0;
+}
+
+/* Headings default to balanced text wrapping */
+h1, h2, h3 {
+  text-wrap: balance;
 }
 
 /* ─── Animation Keyframes ────────────────────────────────────────────────────── */
@@ -128,9 +139,9 @@ body {
 }
 
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(201, 168, 76, 0.15);
-  border-color: rgba(201, 168, 76, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(201, 168, 76, 0.22);
+  border-color: rgba(201, 168, 76, 0.38);
 }
 
 /* ─── Glassmorphism ──────────────────────────────────────────────────────────── */
@@ -147,7 +158,12 @@ body {
 .divider-gold {
   height: 1px;
   background: linear-gradient(to right, transparent, #c9a84c, transparent);
-  opacity: 0.4;
+  opacity: 0.5;
+}
+
+.divider-subtle {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
