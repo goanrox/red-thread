@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-display: "Space Grotesk", sans-serif;
+
+  --color-brass: #d4af37;
+  --color-brass-light: #e2c28d;
+  --color-ivory: #f5f5f0;
+  --color-navy-deep: #0f121d;
+  --color-charcoal: #1a1a1a;
+}
+
+body {
+  background-color: #050505;
+  color: #f5f5f0;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(40px);
+  border: 0.5px solid rgba(197, 160, 89, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.dossier-card {
+  background: #141724;
+  border: 0.5px solid rgba(212, 175, 55, 0.15);
+  position: relative;
+  transition: border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.dossier-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.6s ease;
+}
+
+.dossier-card:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: #1a1e2e;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.08);
+}
+
+.dossier-card:hover::before {
+  opacity: 0.06;
+}
+
+.label-brass {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #d4af37;
+  opacity: 0.7;
+}
+
+.metadata-text {
+  font-family: "Inter", sans-serif;
+  font-size: 9px;
+  color: rgba(245, 245, 240, 0.5);
+  letter-spacing: 0.05em;
+}
+
+.gold-divider {
+  height: 0.5px;
+  background: rgba(197, 160, 89, 0.1);
+}
+
+.monogram-circle {
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, rgba(197, 160, 89, 0.05) 100%);
+  border: 0.5px solid rgba(197, 160, 89, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  color: #c5a059;
+}
+
+.portrait-blur {
+  filter: grayscale(100%) blur(4px);
+  opacity: 0.3;
+}
+
+.gold-button-gradient {
+  background: linear-gradient(180deg, #d4af37 0%, #c5a059 100%);
+  box-shadow: 0 4px 20px rgba(197, 160, 89, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gold-button-gradient:hover {
+  background: linear-gradient(180deg, #e2c28d 0%, #d4af37 100%);
+  box-shadow: 0 12px 40px rgba(197, 160, 89, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.text-gold-rich {
+  background: linear-gradient(to bottom, #f5f5f0 20%, #c5a059 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vignette {
+  box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.8);
+}
+
+.inner-glow {
+  box-shadow: inset 0 0 40px rgba(212, 175, 55, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.divider-gold {
+  background: linear-gradient(90deg, transparent 0%, rgba(197, 160, 89, 0.2) 50%, transparent 100%);
+}
+
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(197, 160, 89, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(197, 160, 89, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.portrait-mask {
+  mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+}
+
+.paper-texture {
+  background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+}
+
+.fingerprint-texture {
+  background-image: url('https://www.transparenttextures.com/patterns/subtle-grey.png');
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s infinite ease-in-out;
+}
+
+@keyframes ambient-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, 1%) scale(1.05); }
+  66% { transform: translate(-1%, 2%) scale(0.95); }
+}
+
+.animate-ambient-float {
+  animation: ambient-float 20s infinite ease-in-out;
+}
