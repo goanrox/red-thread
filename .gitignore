@@ -38,3 +38,7 @@ next-env.d.ts
 
 # Archived sibling projects
 midnight-cases/
+
+# Auto-generated — never commit
+next-env.d.ts
+tsconfig.tsbuildinfo
