@@ -32,8 +32,11 @@ export interface ActiveCaseState {
   score?: number;
   rank?: DetectiveRank;
 
-  // Notes (Phase 2)
+  // Notes
   playerNotes?: string;
+
+  // UI state
+  briefingShown?: boolean;
 }
 
 // ─── Player Profile ───────────────────────────────────────────────────────────
@@ -66,6 +69,8 @@ export interface GameState {
   accuse: (caseId: string, suspectId: string) => void;
   completeCase: (caseId: string, isCorrect: boolean, score: number) => void;
   resetCase: (caseId: string) => void;
+  updateNotes: (caseId: string, notes: string) => void;
+  markBriefingShown: (caseId: string) => void;
 }
 
 // ─── Scoring ──────────────────────────────────────────────────────────────────

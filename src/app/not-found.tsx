@@ -1,19 +1,29 @@
 import Link from "next/link";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-      <p className="label-caps text-crimson">Case Not Found</p>
-      <h1 className="font-serif text-4xl text-parchment">The trail has gone cold.</h1>
-      <p className="max-w-sm text-mist">
-        The page you&apos;re looking for doesn&apos;t exist — or the evidence has been destroyed.
-      </p>
-      <Link
-        href="/"
-        className="mt-4 rounded-xl border border-border px-6 py-3 text-sm text-mist transition-colors hover:border-gold hover:text-parchment"
+    <PageWrapper>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(107,99,212,0.06) 0%, transparent 60%)",
+        }}
       >
-        Return to headquarters
-      </Link>
-    </main>
+        <p className="label-caps text-iris mb-6 tracking-[0.3em]">404</p>
+        <h1 className="font-serif text-5xl md:text-6xl text-parchment leading-tight mb-4">
+          This corridor leads nowhere.
+        </h1>
+        <p className="font-serif italic text-mist text-xl max-w-md leading-relaxed mb-12">
+          The clue you&apos;re looking for doesn&apos;t exist — or perhaps it was never real. The best detectives know when to backtrack.
+        </p>
+        <Link
+          href="/cases"
+          className="inline-flex items-center px-8 py-4 rounded-xl border border-gold/40 text-gold font-sans font-semibold text-sm tracking-widest uppercase hover:bg-gold hover:text-void hover:border-gold transition-colors duration-200"
+        >
+          Return to the Investigation
+        </Link>
+      </div>
+    </PageWrapper>
   );
 }

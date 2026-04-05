@@ -148,6 +148,26 @@ export const useGameStore = create<GameState>()(
           return { cases: rest, activeCaseId: state.activeCaseId === caseId ? null : state.activeCaseId };
         });
       },
+
+      updateNotes: (caseId, notes) => {
+        set((state) => {
+          const caseState = state.cases[caseId];
+          if (!caseState) return state;
+          return {
+            cases: { ...state.cases, [caseId]: { ...caseState, playerNotes: notes } },
+          };
+        });
+      },
+
+      markBriefingShown: (caseId) => {
+        set((state) => {
+          const caseState = state.cases[caseId];
+          if (!caseState) return state;
+          return {
+            cases: { ...state.cases, [caseId]: { ...caseState, briefingShown: true } },
+          };
+        });
+      },
     }),
     {
       name: "red-thread-game",

@@ -1,1 +1,2 @@
-// Phase 1 — Stubs for case components. Full implementation in Phase 1 build.
+export { CaseCard } from "./CaseCard";
+export type { CaseCardProps, CaseCardProgress } from "./CaseCard";
