@@ -146,16 +146,10 @@ export default function LandingPage() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
-            <Link
-              href="/cases"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gold text-void font-sans font-semibold text-sm tracking-widest uppercase transition-colors duration-200 hover:bg-gold-light"
-            >
+            <Link href="/cases" className="btn-gold">
               Begin Investigation
             </Link>
-            <Link
-              href="/cases/thornwood"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-gold/60 text-gold font-sans font-semibold text-sm tracking-widest uppercase transition-colors duration-200 hover:border-gold hover:bg-gold/12"
-            >
+            <Link href="/cases/thornwood" className="btn-outline-gold">
               The Thornwood Affair
             </Link>
           </div>
@@ -177,7 +171,8 @@ export default function LandingPage() {
       </section>
 
       {/* ── Featured Case ────────────────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-28">
+      <section className="section-panel py-28">
+        <div className="max-w-6xl mx-auto px-6">
         <div className="mb-14 animate-fade-up stagger-1">
           <p className="label-caps text-gold mb-3">Now Available</p>
           <h2 className="font-serif text-4xl md:text-5xl text-parchment leading-tight">
@@ -215,10 +210,8 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+        </div>
       </section>
-
-      {/* ── Divider ──────────────────────────────────────────────────────── */}
-      <div className="divider-gold mx-6 md:mx-16" />
 
       {/* ── How It Works ─────────────────────────────────────────────────── */}
       <section
@@ -233,21 +226,20 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {HOW_IT_WORKS.map((step, i) => (
               <div
                 key={step.numeral}
-                className={`animate-fade-up stagger-${i + 1}`}
+                className={`card p-7 animate-fade-up stagger-${i + 1}`}
               >
-                {/* Roman numeral */}
                 <p
                   className="font-serif text-6xl leading-none mb-4"
                   style={{ color: "rgba(201,168,76,0.38)" }}
                 >
                   {step.numeral}
                 </p>
-                <div className="divider-subtle max-w-[48px] mb-4" />
-                <h3 className="font-serif text-2xl text-parchment mb-3 leading-snug">
+                <div className="divider-subtle max-w-[40px] mb-5" />
+                <h3 className="font-serif text-xl text-parchment mb-3 leading-snug">
                   {step.title}
                 </h3>
                 <p className="text-mist text-sm leading-relaxed font-sans">
@@ -281,29 +273,25 @@ export default function LandingPage() {
               <div
                 key={c.title}
                 className={cn(
-                  "relative border border-[#2a2a45] rounded-2xl p-6 bg-surface",
+                  "card relative p-6",
                   `animate-fade-up stagger-${Math.min(i + 1, 6)}`
                 )}
+                style={{ opacity: 0.72 }}
               >
-                {/* Lock badge */}
                 <div className="absolute top-4 right-4">
-                  <span className="label-caps text-shadow border border-[#2a2a45] bg-void px-2 py-1 rounded-full text-[9px]">
+                  <span className="label-caps text-shadow border border-[#2a2a45] bg-void/80 px-2 py-1 rounded-full text-[9px]">
                     Season 2
                   </span>
                 </div>
 
                 <p className="label-caps text-shadow mb-3 pr-16">{c.category}</p>
-                <h3 className="font-serif text-xl text-parchment/80 mb-1">
-                  {c.title}
-                </h3>
-                <p className="font-serif italic text-mist/70 text-sm leading-relaxed mb-4">
+                <h3 className="font-serif text-xl text-parchment mb-1">{c.title}</h3>
+                <p className="font-serif italic text-mist text-sm leading-relaxed mb-4">
                   {c.subtitle}
                 </p>
                 <p className="label-caps text-shadow">{c.setting}</p>
-                <div className="mt-4 pt-4 border-t border-[#2a2a45]">
-                  <span className="label-caps text-shadow/60">
-                    In Production
-                  </span>
+                <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(42,42,69,0.5)" }}>
+                  <span className="label-caps" style={{ color: "rgba(92,90,120,0.55)" }}>In Production</span>
                 </div>
               </div>
             ))}
@@ -353,20 +341,20 @@ function TeaserCard({
   return (
     <div
       className={cn(
-        "relative border border-[#2a2a45] rounded-2xl p-5 bg-surface",
+        "card relative p-5",
         `animate-fade-up stagger-${Math.min(stagger, 6)}`
       )}
+      style={{ opacity: 0.7 }}
     >
-      {/* Season 2 badge */}
       <div className="absolute top-4 right-4">
-        <span className="label-caps text-shadow border border-[#2a2a45] bg-void px-2 py-1 rounded-full text-[9px]">
+        <span className="label-caps text-shadow border border-[#2a2a45] bg-void/80 px-2 py-1 rounded-full text-[9px]">
           Season 2
         </span>
       </div>
 
       <p className="label-caps text-shadow mb-2 pr-16">{c.category}</p>
-      <h3 className="font-serif text-xl text-parchment/80 mb-1">{c.title}</h3>
-      <p className="font-serif italic text-mist/70 text-sm leading-snug mb-3">
+      <h3 className="font-serif text-xl text-parchment mb-1">{c.title}</h3>
+      <p className="font-serif italic text-mist text-sm leading-snug mb-3">
         {c.subtitle}
       </p>
       <p className="label-caps text-shadow">{c.setting}</p>

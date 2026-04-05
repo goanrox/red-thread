@@ -138,14 +138,17 @@ export default function AchievementsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: i * 0.05 }}
               className={cn(
-                "flex items-start gap-4 bg-surface border rounded-xl p-5",
-                isEarned ? "border-gold/20" : "border-[#2a2a45] opacity-60 grayscale"
+                "flex items-start gap-4 card rounded-xl p-5",
+                !isEarned && "opacity-55 grayscale"
               )}
+              style={isEarned ? { borderColor: "rgba(201,168,76,0.25)", borderRadius: "12px" } : { borderRadius: "12px" }}
             >
-              <div className={cn(
-                "w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0",
-                isEarned ? "bg-gold/10 border border-gold/20" : "bg-[#0c0c17] border border-[#2a2a45]"
-              )}>
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
+                style={isEarned
+                  ? { background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.22)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)" }
+                  : { background: "#0c0c17", border: "1px solid rgba(42,42,69,0.8)" }
+                }>
                 {isEarned ? achievement.icon : "?"}
               </div>
               <div className="flex-1 min-w-0">

@@ -166,7 +166,7 @@ export default function EvidencePage({
                 {lockedClues.map((clue) => (
                   <div
                     key={clue.id}
-                    className="bg-[#0c0c17] border border-[#2a2a45] rounded-xl p-4 flex items-center gap-2 opacity-40"
+                    className="card rounded-xl p-4 flex items-center gap-2 opacity-35"
                   >
                     <Lock size={12} className="text-shadow shrink-0" />
                     <span className="label-caps text-shadow text-[9px]">Unknown</span>
@@ -245,7 +245,7 @@ function ClueCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: index * 0.05 }}
       onClick={onClick}
-      className="text-left w-full bg-surface border border-[#2a2a45] rounded-xl p-4 hover:border-gold/40 card-hover transition-colors duration-200"
+      className="text-left w-full card rounded-xl p-4 card-hover"
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <span className="font-serif text-parchment text-sm leading-snug">{clue.title}</span>
@@ -296,7 +296,7 @@ function ClueModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
-        className="bg-surface2 border border-[#2a2a45] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto"
+        className="card-glass rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">

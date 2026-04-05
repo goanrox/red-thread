@@ -155,12 +155,16 @@ export default function CasesPage() {
           )}
 
           {/* Season 2 teaser */}
-          <div className="mt-16 pt-12 border-t border-[#2a2a45] text-center">
+          <div
+            className={cn("mt-16 rounded-2xl p-8 text-center", season2Unlocked ? "card-gold" : "card")}
+            style={season2Unlocked ? {} : { opacity: 0.7 }}
+          >
             {season2Unlocked ? (
               <>
-                <p className="label-caps text-gold mb-3">Season 2 — Unlocked</p>
-                <p className="font-serif italic text-mist text-xl">
-                  You&apos;ve proven yourself. Season Two is being assembled for detectives of your calibre. The cases above will be the first to drop.
+                <p className="label-caps text-gold mb-3 tracking-[0.25em]">Season 2 — Unlocked</p>
+                <p className="font-serif text-2xl text-parchment mb-3">You&apos;ve proven yourself.</p>
+                <p className="font-serif italic text-mist leading-relaxed max-w-lg mx-auto">
+                  Season Two is being assembled for detectives of your calibre. The cases above will be the first to drop.
                 </p>
               </>
             ) : (

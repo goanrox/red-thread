@@ -339,10 +339,10 @@ function OverviewTab({
                 key={scene.id}
                 onClick={() => !locked && onSceneClick(scene)}
                 className={cn(
-                  "text-left bg-surface border border-[#2a2a45] rounded-xl p-5 transition-colors duration-200 group",
+                  "text-left card rounded-xl p-5 w-full transition-all duration-300",
                   locked
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:border-gold/40 cursor-pointer card-hover"
+                    ? "opacity-45 cursor-not-allowed"
+                    : "card-hover cursor-pointer"
                 )}
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
@@ -390,7 +390,7 @@ function OverviewTab({
               <Link
                 key={suspect.id}
                 href={`/cases/${caseId}/interrogate/${suspect.id}`}
-                className="flex items-center gap-3 bg-surface border border-[#2a2a45] rounded-xl p-3 hover:border-gold/40 transition-colors duration-200 card-hover"
+                className="flex items-center gap-3 card rounded-xl p-3 card-hover"
               >
                 <Avatar index={i} name={suspect.name} size="sm" />
                 <div className="min-w-0 flex-1">
@@ -442,7 +442,7 @@ function SuspectsTab({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.07 }}
-            className="bg-surface border border-[#2a2a45] rounded-2xl p-5 flex flex-col gap-4 card-hover"
+            className="card rounded-2xl p-5 flex flex-col gap-4 card-hover"
           >
             <div className="flex items-start gap-4">
               <Avatar index={i} name={suspect.name} size="lg" />
@@ -549,7 +549,7 @@ function EvidenceTab({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: i * 0.05 }}
               onClick={() => setSelectedClue(clue)}
-              className="text-left bg-surface border border-[#2a2a45] rounded-xl p-4 hover:border-gold/40 transition-colors duration-200 card-hover"
+              className="text-left card rounded-xl p-4 card-hover"
             >
               <div className="flex items-start justify-between gap-3 mb-2">
                 <span className="font-serif text-base text-parchment">{clue.title}</span>
@@ -587,7 +587,8 @@ function EvidenceTab({
             {locked.map((clue) => (
               <div
                 key={clue.id}
-                className="bg-[#0c0c17] border border-[#2a2a45] rounded-xl p-4 flex items-center gap-3 opacity-50"
+                className="card rounded-xl p-4 flex items-center gap-3"
+                style={{ opacity: 0.45 }}
               >
                 <Lock size={14} className="text-shadow shrink-0" />
                 <span className="label-caps text-shadow text-[10px]">Unknown clue</span>
@@ -670,9 +671,10 @@ function TimelineTab({
                 {/* Content */}
                 <div
                   className={cn(
-                    "flex-1 bg-surface border rounded-xl p-4 ml-6",
-                    isKey ? "border-gold/30" : "border-[#2a2a45]"
+                    "flex-1 rounded-xl p-4 ml-6",
+                    isKey ? "card-gold" : "card"
                   )}
+                  style={isKey ? { borderRadius: "12px" } : { borderRadius: "12px" }}
                 >
                   <p className="text-parchment text-sm leading-relaxed font-serif">
                     {event.description}
@@ -744,7 +746,8 @@ function NotesTab({
         value={value}
         onChange={handleChange}
         placeholder="Record your observations, suspicions, and theories here. Your notes are saved automatically."
-        className="w-full h-80 bg-surface border border-[#2a2a45] rounded-xl p-4 text-parchment text-sm leading-relaxed resize-none focus:outline-none focus:border-gold/40 font-serif placeholder:text-shadow placeholder:italic transition-colors duration-200"
+        className="input-field w-full h-80 p-5 text-sm leading-relaxed resize-none font-serif placeholder:italic"
+        style={{ color: "#f0ece0" }}
       />
       <p className="label-caps text-shadow text-[10px] mt-2">Notes are saved automatically as you type.</p>
     </div>
@@ -780,7 +783,7 @@ function SceneModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="bg-surface2 border border-[#2a2a45] rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto"
+        className="card-glass rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 sm:p-8">
@@ -815,10 +818,8 @@ function SceneModal({
                     <div
                       key={clue.id}
                       className={cn(
-                        "flex items-center justify-between gap-4 p-4 rounded-xl border",
-                        found
-                          ? "border-gold/30 bg-gold/5"
-                          : "border-[#2a2a45] bg-surface"
+                        "flex items-center justify-between gap-4 p-4 rounded-xl",
+                        found ? "card-gold" : "card"
                       )}
                     >
                       <div className="flex-1 min-w-0">
@@ -847,10 +848,7 @@ function SceneModal({
           )}
 
           <div className="mt-8 flex justify-end">
-            <button
-              onClick={onMarkComplete}
-              className="label-caps text-sm px-5 py-3 rounded-xl bg-gold text-void font-semibold hover:bg-gold-light transition-colors duration-200"
-            >
+            <button onClick={onMarkComplete} className="btn-gold">
               Mark Scene Complete
             </button>
           </div>
@@ -876,7 +874,7 @@ function BriefingModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.94 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="bg-surface2 border border-[#2a2a45] rounded-2xl max-w-xl w-full"
+        className="card-glass rounded-2xl max-w-xl w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 sm:p-8">
@@ -896,10 +894,7 @@ function BriefingModal({
 
           <div className="divider-gold mt-6 mb-6" />
 
-          <button
-            onClick={onClose}
-            className="w-full py-3 rounded-xl bg-gold text-void font-sans font-semibold text-sm tracking-widest uppercase hover:bg-gold-light transition-colors duration-200"
-          >
+          <button onClick={onClose} className="btn-gold w-full">
             Begin Investigation
           </button>
         </div>
@@ -918,7 +913,7 @@ function ClueModal({ clue, onClose }: { clue: Clue; onClose: () => void }) {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
-        className="bg-surface2 border border-[#2a2a45] rounded-2xl max-w-lg w-full"
+        className="card-glass rounded-2xl max-w-lg w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
@@ -1001,11 +996,11 @@ function StatCard({
     crimson: "text-crimson-light",
   };
   return (
-    <div className="bg-surface border border-[#2a2a45] rounded-xl p-4 text-center">
+    <div className="card rounded-xl p-4 text-center">
       <p className={cn("font-serif text-3xl", colorMap[color])}>
-        {value}<span className="text-shadow text-xl">/{total}</span>
+        {value}<span className="text-xl" style={{ color: "rgba(92,90,120,0.7)" }}>/{total}</span>
       </p>
-      <p className="label-caps text-shadow text-[10px] mt-1">{label}</p>
+      <p className="label-caps text-[10px] mt-1.5" style={{ color: "rgba(92,90,120,0.75)" }}>{label}</p>
     </div>
   );
 }

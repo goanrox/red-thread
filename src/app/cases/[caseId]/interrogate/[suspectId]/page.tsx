@@ -149,9 +149,8 @@ export default function InterrogationPage({
             <motion.aside
               initial={false}
               className={cn(
-                "bg-surface border border-[#2a2a45] rounded-2xl flex-col gap-5 overflow-y-auto",
+                "card-elevated rounded-2xl flex-col gap-5 overflow-y-auto",
                 "hidden sm:flex w-72 shrink-0 p-5",
-                // Mobile: absolute overlay
                 sidebarOpen && "fixed bottom-0 left-0 right-0 z-40 flex sm:relative sm:z-auto"
               )}
             >
@@ -214,7 +213,7 @@ export default function InterrogationPage({
                 className="flex items-center gap-3"
               >
                 <SuspectAvatar index={suspectIndex} name={suspect.name} />
-                <div className="flex gap-1.5 bg-surface border border-[#2a2a45] rounded-2xl px-4 py-3">
+                <div className="card flex gap-1.5 rounded-2xl px-4 py-3">
                   {[0, 1, 2].map((i) => (
                     <motion.span
                       key={i}
@@ -272,13 +271,13 @@ export default function InterrogationPage({
                   onClick={() => !typing && handleAsk(q)}
                   disabled={typing}
                   className={cn(
-                    "w-full text-left px-4 py-3 rounded-xl border border-[#2a2a45] bg-surface",
+                    "w-full text-left px-4 py-3 rounded-xl card",
                     "font-serif text-parchment text-sm leading-snug",
-                    "transition-colors duration-200",
-                    q.isKeyQuestion && "border-gold/20",
+                    "transition-all duration-300",
+                    q.isKeyQuestion && "card-gold",
                     typing
                       ? "opacity-50 cursor-not-allowed"
-                      : "hover:border-gold/40 hover:bg-surface2 cursor-pointer"
+                      : "hover:border-gold/40 cursor-pointer"
                   )}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -304,7 +303,11 @@ function PlayerBubble({ text }: { text: string }) {
     <div className="flex justify-end">
       <div
         className="max-w-sm px-4 py-3 rounded-2xl rounded-tr-sm text-parchment text-sm leading-relaxed font-serif"
-        style={{ backgroundColor: "rgba(201,168,76,0.12)", border: "1px solid rgba(201,168,76,0.2)" }}
+        style={{
+          background: "linear-gradient(135deg, rgba(201,168,76,0.16) 0%, rgba(201,168,76,0.10) 100%)",
+          border: "1px solid rgba(201,168,76,0.28)",
+          boxShadow: "inset 0 1px 0 rgba(201,168,76,0.12), 0 2px 12px rgba(0,0,0,0.4)",
+        }}
       >
         {text}
       </div>
@@ -340,7 +343,7 @@ function SuspectBubble({
             </span>
           </div>
         )}
-        <div className="bg-surface border border-[#2a2a45] rounded-2xl rounded-tl-sm px-4 py-3">
+        <div className="card rounded-2xl rounded-tl-sm px-4 py-3">
           <p className="font-serif italic text-parchment text-sm leading-relaxed">{text}</p>
         </div>
       </div>
@@ -372,8 +375,13 @@ function SidebarContent({
       {/* Avatar + name */}
       <div className="text-center">
         <div
-          className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center font-serif text-xl text-mist"
-          style={{ backgroundColor: getAvatarBg(suspectIndex) }}
+          className="w-18 h-18 rounded-full mx-auto mb-3 flex items-center justify-center font-serif text-xl text-mist"
+          style={{
+            width: "72px", height: "72px",
+            background: `radial-gradient(circle at 30% 30%, ${getAvatarBg(suspectIndex)}cc, ${getAvatarBg(suspectIndex)})`,
+            border: "1px solid rgba(42,42,69,0.8)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 4px 16px rgba(0,0,0,0.5)",
+          }}
         >
           {suspect.name.split(" ").map((n) => n[0]).join("")}
         </div>

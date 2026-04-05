@@ -54,7 +54,8 @@ export default function ProfilePage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        className="bg-surface border border-gold/20 rounded-2xl p-6 mb-6"
+        className="card rounded-2xl p-6 mb-6"
+        style={{ borderColor: "rgba(201,168,76,0.28)", background: "linear-gradient(160deg, #191913 0%, #111110 55%)" }}
       >
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
@@ -128,7 +129,7 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-surface border border-[#2a2a45] rounded-2xl p-6 mb-6"
+          className="card rounded-2xl p-6 mb-6"
         >
           <p className="label-caps text-shadow mb-4">Case History</p>
           <div className="space-y-4">
@@ -171,7 +172,7 @@ export default function ProfilePage() {
       >
         <Link
           href="/profile/achievements"
-          className="flex items-center justify-between w-full bg-surface border border-[#2a2a45] rounded-2xl p-5 hover:border-gold/40 transition-colors duration-200 group"
+          className="flex items-center justify-between w-full card rounded-2xl p-5 card-hover group"
         >
           <div className="flex items-center gap-3">
             <Trophy size={18} className="text-gold" />
@@ -221,7 +222,7 @@ function StatCard({
   accent?: boolean;
 }) {
   return (
-    <div className="bg-surface border border-[#2a2a45] rounded-xl p-4 text-center">
+    <div className="card rounded-xl p-4 text-center" style={{ borderRadius: "12px" }}>
       <p className={cn("font-serif text-3xl", accent ? "text-gold" : "text-parchment")}>
         {value}
       </p>

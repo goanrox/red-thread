@@ -69,10 +69,8 @@ export default function TimelinePage({
                 />
 
                 <div
-                  className={cn(
-                    "flex-1 border rounded-xl p-4 ml-6",
-                    isKey ? "border-gold/30 bg-surface" : "border-[#2a2a45] bg-surface"
-                  )}
+                  className={cn("flex-1 rounded-xl p-4 ml-6", isKey ? "card-gold" : "card")}
+                  style={isKey ? undefined : { borderRadius: "12px" }}
                 >
                   <p className="text-parchment text-sm leading-relaxed font-serif">
                     {event.description}

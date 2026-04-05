@@ -131,25 +131,21 @@ export function CaseCard({
   return (
     <div
       className={cn(
-        "relative flex flex-col rounded-2xl overflow-hidden border",
-        !isLocked && "card-hover cursor-pointer border-[#2a2a45]",
-        isLocked && !unlockedPreview && "opacity-60 border-[#2a2a45]",
-        unlockedPreview && "border-gold/20",
+        "card relative flex flex-col overflow-hidden",
+        !isLocked && "card-hover cursor-pointer",
+        isLocked && !unlockedPreview && "opacity-55",
+        unlockedPreview && "card-gold",
         className
       )}
-      style={!isLocked || unlockedPreview ? {
-        background: "linear-gradient(160deg, #181828 0%, #111120 40%)",
-      } : {
-        background: "#111120",
-      }}
     >
       {/* Lock overlay — only when locked AND not unlocked yet */}
       {isLocked && !unlockedPreview && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-void/40 rounded-2xl">
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl"
+             style={{ background: "rgba(7,7,14,0.45)" }}>
           <div className="text-center">
             <div
-              className="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center border border-[#2a2a45]"
-              style={{ backgroundColor: "#0c0c17" }}
+              className="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center"
+              style={{ background: "linear-gradient(160deg,#181828,#111120)", border: "1px solid rgba(42,42,69,0.8)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)" }}
             >
               <LockIcon />
             </div>
@@ -162,22 +158,22 @@ export function CaseCard({
       <div className="flex flex-col flex-1 p-6 gap-4">
         {/* Top row: category + status badges */}
         <div className="flex items-center justify-between">
-          <span className="label-caps text-shadow">{CATEGORY_LABELS[category]}</span>
+          <span className="label-caps" style={{ color: "rgba(92,90,120,0.75)" }}>{CATEGORY_LABELS[category]}</span>
           <div className="flex items-center gap-2">
             {unlockedPreview && (
-              <span className="label-caps text-gold border border-gold/30 bg-gold/10 px-2 py-0.5 rounded-full text-[10px]">
+              <span className="label-caps text-gold border border-gold/30 bg-gold/10 px-2 py-0.5 rounded-full text-[9px]">
                 Season 2
               </span>
             )}
             {isNew && !isComplete && !unlockedPreview && (
-              <span className="label-caps text-gold border border-gold/30 bg-gold/10 px-2 py-0.5 rounded-full text-[10px]">
+              <span className="label-caps text-gold border border-gold/30 bg-gold/10 px-2 py-0.5 rounded-full text-[9px]">
                 New
               </span>
             )}
             {isComplete && (
               <span
                 className={cn(
-                  "label-caps px-2 py-0.5 rounded-full border text-[10px]",
+                  "label-caps px-2 py-0.5 rounded-full border text-[9px]",
                   progress?.isCorrect
                     ? "text-gold border-gold/30 bg-gold/10"
                     : "text-crimson-light border-crimson/30 bg-crimson/10"
@@ -191,17 +187,17 @@ export function CaseCard({
 
         {/* Title */}
         <div>
-          <h3 className="font-serif text-[1.625rem] leading-tight text-parchment mb-1">
+          <h3 className="font-serif text-[1.7rem] leading-tight text-parchment mb-2">
             {title}
           </h3>
-          <p className="font-serif italic text-mist text-base leading-snug">
+          <p className="font-serif italic text-base leading-snug" style={{ color: "rgba(168,165,192,0.8)" }}>
             {subtitle}
           </p>
         </div>
 
         {/* Setting */}
         {setting && (
-          <p className="label-caps text-shadow -mt-1">{setting}</p>
+          <p className="label-caps -mt-1" style={{ color: "rgba(92,90,120,0.7)" }}>{setting}</p>
         )}
 
         {/* Spacer */}
@@ -232,14 +228,14 @@ export function CaseCard({
         {/* Progress bar */}
         {inProgress && (
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between mb-2">
               <span className="label-caps text-shadow">Investigation</span>
               <span className="label-caps text-mist">{progressPercent}%</span>
             </div>
-            <div className="h-px bg-[#2a2a45] rounded-full overflow-hidden">
+            <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(42,42,69,0.6)" }}>
               <div
                 className="h-full bg-gold rounded-full transition-all duration-700"
-                style={{ width: `${progressPercent}%` }}
+                style={{ width: `${progressPercent}%`, boxShadow: "0 0 8px rgba(201,168,76,0.4)" }}
               />
             </div>
           </div>
@@ -247,22 +243,29 @@ export function CaseCard({
 
         {/* CTA */}
         {isLocked && !unlockedPreview ? (
-          <div className="w-full py-3 rounded-xl label-caps text-center text-shadow border border-[#2a2a45] select-none">
+          <div className="w-full py-3 rounded-xl label-caps text-center text-shadow select-none"
+               style={{ border: "1px solid rgba(42,42,69,0.6)", background: "rgba(7,7,14,0.3)" }}>
             Coming Season 2
           </div>
         ) : unlockedPreview ? (
-          <div className="w-full py-3 rounded-xl label-caps text-center text-gold/70 border border-gold/20 select-none">
+          <div className="w-full py-3 rounded-xl label-caps text-center select-none"
+               style={{ border: "1px solid rgba(201,168,76,0.2)", color: "rgba(201,168,76,0.6)", background: "rgba(201,168,76,0.03)" }}>
             Coming Soon — Stay Tuned
           </div>
         ) : (
           <Link
             href={`/cases/${id}`}
             className={cn(
-              "w-full py-3 rounded-xl label-caps text-center block transition-colors duration-200",
+              "w-full py-3 rounded-xl label-caps text-center block transition-all duration-300",
               isComplete
-                ? "border border-[#2a2a45] text-mist hover:border-gold/60 hover:text-gold"
-                : "border border-gold/55 text-gold hover:bg-gold hover:text-void hover:border-gold"
+                ? "text-mist hover:text-gold"
+                : "btn-gold"
             )}
+            style={isComplete ? {
+              border: "1px solid rgba(42,42,69,0.8)",
+              background: "rgba(7,7,14,0.3)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+            } : undefined}
           >
             {ctaLabel}
           </Link>

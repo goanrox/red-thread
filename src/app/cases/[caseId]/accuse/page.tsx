@@ -113,7 +113,7 @@ export default function AccusePage({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.07 }}
                     onClick={() => handleSelect(suspect)}
-                    className="text-left bg-surface border border-[#2a2a45] rounded-2xl p-5 hover:border-crimson/40 hover:bg-crimson/5 transition-colors duration-200 card-hover group"
+                    className="text-left card rounded-2xl p-5 transition-all duration-300 card-hover group"
                   >
                     <div className="flex items-start gap-3 mb-4">
                       <SuspectAvatar index={i} name={suspect.name} />
@@ -164,7 +164,7 @@ export default function AccusePage({
             transition={{ duration: 0.25 }}
             className="max-w-md mx-auto"
           >
-            <div className="bg-surface border border-crimson/30 rounded-2xl p-6 mb-6">
+            <div className="card rounded-2xl p-6 mb-6" style={{ borderColor: "rgba(139,34,50,0.35)" }}>
               <div className="flex items-center gap-4 mb-4">
                 <SuspectAvatar index={caseData.suspects.findIndex(s => s.id === selected.id)} name={selected.name} />
                 <div>
@@ -186,7 +186,12 @@ export default function AccusePage({
               </button>
               <button
                 onClick={() => setStep("confirm2")}
-                className="flex-1 py-3 rounded-xl bg-crimson border border-crimson text-parchment label-caps hover:bg-crimson-light hover:border-crimson-light transition-colors duration-200 flex items-center justify-center gap-2"
+                className="flex-1 py-3 rounded-xl text-parchment label-caps transition-all duration-200 flex items-center justify-center gap-2"
+                style={{
+                  background: "linear-gradient(135deg, #8b2232, #6b1a26)",
+                  border: "1px solid rgba(193,50,72,0.4)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 16px rgba(139,34,50,0.35)",
+                }}
               >
                 I&apos;m Certain <ChevronRight size={13} />
               </button>
@@ -204,17 +209,22 @@ export default function AccusePage({
             transition={{ duration: 0.25 }}
             className="max-w-md mx-auto text-center"
           >
-            <div className="mb-8">
+            <div
+              className="card-glass rounded-2xl p-8 mb-6"
+              style={{ borderColor: "rgba(139,34,50,0.4)" }}
+            >
               <div className="flex items-center justify-center gap-3 mb-6">
-                <AlertTriangle size={20} className="text-crimson-light" />
-                <p className="label-caps text-crimson-light">Final Warning</p>
-                <AlertTriangle size={20} className="text-crimson-light" />
+                <AlertTriangle size={18} className="text-crimson-light" />
+                <p className="label-caps text-crimson-light tracking-[0.2em]">Final Warning</p>
+                <AlertTriangle size={18} className="text-crimson-light" />
               </div>
-              <p className="font-serif text-3xl text-parchment mb-4">
+              <p className="font-serif text-3xl text-parchment mb-4 leading-tight">
                 This accusation is final.
               </p>
-              <p className="font-serif italic text-mist text-lg leading-relaxed">
-                You are about to accuse <span className="text-parchment not-italic">{selected.name}</span> of the murder of {caseData.victim.name}. There is no second chance.
+              <p className="font-serif italic text-mist leading-relaxed">
+                You are about to accuse{" "}
+                <span className="text-parchment not-italic">{selected.name}</span>{" "}
+                of the murder of {caseData.victim.name}. There is no second chance.
               </p>
             </div>
 
@@ -222,12 +232,15 @@ export default function AccusePage({
               <button
                 onClick={handleFinalAccuse}
                 disabled={loading}
-                className={cn(
-                  "w-full py-4 rounded-xl border font-sans font-semibold text-sm tracking-widest uppercase transition-colors duration-200 flex items-center justify-center gap-2",
-                  loading
-                    ? "bg-crimson/50 border-crimson/50 text-parchment/50 cursor-not-allowed"
-                    : "bg-crimson border-crimson text-parchment hover:bg-crimson-light hover:border-crimson-light"
-                )}
+                className="w-full py-4 rounded-xl label-caps text-parchment transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={loading ? {
+                  background: "rgba(139,34,50,0.4)",
+                  border: "1px solid rgba(139,34,50,0.3)",
+                } : {
+                  background: "linear-gradient(135deg, #a82840 0%, #8b2232 55%, #6b1a26 100%)",
+                  border: "1px solid rgba(193,50,72,0.5)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 6px 24px rgba(139,34,50,0.5), 0 2px 8px rgba(0,0,0,0.4)",
+                }}
               >
                 {loading ? (
                   <>
@@ -240,14 +253,15 @@ export default function AccusePage({
                   </>
                 ) : (
                   <>
-                    <Skull size={16} />
+                    <Skull size={15} />
                     Make Final Accusation
                   </>
                 )}
               </button>
               <button
                 onClick={handleBack}
-                className="w-full py-3 rounded-xl border border-[#2a2a45] text-mist label-caps hover:border-gold/40 hover:text-parchment transition-colors duration-200"
+                className="w-full py-3 rounded-xl border border-[#2a2a45] text-mist label-caps hover:border-gold/40 hover:text-parchment transition-all duration-200"
+                style={{ background: "rgba(7,7,14,0.3)" }}
               >
                 Wait — I need more time
               </button>

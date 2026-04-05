@@ -191,7 +191,7 @@ export default function ResultPage({
             className="space-y-8"
           >
             {/* Ending narrative */}
-            <div className="bg-surface border border-[#2a2a45] rounded-2xl p-6">
+            <div className="card rounded-2xl p-6">
               <p className="label-caps text-shadow mb-3">{ending.title}</p>
               <p className="font-serif italic text-mist text-base leading-relaxed">
                 {ending.narrative}
@@ -199,7 +199,10 @@ export default function ResultPage({
             </div>
 
             {/* Hidden truth */}
-            <div className="bg-surface border border-gold/20 rounded-2xl p-6">
+            <div
+              className="card rounded-2xl p-6"
+              style={{ borderColor: "rgba(201,168,76,0.28)", background: "linear-gradient(160deg, #191913 0%, #111110 55%)" }}
+            >
               <p className="label-caps text-gold mb-3">The Hidden Truth</p>
               <p className="font-serif italic text-mist text-sm leading-relaxed">
                 {caseData.solution.twist ?? caseData.solution.narrativeReveal}
@@ -229,7 +232,7 @@ export default function ResultPage({
             )}
 
             {/* The killer's tell */}
-            <div className="bg-surface border border-[#2a2a45] rounded-2xl p-6">
+            <div className="card rounded-2xl p-6">
               <p className="label-caps text-shadow mb-3">The Killer&apos;s Tell</p>
               <p className="font-serif italic text-mist text-sm leading-relaxed mb-4">
                 {killer.tells.join(" ")}
@@ -241,7 +244,7 @@ export default function ResultPage({
 
             {/* Score breakdown */}
             {score > 0 && (
-              <div className="bg-surface border border-[#2a2a45] rounded-2xl p-6">
+              <div className="card rounded-2xl p-6">
                 <div className="flex items-center gap-2 mb-5">
                   <Trophy size={16} className="text-gold" />
                   <p className="label-caps text-gold">Case Report</p>
@@ -292,14 +295,26 @@ export default function ResultPage({
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/cases"
-                className="flex-1 py-3 rounded-xl border border-[#2a2a45] text-mist label-caps text-center hover:border-gold/40 hover:text-parchment transition-colors duration-200 flex items-center justify-center gap-2"
+                className="flex-1 py-3 rounded-xl label-caps text-center transition-all duration-200 flex items-center justify-center gap-2 text-mist hover:text-parchment hover:border-gold/40"
+                style={{ border: "1px solid rgba(42,42,69,0.8)", background: "rgba(7,7,14,0.3)" }}
               >
                 <BookOpen size={13} />
                 Back to Cases
               </Link>
               <button
                 onClick={handlePlayAgain}
-                className="flex-1 py-3 rounded-xl border border-gold/40 text-gold label-caps hover:bg-gold hover:text-void hover:border-gold transition-colors duration-200 flex items-center justify-center gap-2"
+                className="flex-1 py-3 rounded-xl label-caps transition-all duration-200 flex items-center justify-center gap-2 text-gold hover:text-void"
+                style={{
+                  border: "1px solid rgba(201,168,76,0.4)",
+                  background: "rgba(201,168,76,0.06)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(201,168,76,0.18)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(201,168,76,0.06)";
+                }}
               >
                 <RotateCcw size={13} />
                 Play Again
@@ -327,14 +342,19 @@ function ResultCard({
 }) {
   const bgs = ["#2a2a45","#1f1f35","#181828","#111120","#2a2a45","#1f1f35"];
   return (
-    <div className={cn(
-      "bg-surface border rounded-2xl p-5 text-center",
-      status === "correct" ? "border-gold/30" : status === "escaped" ? "border-crimson/30" : "border-[#2a2a45]"
-    )}>
+    <div
+      className="card rounded-2xl p-5 text-center"
+      style={status === "correct" ? { borderColor: "rgba(201,168,76,0.32)", background: "linear-gradient(160deg, #191913 0%, #111110 55%)" }
+        : status === "escaped" ? { borderColor: "rgba(139,34,50,0.35)", background: "linear-gradient(160deg, #191014 0%, #110c10 55%)" }
+        : undefined}
+    >
       <p className="label-caps text-shadow text-[10px] mb-3">{label}</p>
       <div
         className="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center font-serif text-base text-mist"
-        style={{ backgroundColor: bgs[index % bgs.length] }}
+        style={{
+          background: `radial-gradient(circle at 40% 35%, ${bgs[index % bgs.length]}, #0c0c1a)`,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 8px rgba(0,0,0,0.4)",
+        }}
       >
         {suspect.name.split(" ").map((n) => n[0]).join("")}
       </div>
