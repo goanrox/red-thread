@@ -137,3 +137,64 @@ export interface Category {
   description: string;
   icon: string; // Unicode or SVG path
 }
+
+// ─── Progression & Archive System ────────────────────────────────────────────
+
+export type VisualTag =
+  | "Classified"
+  | "Season Locked"
+  | "Requires Clearance"
+  | "High Profile"
+  | "Cold Case"
+  | "Restricted"
+  | "Under Review"
+  | "Active Investigation"
+  | "Case Closed";
+
+export type ArchiveClearanceLevel = "I" | "II" | "III";
+
+export interface TeaserSuspect {
+  initials: string;      // e.g. "E.M." — shown even in locked state
+  role: string;          // e.g. "Personal Secretary" or "[REDACTED]"
+  isRedacted: boolean;
+}
+
+export interface TeaserEvidence {
+  label: string;         // e.g. "Banking Ledger — Office" or "[CLASSIFIED]"
+  type: ClueType;
+  isRedacted: boolean;
+}
+
+// Full display manifest — used for all 12 cases regardless of playable status
+export interface CaseManifest {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: CaseCategory;
+  difficulty: Difficulty;
+  estimatedMinutes: number;
+  season: 1 | 2 | 3;
+  location: string;
+  unlockRequires?: string;          // caseId that must be solved
+  unlockRequiresSeason?: 1 | 2;    // entire season must be completed
+  teaserDescription: string;
+  openingNarrative: string;
+  teaserSuspects: TeaserSuspect[];
+  teaserEvidence: TeaserEvidence[];
+  visualTags: VisualTag[];
+  prestigeReward: string;
+  suspectCount: number;
+  clueCount: number;
+  isNew?: boolean;
+  isFeatured?: boolean;
+  hiddenTwist?: string;             // cross-case narrative clue (shown after solve)
+}
+
+export interface SeasonInfo {
+  number: 1 | 2 | 3;
+  title: string;         // "Foundations"
+  subtitle: string;      // "Season One"
+  tone: string;          // "Wealth, old money, hidden family secrets, buried lies."
+  crypticHint: string;   // "Every great lie begins with a family."
+  caseIds: string[];
+}
