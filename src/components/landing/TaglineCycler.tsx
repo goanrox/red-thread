@@ -3,9 +3,12 @@
 import { useState, useEffect } from "react";
 
 const TAGLINES = [
-  "Every clue tells a story.",
   "Every suspect has a secret.",
   "Only the truth ends it.",
+  "Every clue tells a story.",
+  "Some cases never stay buried.",
+  "The truth hides in plain sight.",
+  "Every alibi leaves a trace.",
 ];
 
 export function TaglineCycler() {
@@ -18,18 +21,19 @@ export function TaglineCycler() {
       setTimeout(() => {
         setIndex((i) => (i + 1) % TAGLINES.length);
         setFading(false);
-      }, 400);
-    }, 3200);
+      }, 500);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <p
-      className="font-serif italic text-3xl md:text-4xl leading-relaxed"
+      className="font-serif italic text-2xl md:text-3xl leading-relaxed"
       style={{
         opacity: fading ? 0 : 1,
-        transition: "opacity 400ms ease",
-        color: "rgba(240, 236, 224, 0.75)",
+        transform: fading ? "translateY(-6px)" : "translateY(0)",
+        transition: "opacity 500ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1)",
+        color: "rgba(245, 245, 240, 0.78)",
       }}
     >
       {TAGLINES[index]}

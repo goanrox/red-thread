@@ -2,38 +2,82 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Navigation() {
   const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-[#2a2a45]">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Wordmark */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <span
-            className="font-serif text-xl text-parchment tracking-wider group-hover:text-gold transition-colors duration-200"
-            style={{ fontWeight: 500 }}
-          >
-            Red Thread
-          </span>
-          <span
-            className="hidden sm:block h-px w-8 opacity-40 group-hover:opacity-80 transition-opacity duration-300"
-            style={{ background: "linear-gradient(to right, #c9a84c, transparent)" }}
-          />
-        </Link>
+    <nav
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 md:px-24 transition-all duration-700",
+        isScrolled
+          ? "py-5 glass shadow-2xl"
+          : "py-10 bg-transparent"
+      )}
+    >
+      {/* Wordmark */}
+      <Link href="/" className="flex items-center gap-4 group">
+        <span
+          className="transition-all duration-500 group-hover:w-12"
+          style={{
+            display: "block",
+            height: "0.5px",
+            width: "32px",
+            background: "linear-gradient(to right, #d4af37, rgba(212,175,55,0.3))",
+          }}
+        />
+        <span className="text-sm font-serif italic tracking-[0.3em] text-ivory/90 group-hover:text-brass transition-colors duration-500">
+          Red Thread
+        </span>
+      </Link>
 
-        {/* Nav links */}
-        <div className="flex items-center gap-8">
-          <NavLink href="/cases" current={pathname}>
-            Cases
-          </NavLink>
-          <NavLink href="/profile" current={pathname}>
-            Detective
-          </NavLink>
-        </div>
+      {/* Desktop Nav */}
+      <div className="hidden md:flex items-center gap-10">
+        <NavLink href="/cases" current={pathname}>
+          Cases
+        </NavLink>
+        <NavLink href="/profile" current={pathname}>
+          Detective
+        </NavLink>
+        <Link
+          href="/cases"
+          className="px-5 py-2 border border-brass/20 rounded-sm text-[9px] font-display uppercase tracking-[0.35em] text-brass/60 hover:text-brass hover:border-brass/40 transition-all duration-500"
+        >
+          Case File
+        </Link>
       </div>
+
+      {/* Mobile toggle */}
+      <button
+        className="md:hidden text-brass/50 hover:text-brass transition-colors"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+      </button>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="absolute top-full left-0 right-0 glass border-t border-brass/10 px-8 py-6 flex flex-col gap-5 md:hidden">
+          <MobileNavLink href="/cases" onClick={() => setIsMenuOpen(false)}>
+            Cases
+          </MobileNavLink>
+          <MobileNavLink href="/profile" onClick={() => setIsMenuOpen(false)}>
+            Detective
+          </MobileNavLink>
+        </div>
+      )}
     </nav>
   );
 }
@@ -54,20 +98,37 @@ function NavLink({
     <Link
       href={href}
       className={cn(
-        "label-caps transition-colors duration-200 relative group",
-        isActive ? "text-gold" : "text-mist hover:text-parchment"
+        "text-[9px] font-display uppercase tracking-[0.4em] relative group transition-colors duration-500",
+        isActive ? "text-brass" : "text-ivory/40 hover:text-brass"
       )}
     >
       {children}
       <span
         className={cn(
-          "absolute -bottom-[1px] left-0 right-0 h-px transition-transform duration-200 origin-left",
-          isActive
-            ? "scale-x-100"
-            : "scale-x-0 group-hover:scale-x-100"
+          "absolute -bottom-2 left-0 h-[0.5px] bg-brass/60 transition-all duration-500 origin-left",
+          isActive ? "w-full" : "w-0 group-hover:w-full"
         )}
-        style={{ background: "linear-gradient(to right, #c9a84c, transparent)" }}
       />
+    </Link>
+  );
+}
+
+function MobileNavLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="text-[9px] font-display uppercase tracking-[0.4em] text-ivory/50 hover:text-brass transition-colors duration-300"
+    >
+      {children}
     </Link>
   );
 }
