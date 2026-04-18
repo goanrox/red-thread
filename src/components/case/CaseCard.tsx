@@ -27,21 +27,18 @@ export interface CaseCardProgress {
 // ─── CaseCard Props ───────────────────────────────────────────────────────────
 
 export interface CaseCardProps extends CaseSummary {
-  // Legacy flat props (used by landing page)
   setting?: string;
   suspectCount?: number;
   clueCount?: number;
   className?: string;
-
-  // Rich manifest-based props (used by archive)
   manifest?: CaseManifest;
   isLocked?: boolean;
   isSeasonLocked?: boolean;
   progress?: CaseCardProgress;
-  unlockInfo?: string; // "Complete The Thornwood Affair to unlock"
+  unlockInfo?: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const CATEGORY_LABELS: Record<CaseCategory, string> = {
   "country-house": "Country House",
@@ -60,60 +57,32 @@ const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   5: "Extreme",
 };
 
-const TAG_STYLES: Record<VisualTag, { text: string; border: string; bg: string }> = {
-  Classified: {
-    text: "rgba(139,34,50,0.9)",
-    border: "rgba(139,34,50,0.4)",
-    bg: "rgba(139,34,50,0.08)",
-  },
-  "Season Locked": {
-    text: "rgba(92,90,120,0.8)",
-    border: "rgba(42,42,69,0.8)",
-    bg: "rgba(7,7,14,0.4)",
-  },
-  "Requires Clearance": {
-    text: "rgba(139,34,50,0.8)",
-    border: "rgba(139,34,50,0.35)",
-    bg: "rgba(139,34,50,0.06)",
-  },
-  "High Profile": {
-    text: "rgba(201,168,76,0.9)",
-    border: "rgba(201,168,76,0.3)",
-    bg: "rgba(201,168,76,0.06)",
-  },
-  "Cold Case": {
-    text: "rgba(107,99,212,0.9)",
-    border: "rgba(107,99,212,0.3)",
-    bg: "rgba(107,99,212,0.06)",
-  },
-  Restricted: {
-    text: "rgba(139,34,50,0.8)",
-    border: "rgba(139,34,50,0.35)",
-    bg: "rgba(139,34,50,0.06)",
-  },
-  "Under Review": {
-    text: "rgba(92,90,120,0.8)",
-    border: "rgba(42,42,69,0.7)",
-    bg: "rgba(42,42,69,0.08)",
-  },
-  "Active Investigation": {
-    text: "rgba(201,168,76,1)",
-    border: "rgba(201,168,76,0.45)",
-    bg: "rgba(201,168,76,0.08)",
-  },
-  "Case Closed": {
-    text: "rgba(168,165,192,0.7)",
-    border: "rgba(42,42,69,0.6)",
-    bg: "rgba(7,7,14,0.3)",
-  },
+// Tag color semantics — each maps to one of our token-based status colors
+const TAG_VARIANT: Record<VisualTag, "default" | "danger" | "accent" | "info" | "muted"> = {
+  Classified:            "danger",
+  "Season Locked":       "muted",
+  "Requires Clearance":  "danger",
+  "High Profile":        "accent",
+  "Cold Case":           "info",
+  Restricted:            "danger",
+  "Under Review":        "muted",
+  "Active Investigation":"accent",
+  "Case Closed":         "muted",
 };
 
+// ─── Shared sub-components ────────────────────────────────────────────────────
+
 function VisualTagBadge({ tag }: { tag: VisualTag }) {
-  const s = TAG_STYLES[tag];
+  const v = TAG_VARIANT[tag] ?? "default";
   return (
     <span
-      className="label-caps px-2 py-0.5 rounded-full text-[9px] shrink-0"
-      style={{ color: s.text, border: `1px solid ${s.border}`, background: s.bg }}
+      className={cn(
+        "badge",
+        v === "accent" && "badge-accent",
+        v === "danger" && "badge-danger",
+        v === "info"   && "badge-muted",
+        v === "muted"  && "badge-muted",
+      )}
     >
       {tag}
     </span>
@@ -122,15 +91,26 @@ function VisualTagBadge({ tag }: { tag: VisualTag }) {
 
 function DifficultyDots({ level }: { level: Difficulty }) {
   return (
-    <div className="flex items-center gap-1.5" aria-label={`Difficulty: ${DIFFICULTY_LABELS[level]}`}>
+    <div
+      className="flex items-center gap-1.5"
+      aria-label={`Difficulty: ${DIFFICULTY_LABELS[level]}`}
+      title={DIFFICULTY_LABELS[level]}
+    >
       {Array.from({ length: 5 }, (_, i) => (
         <span
           key={i}
-          className="w-1.5 h-1.5 rounded-full transition-colors duration-200"
-          style={{ background: i < level ? "rgba(201,168,76,0.8)" : "rgba(42,42,69,0.7)" }}
+          className="w-1.5 h-1.5 rounded-full"
+          style={{
+            background: i < level
+              ? "var(--color-accent)"
+              : "var(--color-surface-3)",
+          }}
         />
       ))}
-      <span className="label-caps ml-1" style={{ color: "rgba(92,90,120,0.7)", fontSize: "9px" }}>
+      <span
+        className="ml-1 text-eyebrow"
+        style={{ fontSize: "12px", textTransform: "none", letterSpacing: 0 }}
+      >
         {DIFFICULTY_LABELS[level]}
       </span>
     </div>
@@ -140,13 +120,14 @@ function DifficultyDots({ level }: { level: Difficulty }) {
 function RedactedBar({ width = "70%" }: { width?: string }) {
   return (
     <span
+      aria-hidden
       className="inline-block rounded-sm align-middle"
       style={{
         width,
         height: "10px",
-        background: "rgba(42,42,69,0.7)",
-        verticalAlign: "middle",
+        background: "var(--color-surface-3)",
         display: "inline-block",
+        verticalAlign: "middle",
       }}
     />
   );
@@ -154,26 +135,26 @@ function RedactedBar({ width = "70%" }: { width?: string }) {
 
 function TeaserSuspectRow({ suspect }: { suspect: TeaserSuspect }) {
   return (
-    <div className="flex items-center gap-2.5 py-1">
+    <div className="flex items-center gap-2.5 py-1.5">
       <span
-        className="label-caps shrink-0"
-        style={{ color: "rgba(92,90,120,0.7)", fontSize: "9px", width: "22px" }}
+        className="text-meta shrink-0 w-6"
+        style={{ color: "var(--color-text-tertiary)", fontVariantNumeric: "tabular-nums" }}
       >
-        {suspect.isRedacted ? "??." : suspect.initials}
+        {suspect.isRedacted ? "??" : suspect.initials}
       </span>
       <span
         className="w-px h-3 shrink-0"
-        style={{ background: "rgba(42,42,69,0.6)" }}
+        style={{ background: "var(--color-border)" }}
       />
       {suspect.isRedacted ? (
-        <div className="flex items-center gap-1.5">
-          <RedactedBar width="60px" />
-          <span className="label-caps" style={{ color: "rgba(92,90,120,0.45)", fontSize: "8px" }}>
+        <span className="flex items-center gap-2">
+          <RedactedBar width="56px" />
+          <span className="text-meta" style={{ color: "var(--color-text-quaternary)" }}>
             {suspect.role}
           </span>
-        </div>
+        </span>
       ) : (
-        <span className="label-caps" style={{ color: "rgba(168,165,192,0.65)", fontSize: "9px" }}>
+        <span className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
           {suspect.role}
         </span>
       )}
@@ -182,31 +163,28 @@ function TeaserSuspectRow({ suspect }: { suspect: TeaserSuspect }) {
 }
 
 function TeaserEvidenceRow({ evidence }: { evidence: TeaserEvidence }) {
-  const typeColors: Record<string, string> = {
-    physical: "rgba(201,168,76,0.5)",
-    document: "rgba(107,99,212,0.5)",
-    forensic: "rgba(139,34,50,0.5)",
-    testimony: "rgba(168,165,192,0.4)",
-    observation: "rgba(92,90,120,0.5)",
+  const dotColor: Record<string, string> = {
+    physical:    "var(--color-accent)",
+    document:    "var(--color-iris)",
+    forensic:    "var(--color-danger)",
+    testimony:   "var(--color-text-tertiary)",
+    observation: "var(--color-text-quaternary)",
   };
   return (
-    <div className="flex items-center gap-2.5 py-1">
+    <div className="flex items-center gap-2.5 py-1.5">
       <span
         className="w-1.5 h-1.5 rounded-full shrink-0"
-        style={{ background: typeColors[evidence.type] || "rgba(42,42,69,0.7)" }}
+        style={{ background: dotColor[evidence.type] ?? "var(--color-border)" }}
       />
       {evidence.isRedacted ? (
-        <div className="flex items-center gap-2">
-          <RedactedBar width="80px" />
-          <span className="label-caps" style={{ color: "rgba(92,90,120,0.4)", fontSize: "8px" }}>
+        <span className="flex items-center gap-2">
+          <RedactedBar width="72px" />
+          <span className="text-meta" style={{ color: "var(--color-text-quaternary)" }}>
             {evidence.label}
           </span>
-        </div>
+        </span>
       ) : (
-        <span
-          className="label-caps"
-          style={{ color: "rgba(168,165,192,0.6)", fontSize: "9px" }}
-        >
+        <span className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
           {evidence.label}
         </span>
       )}
@@ -214,7 +192,48 @@ function TeaserEvidenceRow({ evidence }: { evidence: TeaserEvidence }) {
   );
 }
 
-// ─── Sub-card: Active Investigation ──────────────────────────────────────────
+function ProgressBar({
+  value,
+  max,
+  label,
+  current,
+  color = "var(--color-accent)",
+}: {
+  value: number;
+  max: number;
+  label: string;
+  current: string;
+  color?: string;
+}) {
+  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1.5">
+        <span className="text-meta" style={{ color: "var(--color-text-tertiary)" }}>
+          {label}
+        </span>
+        <span className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
+          {current}
+        </span>
+      </div>
+      <div
+        className="h-[3px] w-full rounded-full overflow-hidden"
+        style={{ background: "var(--color-surface-3)" }}
+        role="progressbar"
+        aria-valuenow={value}
+        aria-valuemax={max}
+        aria-label={label}
+      >
+        <div
+          className="h-full rounded-full transition-[width] duration-500"
+          style={{ width: `${pct}%`, background: color }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ─── Card: Active investigation ───────────────────────────────────────────────
 
 function ActiveCard({
   manifest,
@@ -225,144 +244,65 @@ function ActiveCard({
   progress?: CaseCardProgress;
   className?: string;
 }) {
-  const cluePercent =
-    progress && progress.totalClues > 0
-      ? Math.round((progress.cluesFound / progress.totalClues) * 100)
-      : 0;
-  const suspectPercent =
-    progress && progress.totalSuspects && progress.totalSuspects > 0
-      ? Math.round(((progress.suspectsInterviewed ?? 0) / progress.totalSuspects) * 100)
-      : 0;
-
   return (
     <div
-      className={cn("relative flex flex-col overflow-hidden cursor-pointer", className)}
-      style={{
-        background: "linear-gradient(160deg, #181828 0%, #111120 55%)",
-        border: "1px solid rgba(201,168,76,0.35)",
-        borderRadius: "16px",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.055), 0 4px 20px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.08)",
-      }}
+      className={cn("surface flex flex-col overflow-hidden", className)}
+      style={{ borderColor: "var(--color-accent-ring)" }}
     >
-      {/* Active pulse accent */}
+      {/* Accent top rule */}
       <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(201,168,76,0.6), transparent)",
-        }}
+        aria-hidden
+        className="h-[2px] w-full shrink-0"
+        style={{ background: "var(--color-accent)" }}
       />
 
-      <div className="flex flex-col flex-1 p-6 gap-4">
+      <div className="flex flex-col flex-1 p-5 gap-4">
         {/* Status row */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <span
-              className="w-1.5 h-1.5 rounded-full animate-pulse-gold"
-              style={{ background: "rgba(201,168,76,0.9)" }}
-            />
-            <span
-              className="label-caps"
-              style={{ color: "rgba(201,168,76,0.9)", fontSize: "9px", letterSpacing: "0.25em" }}
-            >
-              Investigation Active
-            </span>
-          </div>
-          <span className="label-caps" style={{ color: "rgba(92,90,120,0.65)", fontSize: "9px" }}>
-            {CATEGORY_LABELS[manifest.category]}
-          </span>
+          <span className="badge badge-accent badge-dot">Active</span>
+          <span className="text-eyebrow">{CATEGORY_LABELS[manifest.category]}</span>
         </div>
 
         {/* Title */}
         <div>
-          <h3 className="font-serif text-[1.65rem] leading-tight text-parchment mb-2">
+          <h3
+            className="font-serif leading-tight text-[color:var(--color-text)] mb-1"
+            style={{ fontSize: "var(--fz-title-sm)" }}
+          >
             {manifest.title}
           </h3>
-          <p
-            className="font-serif italic text-sm leading-snug"
-            style={{ color: "rgba(168,165,192,0.75)" }}
-          >
+          <p className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
             {manifest.subtitle}
           </p>
         </div>
 
-        {/* Location */}
-        <p className="label-caps -mt-1" style={{ color: "rgba(92,90,120,0.6)", fontSize: "9px" }}>
-          {manifest.location}
-        </p>
+        <p className="text-eyebrow">{manifest.location}</p>
 
         <div className="flex-1" />
-        <div className="divider-gold" />
+        <div className="divider" />
 
-        {/* Progress metrics */}
+        {/* Progress */}
         {progress && (
           <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="label-caps" style={{ color: "rgba(92,90,120,0.8)", fontSize: "9px" }}>
-                Evidence Recovered
-              </span>
-              <span
-                className="label-caps"
-                style={{ color: "rgba(201,168,76,0.85)", fontSize: "9px" }}
-              >
-                {progress.cluesFound} / {progress.totalClues}
-              </span>
-            </div>
-            <div
-              className="h-px rounded-full overflow-hidden"
-              style={{ background: "rgba(42,42,69,0.6)" }}
-            >
-              <div
-                className="h-full rounded-full transition-all duration-700"
-                style={{
-                  width: `${cluePercent}%`,
-                  background: "linear-gradient(to right, rgba(201,168,76,0.5), rgba(201,168,76,0.9))",
-                  boxShadow: "0 0 6px rgba(201,168,76,0.3)",
-                }}
+            <ProgressBar
+              label="Evidence"
+              value={progress.cluesFound}
+              max={progress.totalClues}
+              current={`${progress.cluesFound} / ${progress.totalClues}`}
+            />
+            {(progress.totalSuspects ?? 0) > 0 && (
+              <ProgressBar
+                label="Suspects"
+                value={progress.suspectsInterviewed ?? 0}
+                max={progress.totalSuspects!}
+                current={`${progress.suspectsInterviewed ?? 0} / ${progress.totalSuspects}`}
+                color="var(--color-iris)"
               />
-            </div>
-
-            {progress.totalSuspects && progress.totalSuspects > 0 && (
-              <>
-                <div className="flex items-center justify-between">
-                  <span
-                    className="label-caps"
-                    style={{ color: "rgba(92,90,120,0.8)", fontSize: "9px" }}
-                  >
-                    Suspects Interviewed
-                  </span>
-                  <span
-                    className="label-caps"
-                    style={{ color: "rgba(168,165,192,0.7)", fontSize: "9px" }}
-                  >
-                    {progress.suspectsInterviewed ?? 0} / {progress.totalSuspects}
-                  </span>
-                </div>
-                <div
-                  className="h-px rounded-full overflow-hidden"
-                  style={{ background: "rgba(42,42,69,0.6)" }}
-                >
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{
-                      width: `${suspectPercent}%`,
-                      background:
-                        "linear-gradient(to right, rgba(107,99,212,0.4), rgba(107,99,212,0.7))",
-                    }}
-                  />
-                </div>
-              </>
             )}
           </div>
         )}
 
-        {/* CTA */}
-        <Link
-          href={`/cases/${manifest.id}`}
-          className="btn-gold w-full text-center block"
-          style={{ padding: "12px 24px" }}
-        >
+        <Link href={`/cases/${manifest.id}`} className="btn btn-primary w-full justify-center">
           Continue Investigation
         </Link>
       </div>
@@ -370,7 +310,7 @@ function ActiveCard({
   );
 }
 
-// ─── Sub-card: Solved ─────────────────────────────────────────────────────────
+// ─── Card: Solved ─────────────────────────────────────────────────────────────
 
 function SolvedCard({
   manifest,
@@ -381,119 +321,63 @@ function SolvedCard({
   progress?: CaseCardProgress;
   className?: string;
 }) {
-  const isPerfect = progress?.perfectDeduction;
   const isCorrect = progress?.isCorrect;
+  const isPerfect = progress?.perfectDeduction;
 
   return (
     <div
-      className={cn("relative flex flex-col overflow-hidden", className)}
-      style={{
-        background: "linear-gradient(160deg, #141420 0%, #0f0f1c 55%)",
-        border: isCorrect
-          ? "1px solid rgba(42,42,69,0.7)"
-          : "1px solid rgba(139,34,50,0.3)",
-        borderRadius: "16px",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.55)",
-      }}
+      className={cn("surface flex flex-col overflow-hidden", className)}
+      style={{ opacity: 0.75 }}
     >
-      <div className="flex flex-col flex-1 p-6 gap-4">
+      <div className="flex flex-col flex-1 p-5 gap-4">
         {/* Status row */}
         <div className="flex items-center justify-between flex-wrap gap-2">
+          <span
+            className={cn("badge", isCorrect ? "badge-muted" : "badge-danger")}
+          >
+            {isCorrect ? "Closed" : "Unsolved"}
+          </span>
           <div className="flex items-center gap-2">
-            <span
-              className="label-caps"
-              style={{
-                color: isCorrect ? "rgba(168,165,192,0.6)" : "rgba(139,34,50,0.7)",
-                fontSize: "9px",
-                letterSpacing: "0.25em",
-              }}
-            >
-              {isCorrect ? "Case Closed" : "Unsolved"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {isPerfect && (
-              <span
-                className="label-caps px-2 py-0.5 rounded-full text-[9px]"
-                style={{
-                  color: "rgba(201,168,76,0.9)",
-                  border: "1px solid rgba(201,168,76,0.3)",
-                  background: "rgba(201,168,76,0.05)",
-                }}
-              >
-                Perfect Deduction
-              </span>
-            )}
-            <span className="label-caps" style={{ color: "rgba(92,90,120,0.55)", fontSize: "9px" }}>
-              {CATEGORY_LABELS[manifest.category]}
-            </span>
+            {isPerfect && <span className="badge badge-accent">Perfect Deduction</span>}
+            <span className="text-eyebrow">{CATEGORY_LABELS[manifest.category]}</span>
           </div>
         </div>
 
         {/* Title */}
         <div>
           <h3
-            className="font-serif text-[1.65rem] leading-tight mb-2"
-            style={{ color: "rgba(240,236,224,0.65)" }}
+            className="font-serif leading-tight text-[color:var(--color-text)] mb-1"
+            style={{ fontSize: "var(--fz-title-sm)" }}
           >
             {manifest.title}
           </h3>
-          <p
-            className="font-serif italic text-sm leading-snug"
-            style={{ color: "rgba(168,165,192,0.45)" }}
-          >
+          <p className="text-meta" style={{ color: "var(--color-text-tertiary)" }}>
             {manifest.subtitle}
           </p>
         </div>
 
-        <p
-          className="label-caps -mt-1"
-          style={{ color: "rgba(92,90,120,0.5)", fontSize: "9px" }}
-        >
-          {manifest.location}
-        </p>
-
+        <p className="text-eyebrow">{manifest.location}</p>
         <div className="flex-1" />
-        <div
-          className="h-px"
-          style={{
-            background:
-              "linear-gradient(to right, transparent, rgba(42,42,69,0.6), transparent)",
-          }}
-        />
+        <div className="divider" />
 
-        {/* Score / rating */}
+        {/* Score */}
         {progress?.score !== undefined && (
           <div className="flex items-center justify-between">
-            <span
-              className="label-caps"
-              style={{ color: "rgba(92,90,120,0.6)", fontSize: "9px" }}
-            >
+            <span className="text-meta" style={{ color: "var(--color-text-tertiary)" }}>
               Archive Score
             </span>
             <span
-              className="label-caps"
-              style={{
-                color: isCorrect ? "rgba(201,168,76,0.7)" : "rgba(139,34,50,0.6)",
-                fontSize: "9px",
-              }}
+              className="text-meta font-medium"
+              style={{ color: isCorrect ? "var(--color-accent)" : "var(--color-danger)" }}
             >
               {progress.score} pts
             </span>
           </div>
         )}
 
-        {/* CTA */}
         <Link
           href={`/cases/${manifest.id}`}
-          className="w-full py-3 rounded-xl label-caps text-center block transition-all duration-300 hover:text-mist"
-          style={{
-            border: "1px solid rgba(42,42,69,0.6)",
-            color: "rgba(92,90,120,0.7)",
-            background: "rgba(7,7,14,0.2)",
-            fontSize: "9px",
-            letterSpacing: "0.2em",
-          }}
+          className="btn btn-secondary w-full justify-center"
         >
           Review Case File
         </Link>
@@ -502,7 +386,7 @@ function SolvedCard({
   );
 }
 
-// ─── Sub-card: Locked (previous case required) ────────────────────────────────
+// ─── Card: Locked (previous case required) ────────────────────────────────────
 
 function LockedCard({
   manifest,
@@ -515,28 +399,14 @@ function LockedCard({
 }) {
   return (
     <div
-      className={cn("relative flex flex-col overflow-hidden", className)}
-      style={{
-        background: "linear-gradient(160deg, #0f0f1c 0%, #0a0a14 55%)",
-        border: "1px solid rgba(42,42,69,0.5)",
-        borderRadius: "16px",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02), 0 4px 20px rgba(0,0,0,0.6)",
-      }}
+      className={cn("surface flex flex-col overflow-hidden", className)}
+      aria-label={`${manifest.title} — locked`}
     >
-      {/* Subtle shimmer overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none rounded-2xl"
-        style={{
-          background:
-            "linear-gradient(135deg, transparent 40%, rgba(42,42,69,0.06) 50%, transparent 60%)",
-        }}
-      />
-
-      <div className="flex flex-col flex-1 p-6 gap-4">
-        {/* Visual tags */}
+      <div className="flex flex-col flex-1 p-5 gap-4">
+        {/* Tags */}
         {manifest.visualTags.length > 0 && (
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {manifest.visualTags.slice(0, 3).map((tag) => (
+          <div className="flex flex-wrap gap-1.5">
+            {manifest.visualTags.slice(0, 2).map((tag) => (
               <VisualTagBadge key={tag} tag={tag} />
             ))}
           </div>
@@ -544,49 +414,46 @@ function LockedCard({
 
         {/* Title */}
         <div>
-          <h3 className="font-serif text-[1.65rem] leading-tight text-parchment mb-2">
+          <h3
+            className="font-serif leading-tight text-[color:var(--color-text)] mb-1"
+            style={{ fontSize: "var(--fz-title-sm)" }}
+          >
             {manifest.title}
           </h3>
-          <p
-            className="font-serif italic text-sm leading-snug"
-            style={{ color: "rgba(168,165,192,0.6)" }}
-          >
+          <p className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
             {manifest.subtitle}
           </p>
         </div>
 
-        {/* Location */}
-        <p className="label-caps -mt-1" style={{ color: "rgba(92,90,120,0.5)", fontSize: "9px" }}>
-          {manifest.location}
-        </p>
+        <p className="text-eyebrow">{manifest.location}</p>
 
         {/* Teaser description */}
         <p
-          className="font-serif italic text-sm leading-relaxed"
-          style={{ color: "rgba(168,165,192,0.45)", borderLeft: "2px solid rgba(42,42,69,0.5)", paddingLeft: "12px" }}
+          className="text-meta leading-relaxed border-l-2 pl-3"
+          style={{
+            color: "var(--color-text-secondary)",
+            borderColor: "var(--color-border)",
+          }}
         >
           {manifest.teaserDescription}
         </p>
 
-        {/* Redacted suspects */}
+        {/* Suspects teaser */}
         <div>
-          <p
-            className="label-caps mb-2"
-            style={{ color: "rgba(92,90,120,0.4)", fontSize: "8px", letterSpacing: "0.2em" }}
-          >
-            File — Persons of Interest
+          <p className="text-eyebrow mb-2" style={{ marginBottom: "6px" }}>
+            Persons of Interest
           </p>
           <div
-            className="rounded-lg px-3 py-1"
-            style={{ background: "rgba(7,7,14,0.4)", border: "1px solid rgba(42,42,69,0.3)" }}
+            className="rounded-[var(--radius)] px-3 py-1"
+            style={{ background: "var(--color-surface-2)", border: "1px solid var(--color-border)" }}
           >
             {manifest.teaserSuspects.slice(0, 4).map((s, i) => (
               <TeaserSuspectRow key={i} suspect={s} />
             ))}
             {manifest.teaserSuspects.length > 4 && (
               <p
-                className="label-caps py-1"
-                style={{ color: "rgba(92,90,120,0.35)", fontSize: "8px" }}
+                className="text-meta py-1"
+                style={{ color: "var(--color-text-quaternary)" }}
               >
                 +{manifest.teaserSuspects.length - 4} additional subjects — access restricted
               </p>
@@ -594,17 +461,14 @@ function LockedCard({
           </div>
         </div>
 
-        {/* Redacted evidence */}
+        {/* Evidence teaser */}
         <div>
-          <p
-            className="label-caps mb-2"
-            style={{ color: "rgba(92,90,120,0.4)", fontSize: "8px", letterSpacing: "0.2em" }}
-          >
-            File — Evidence Log
+          <p className="text-eyebrow" style={{ marginBottom: "6px" }}>
+            Evidence Log
           </p>
           <div
-            className="rounded-lg px-3 py-1"
-            style={{ background: "rgba(7,7,14,0.4)", border: "1px solid rgba(42,42,69,0.3)" }}
+            className="rounded-[var(--radius)] px-3 py-1"
+            style={{ background: "var(--color-surface-2)", border: "1px solid var(--color-border)" }}
           >
             {manifest.teaserEvidence.slice(0, 3).map((e, i) => (
               <TeaserEvidenceRow key={i} evidence={e} />
@@ -613,60 +477,43 @@ function LockedCard({
         </div>
 
         <div className="flex-1" />
-        <div
-          className="h-px"
-          style={{
-            background:
-              "linear-gradient(to right, transparent, rgba(42,42,69,0.5), transparent)",
-          }}
-        />
+        <div className="divider" />
 
-        {/* Metadata row */}
+        {/* Meta row */}
         <div className="flex items-center justify-between">
           <DifficultyDots level={manifest.difficulty} />
-          <span className="label-caps" style={{ color: "rgba(92,90,120,0.45)", fontSize: "9px" }}>
+          <span className="text-meta" style={{ color: "var(--color-text-tertiary)" }}>
             {manifest.estimatedMinutes} min
           </span>
         </div>
 
-        {/* Unlock requirement */}
+        {/* Unlock info */}
         {unlockInfo && (
           <div
-            className="flex items-center gap-2 rounded-lg px-3 py-2"
-            style={{
-              background: "rgba(42,42,69,0.12)",
-              border: "1px solid rgba(42,42,69,0.3)",
-            }}
+            className="flex items-center gap-2 rounded-[var(--radius)] px-3 py-2.5"
+            style={{ background: "var(--color-surface-2)", border: "1px solid var(--color-border)" }}
           >
             <LockIcon />
-            <span
-              className="label-caps"
-              style={{ color: "rgba(92,90,120,0.65)", fontSize: "9px" }}
-            >
+            <span className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
               {unlockInfo}
             </span>
           </div>
         )}
 
-        {/* CTA */}
         <div
-          className="w-full py-3 rounded-xl label-caps text-center select-none"
-          style={{
-            border: "1px solid rgba(42,42,69,0.4)",
-            color: "rgba(42,42,69,0.8)",
-            background: "rgba(7,7,14,0.2)",
-            fontSize: "9px",
-            letterSpacing: "0.2em",
-          }}
+          className="btn btn-disabled w-full justify-center"
+          aria-disabled="true"
+          role="button"
         >
-          Restricted — Access Not Granted
+          <LockIcon />
+          Access Restricted
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Sub-card: Season Locked (cinematic banner) ───────────────────────────────
+// ─── Card: Season locked ──────────────────────────────────────────────────────
 
 export function SeasonLockedCard({
   seasonNumber,
@@ -676,128 +523,59 @@ export function SeasonLockedCard({
   className?: string;
 }) {
   const season = SEASONS.find((s) => s.number === seasonNumber);
-  const prevSeasonNumber = (seasonNumber - 1) as 1 | 2;
-  const prevSeason = SEASONS.find((s) => s.number === prevSeasonNumber);
+  const prevSeason = SEASONS.find((s) => s.number === (seasonNumber - 1));
   if (!season) return null;
 
   return (
     <div
-      className={cn("relative overflow-hidden", className)}
-      style={{
-        background: "linear-gradient(160deg, #0d0d1a 0%, #090912 100%)",
-        border: "1px solid rgba(42,42,69,0.4)",
-        borderRadius: "16px",
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.025), 0 4px 24px rgba(0,0,0,0.7)",
-        minHeight: "200px",
-      }}
+      className={cn("surface overflow-hidden", className)}
+      aria-label={`${season.subtitle} — locked`}
     >
-      {/* Grid texture overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(42,42,69,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(42,42,69,0.06) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
-      <div className="relative p-8 md:p-10">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          {/* Left: Season info */}
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-4">
-              <span
-                className="label-caps"
-                style={{ color: "rgba(42,42,69,0.9)", fontSize: "9px", letterSpacing: "0.3em" }}
-              >
-                {season.subtitle}
-              </span>
-              <span
-                className="h-px flex-1 max-w-[40px]"
-                style={{ background: "rgba(42,42,69,0.5)" }}
-              />
-              <span
-                className="label-caps px-2 py-0.5 rounded-full text-[9px]"
-                style={{
-                  color: "rgba(42,42,69,0.9)",
-                  border: "1px solid rgba(42,42,69,0.5)",
-                  background: "rgba(7,7,14,0.4)",
-                }}
-              >
-                Season Locked
-              </span>
-            </div>
-
-            <h2
-              className="font-serif leading-none mb-3"
-              style={{ fontSize: "clamp(28px, 4vw, 42px)", color: "rgba(240,236,224,0.25)" }}
-            >
-              {season.title}
-            </h2>
-
-            <p
-              className="font-serif italic mb-4"
-              style={{ color: "rgba(168,165,192,0.3)", fontSize: "14px" }}
-            >
-              &ldquo;{season.crypticHint}&rdquo;
-            </p>
-
-            <p
-              className="label-caps"
-              style={{ color: "rgba(92,90,120,0.5)", fontSize: "9px", lineHeight: 1.8 }}
-            >
-              {season.tone}
-            </p>
+      <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        {/* Info */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-3">
+            <p className="text-eyebrow">{season.subtitle}</p>
+            <span className="badge badge-muted">Season Locked</span>
           </div>
+          <h2
+            className="font-serif leading-tight text-[color:var(--color-text-tertiary)] mb-2"
+            style={{ fontSize: "clamp(24px, 3.5vw, 36px)" }}
+          >
+            {season.title}
+          </h2>
+          <p
+            className="font-serif italic"
+            style={{ color: "var(--color-text-quaternary)", fontSize: "var(--fz-body)" }}
+          >
+            &ldquo;{season.crypticHint}&rdquo;
+          </p>
+        </div>
 
-          {/* Right: Lock info */}
-          <div className="flex flex-col gap-3 md:items-end">
-            <div className="flex items-center gap-2">
-              <span
-                className="label-caps"
-                style={{ color: "rgba(42,42,69,0.7)", fontSize: "9px" }}
-              >
-                {season.caseIds.length} cases
-              </span>
-              <span className="w-px h-3" style={{ background: "rgba(42,42,69,0.5)" }} />
-              <span
-                className="label-caps"
-                style={{ color: "rgba(42,42,69,0.7)", fontSize: "9px" }}
-              >
-                Locked
-              </span>
-            </div>
-
-            <div
-              className="rounded-xl px-4 py-3 text-center"
-              style={{
-                border: "1px solid rgba(42,42,69,0.35)",
-                background: "rgba(7,7,14,0.35)",
-                minWidth: "200px",
-              }}
-            >
-              <LockIcon style={{ margin: "0 auto 8px", display: "block" }} />
-              <p
-                className="label-caps"
-                style={{ color: "rgba(42,42,69,0.8)", fontSize: "9px", lineHeight: 1.7 }}
-              >
-                Complete {prevSeason ? prevSeason.subtitle : "all previous cases"}
-              </p>
-              <p
-                className="label-caps"
-                style={{ color: "rgba(42,42,69,0.6)", fontSize: "9px" }}
-              >
-                to access this archive
-              </p>
-            </div>
-          </div>
+        {/* Unlock requirement */}
+        <div
+          className="rounded-[var(--radius-lg)] px-5 py-4 text-center"
+          style={{
+            background: "var(--color-surface-2)",
+            border: "1px solid var(--color-border)",
+            minWidth: "200px",
+          }}
+        >
+          <LockIcon style={{ margin: "0 auto 10px" }} />
+          <p className="text-meta" style={{ color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
+            Complete{" "}
+            <strong style={{ color: "var(--color-text)", fontWeight: 500 }}>
+              {prevSeason ? prevSeason.subtitle : "all previous cases"}
+            </strong>
+            {" "}to access this archive
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Main CaseCard (legacy-compatible + manifest-aware) ───────────────────────
+// ─── Main CaseCard ─────────────────────────────────────────────────────────────
 
 export function CaseCard({
   id,
@@ -808,314 +586,195 @@ export function CaseCard({
   estimatedMinutes,
   setting,
   isNew,
-  isFeatured,
   suspectCount = 0,
   clueCount = 0,
   manifest,
   isLocked = false,
-  isSeasonLocked = false,
   progress,
   unlockInfo,
   className,
 }: CaseCardProps) {
-  // If full manifest provided, use rich state rendering
+  // Rich manifest-based rendering (archive page)
   if (manifest) {
     const inProgress = !!progress && progress.cluesFound > 0 && !progress.isComplete;
     const isComplete = !!progress?.isComplete;
 
-    if (isComplete) {
-      return <SolvedCard manifest={manifest} progress={progress} className={className} />;
-    }
+    if (isComplete) return <SolvedCard manifest={manifest} progress={progress} className={className} />;
+    if (inProgress) return <ActiveCard manifest={manifest} progress={progress} className={className} />;
+    if (isLocked)   return <LockedCard manifest={manifest} unlockInfo={unlockInfo} className={className} />;
 
-    if (inProgress) {
-      return <ActiveCard manifest={manifest} progress={progress} className={className} />;
-    }
-
-    if (isLocked) {
-      return (
-        <LockedCard manifest={manifest} unlockInfo={unlockInfo} className={className} />
-      );
-    }
-
-    // Unlocked, not started — show as interactive card
+    // Unlocked, not started
     return (
-      <div
-        className={cn("card card-hover relative flex flex-col overflow-hidden cursor-pointer", className)}
+      <Link
+        href={`/cases/${manifest.id}`}
+        className={cn(
+          "surface flex flex-col overflow-hidden transition-[background,border-color] duration-150",
+          "hover:border-[color:var(--color-border-strong)] hover:bg-[color:var(--color-surface-2)]",
+          className
+        )}
       >
-        <div className="flex flex-col flex-1 p-6 gap-4">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <span
-              className="label-caps"
-              style={{ color: "rgba(92,90,120,0.7)", fontSize: "9px" }}
-            >
-              {CATEGORY_LABELS[manifest.category]}
-            </span>
-            <div className="flex items-center gap-2">
-              {manifest.isNew && (
-                <VisualTagBadge tag="High Profile" />
-              )}
+        <div className="flex flex-col flex-1 p-5 gap-4">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-2">
+            <span className="text-eyebrow">{CATEGORY_LABELS[manifest.category]}</span>
+            <div className="flex flex-wrap gap-1.5 justify-end">
+              {manifest.isNew && <span className="badge badge-accent">New</span>}
               {manifest.visualTags
                 .filter((t) => t !== "Season Locked")
                 .slice(0, 1)
-                .map((t) => (
-                  <VisualTagBadge key={t} tag={t} />
-                ))}
+                .map((t) => <VisualTagBadge key={t} tag={t} />)}
             </div>
           </div>
 
+          {/* Title */}
           <div>
-            <h3 className="font-serif text-[1.65rem] leading-tight text-parchment mb-2">
+            <h3
+              className="font-serif leading-tight text-[color:var(--color-text)] mb-1"
+              style={{ fontSize: "var(--fz-title-sm)" }}
+            >
               {manifest.title}
             </h3>
-            <p
-              className="font-serif italic text-sm leading-snug"
-              style={{ color: "rgba(168,165,192,0.75)" }}
-            >
+            <p className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
               {manifest.subtitle}
             </p>
           </div>
 
-          <p
-            className="label-caps -mt-1"
-            style={{ color: "rgba(92,90,120,0.6)", fontSize: "9px" }}
-          >
-            {manifest.location}
-          </p>
+          <p className="text-eyebrow">{manifest.location}</p>
 
           <p
-            className="font-serif italic text-sm leading-relaxed"
-            style={{ color: "rgba(168,165,192,0.5)" }}
+            className="text-meta leading-relaxed"
+            style={{ color: "var(--color-text-secondary)" }}
           >
             {manifest.teaserDescription}
           </p>
 
           <div className="flex-1" />
-          <div className="divider-gold" />
+          <div className="divider" />
 
+          {/* Footer */}
           <div className="flex items-center justify-between">
             <DifficultyDots level={manifest.difficulty} />
             <div className="flex items-center gap-3">
-              <span
-                className="label-caps"
-                style={{ color: "rgba(92,90,120,0.6)", fontSize: "9px" }}
-              >
+              <span className="text-meta" style={{ color: "var(--color-text-tertiary)" }}>
                 {manifest.clueCount} clues
               </span>
               <span
-                className="label-caps"
-                style={{ color: "rgba(92,90,120,0.6)", fontSize: "9px" }}
-              >
+                className="w-px h-3"
+                style={{ background: "var(--color-border)" }}
+              />
+              <span className="text-meta" style={{ color: "var(--color-text-tertiary)" }}>
                 {manifest.estimatedMinutes} min
               </span>
             </div>
           </div>
 
-          <Link
-            href={`/cases/${manifest.id}`}
-            className="btn-gold w-full text-center block"
-            style={{ padding: "12px 24px" }}
-          >
+          <span className="btn btn-primary w-full justify-center">
             Begin Investigation
-          </Link>
+          </span>
         </div>
-      </div>
+      </Link>
     );
   }
 
-  // ── Legacy flat-props rendering (landing page, etc.) ──────────────────────
+  // ── Legacy flat-props rendering ───────────────────────────────────────────
   const inProgress = !!progress && progress.cluesFound > 0 && !progress.isComplete;
   const isComplete = !!progress?.isComplete;
-  const progressPercent =
-    progress && progress.totalClues > 0
-      ? Math.round((progress.cluesFound / progress.totalClues) * 100)
-      : 0;
-
+  const pct = progress && progress.totalClues > 0
+    ? Math.round((progress.cluesFound / progress.totalClues) * 100)
+    : 0;
   const ctaLabel = isLocked
     ? "Restricted"
-    : isComplete
-    ? "Review Case File"
-    : inProgress
-    ? "Continue Investigation"
+    : isComplete ? "Review Case File"
+    : inProgress ? "Continue Investigation"
     : "Begin Investigation";
 
   return (
     <div
       className={cn(
-        "card relative flex flex-col overflow-hidden",
-        !isLocked && "card-hover cursor-pointer",
-        isLocked && "opacity-55",
+        "surface relative flex flex-col overflow-hidden",
+        !isLocked && "transition-[background,border-color] duration-150 hover:border-[color:var(--color-border-strong)] hover:bg-[color:var(--color-surface-2)]",
+        isLocked && "opacity-50",
         className
       )}
     >
       {isLocked && (
         <div
-          className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl"
-          style={{ background: "rgba(7,7,14,0.45)" }}
+          className="absolute inset-0 z-10 flex items-center justify-center rounded-[var(--radius-lg)]"
+          style={{ background: "rgba(10,10,12,0.6)" }}
         >
-          <div className="text-center">
-            <div
-              className="w-10 h-10 mx-auto mb-3 rounded-full flex items-center justify-center"
-              style={{
-                background: "linear-gradient(160deg,#181828,#111120)",
-                border: "1px solid rgba(42,42,69,0.8)",
-              }}
-            >
-              <LockIcon />
-            </div>
-            <p className="label-caps text-shadow">Restricted Archive</p>
+          <div className="text-center px-4">
+            <LockIcon style={{ margin: "0 auto 8px" }} />
+            <p className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
+              Restricted Archive
+            </p>
           </div>
         </div>
       )}
 
-      <div className="flex flex-col flex-1 p-6 gap-4">
-        <div className="flex items-center justify-between">
-          <span
-            className="label-caps"
-            style={{ color: "rgba(92,90,120,0.75)", fontSize: "9px" }}
-          >
-            {CATEGORY_LABELS[category]}
-          </span>
-          <div className="flex items-center gap-2">
-            {isNew && !isComplete && (
-              <span
-                className="label-caps px-2 py-0.5 rounded-full border text-[9px]"
-                style={{
-                  color: "rgba(201,168,76,0.9)",
-                  border: "1px solid rgba(201,168,76,0.3)",
-                  background: "rgba(201,168,76,0.06)",
-                }}
-              >
-                Now Available
-              </span>
-            )}
+      <div className="flex flex-col flex-1 p-5 gap-4">
+        <div className="flex items-start justify-between gap-2">
+          <span className="text-eyebrow">{CATEGORY_LABELS[category]}</span>
+          <div className="flex flex-wrap gap-1.5 justify-end">
+            {isNew && !isComplete && <span className="badge badge-accent">New</span>}
             {isComplete && (
-              <span
-                className={cn(
-                  "label-caps px-2 py-0.5 rounded-full border text-[9px]"
-                )}
-                style={
-                  progress?.isCorrect
-                    ? {
-                        color: "rgba(201,168,76,0.9)",
-                        border: "1px solid rgba(201,168,76,0.3)",
-                        background: "rgba(201,168,76,0.06)",
-                      }
-                    : {
-                        color: "rgba(139,34,50,0.9)",
-                        border: "1px solid rgba(139,34,50,0.3)",
-                        background: "rgba(139,34,50,0.06)",
-                      }
-                }
-              >
-                {progress?.isCorrect ? "Case Closed" : "Unsolved"}
+              <span className={cn("badge", progress?.isCorrect ? "badge-muted" : "badge-danger")}>
+                {progress?.isCorrect ? "Closed" : "Unsolved"}
               </span>
             )}
           </div>
         </div>
 
         <div>
-          <h3 className="font-serif text-[1.7rem] leading-tight text-parchment mb-2">
+          <h3
+            className="font-serif leading-tight text-[color:var(--color-text)] mb-1"
+            style={{ fontSize: "var(--fz-title-sm)" }}
+          >
             {title}
           </h3>
-          <p
-            className="font-serif italic text-base leading-snug"
-            style={{ color: "rgba(168,165,192,0.8)" }}
-          >
+          <p className="text-meta" style={{ color: "var(--color-text-secondary)" }}>
             {subtitle}
           </p>
         </div>
 
-        {setting && (
-          <p
-            className="label-caps -mt-1"
-            style={{ color: "rgba(92,90,120,0.7)", fontSize: "9px" }}
-          >
-            {setting}
-          </p>
-        )}
+        {setting && <p className="text-eyebrow">{setting}</p>}
 
         <div className="flex-1" />
-        <div className="divider-gold" />
+        <div className="divider" />
 
         <div className="flex items-center justify-between">
           <DifficultyDots level={difficulty} />
           {clueCount > 0 && (
-            <span
-              className="label-caps"
-              style={{ color: "rgba(92,90,120,0.6)", fontSize: "9px" }}
-            >
+            <span className="text-meta" style={{ color: "var(--color-text-tertiary)" }}>
               {clueCount} clues
             </span>
           )}
         </div>
 
         {inProgress && (
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <span
-                className="label-caps"
-                style={{ color: "rgba(92,90,120,0.7)", fontSize: "9px" }}
-              >
-                Investigation
-              </span>
-              <span
-                className="label-caps"
-                style={{ color: "rgba(168,165,192,0.7)", fontSize: "9px" }}
-              >
-                {progressPercent}%
-              </span>
-            </div>
-            <div
-              className="h-px rounded-full overflow-hidden"
-              style={{ background: "rgba(42,42,69,0.6)" }}
-            >
-              <div
-                className="h-full rounded-full transition-all duration-700"
-                style={{
-                  width: `${progressPercent}%`,
-                  background: "rgba(201,168,76,0.7)",
-                  boxShadow: "0 0 6px rgba(201,168,76,0.3)",
-                }}
-              />
-            </div>
-          </div>
+          <ProgressBar
+            label="Investigation"
+            value={pct}
+            max={100}
+            current={`${pct}%`}
+          />
         )}
 
         {isLocked ? (
           <div
-            className="w-full py-3 rounded-xl label-caps text-center select-none"
-            style={{
-              border: "1px solid rgba(42,42,69,0.6)",
-              color: "rgba(42,42,69,0.7)",
-              background: "rgba(7,7,14,0.3)",
-              fontSize: "9px",
-              letterSpacing: "0.2em",
-            }}
+            className="btn btn-disabled w-full justify-center"
+            aria-disabled="true"
+            role="button"
           >
+            <LockIcon />
             Restricted
           </div>
         ) : (
           <Link
             href={`/cases/${id}`}
             className={cn(
-              "w-full py-3 rounded-xl label-caps text-center block transition-all duration-300",
-              isComplete ? "hover:text-mist" : "btn-gold"
+              "btn w-full justify-center",
+              isComplete ? "btn-secondary" : "btn-primary"
             )}
-            style={
-              isComplete
-                ? {
-                    border: "1px solid rgba(42,42,69,0.8)",
-                    color: "rgba(92,90,120,0.7)",
-                    background: "rgba(7,7,14,0.3)",
-                    fontSize: "9px",
-                    letterSpacing: "0.2em",
-                    padding: "12px 24px",
-                    display: "block",
-                    textAlign: "center",
-                    borderRadius: "12px",
-                  }
-                : { padding: "12px 24px" }
-            }
           >
             {ctaLabel}
           </Link>
@@ -1137,8 +796,17 @@ function LockIcon({ style }: { style?: React.CSSProperties }) {
       aria-hidden="true"
       style={style}
     >
-      <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="#5c5a78" strokeWidth="1.25" />
-      <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="#5c5a78" strokeWidth="1.25" strokeLinecap="round" />
+      <rect
+        x="3" y="7" width="10" height="7" rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.25"
+      />
+      <path
+        d="M5 7V5a3 3 0 0 1 6 0v2"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

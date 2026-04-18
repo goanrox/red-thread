@@ -29,8 +29,6 @@ interface EnrichedCase {
   unlockInfo?: string;
 }
 
-// ─── Filter pills ─────────────────────────────────────────────────────────────
-
 const FILTERS: Array<{ id: FilterId; label: string }> = [
   { id: "all", label: "All Cases" },
   ...CATEGORIES.map((c) => ({ id: c.id as FilterId, label: c.label })),
@@ -41,10 +39,8 @@ const FILTERS: Array<{ id: FilterId; label: string }> = [
 export default function CasesPage() {
   const [activeFilter, setActiveFilter] = useState<FilterId>("all");
   const caseStates = useGameStore((s) => s.cases);
-
   const liveCases = getAllCases();
 
-  // Derive solved case IDs
   const solvedCaseIds = useMemo(
     () =>
       Object.values(caseStates)
@@ -55,7 +51,6 @@ export default function CasesPage() {
 
   const clearanceLevel = getArchiveClearanceLevel(solvedCaseIds.length);
 
-  // Enrich all 12 manifests with live state
   const enriched: EnrichedCase[] = useMemo(() => {
     return CASE_MANIFEST.map((manifest) => {
       const unlocked = isCaseUnlocked(manifest.id, solvedCaseIds);
@@ -97,7 +92,6 @@ export default function CasesPage() {
     });
   }, [caseStates, solvedCaseIds, liveCases]);
 
-  // Apply category filter
   const filtered = useMemo(
     () =>
       activeFilter === "all"
@@ -106,7 +100,6 @@ export default function CasesPage() {
     [enriched, activeFilter]
   );
 
-  // Group by season
   const seasonGroups = useMemo(
     () =>
       SEASONS.map((season) => ({
@@ -119,82 +112,101 @@ export default function CasesPage() {
   );
 
   const isFilteredView = activeFilter !== "all";
+  const solvedPct = Math.round((solvedCaseIds.length / CASE_MANIFEST.length) * 100);
 
   return (
     <PageWrapper>
-      <div className="min-h-screen pt-16">
+      {/* Top nav offset — exactly --nav-h, no guesswork */}
+      <main style={{ paddingTop: "var(--nav-h)" }}>
 
-        {/* ── Archive Header ──────────────────────────────────────────── */}
-        <div
-          className="border-b border-[#2a2a45] py-16"
-          style={{ backgroundColor: "#0c0c17" }}
+        {/* ── Header ───────────────────────────────────────────────────── */}
+        <section
+          className="border-b"
+          style={{ borderColor: "var(--color-border)", background: "var(--color-bg)" }}
         >
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 animate-fade-up">
-              <div>
-                <p className="label-caps text-gold mb-3 tracking-[0.3em]">The Archive</p>
-                <h1 className="font-serif text-5xl md:text-6xl text-parchment leading-tight mb-4">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 animate-fade-up">
+              <div className="max-w-2xl">
+                <p className="text-eyebrow mb-3">The Archive</p>
+                <h1
+                  className="font-serif leading-[1.05] text-[color:var(--color-text)]"
+                  style={{ fontSize: "var(--fz-display)" }}
+                >
                   Case Browser
                 </h1>
-                <p className="font-serif italic text-mist text-xl max-w-xl leading-relaxed">
-                  Each case is a closed world. One killer. One truth. Everything else is misdirection.
+                <p
+                  className="mt-4 text-[color:var(--color-text-secondary)]"
+                  style={{ fontSize: "var(--fz-body-lg)", lineHeight: 1.55 }}
+                >
+                  Every case is a closed world. One killer. One truth. Everything else is misdirection.
                 </p>
               </div>
 
-              {/* Clearance badge */}
+              {/* Clearance card */}
               <div
-                className="shrink-0 rounded-xl p-5"
-                style={{
-                  background: "rgba(7,7,14,0.6)",
-                  border: "1px solid rgba(42,42,69,0.6)",
-                }}
+                className="surface p-5 w-full lg:w-[260px] shrink-0"
+                aria-label="Archive clearance"
               >
+                <div className="flex items-center justify-between">
+                  <p className="text-eyebrow">Clearance</p>
+                  <p className="text-meta">
+                    {solvedCaseIds.length}/{CASE_MANIFEST.length}
+                  </p>
+                </div>
                 <p
-                  className="label-caps mb-1"
-                  style={{ color: "rgba(92,90,120,0.6)", fontSize: "9px", letterSpacing: "0.25em" }}
-                >
-                  Archive Clearance
-                </p>
-                <p
-                  className="font-serif"
-                  style={{ fontSize: "36px", color: "rgba(201,168,76,0.9)", lineHeight: 1, marginBottom: "4px" }}
+                  className="mt-2 font-serif leading-none"
+                  style={{ fontSize: "32px", color: "var(--color-text)" }}
                 >
                   Level {clearanceLevel}
                 </p>
-                <p
-                  className="label-caps"
-                  style={{ color: "rgba(92,90,120,0.5)", fontSize: "9px" }}
+                <div
+                  className="mt-4 h-1 w-full rounded-full overflow-hidden"
+                  style={{ background: "var(--color-surface-3)" }}
                 >
-                  {solvedCaseIds.length} / {CASE_MANIFEST.length} solved
-                </p>
+                  <div
+                    className="h-full rounded-full transition-[width] duration-500"
+                    style={{ width: `${solvedPct}%`, background: "var(--color-accent)" }}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* ── Filter Bar ─────────────────────────────────────────────── */}
-        <div className="border-b border-[#2a2a45] sticky top-16 z-40 glass">
-          <div className="max-w-6xl mx-auto px-6 py-4">
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5">
-              {FILTERS.map((f) => (
-                <FilterPill
-                  key={f.id}
-                  label={f.label}
-                  active={activeFilter === f.id}
-                  onClick={() => setActiveFilter(f.id)}
-                />
-              ))}
-            </div>
+        {/* ── Sticky filter bar ────────────────────────────────────────── */}
+        <div
+          className="sticky z-30 nav-glass"
+          style={{
+            top: "var(--nav-h)",
+            height: "var(--subnav-h)",
+            borderBottom: "1px solid var(--color-border)",
+          }}
+        >
+          <div
+            className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center gap-2 overflow-x-auto scrollbar-none"
+            role="tablist"
+            aria-label="Filter cases by category"
+          >
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                role="tab"
+                aria-selected={activeFilter === f.id}
+                aria-pressed={activeFilter === f.id}
+                onClick={() => setActiveFilter(f.id)}
+                className={cn("chip", activeFilter === f.id && "is-active")}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* ── Content ────────────────────────────────────────────────── */}
-        <div className="max-w-6xl mx-auto px-6 py-16 space-y-20">
-
-          {/* Filtered: flat view grouped by season */}
+        {/* ── Content ──────────────────────────────────────────────────── */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16 space-y-16 md:space-y-20">
           {isFilteredView && <FilteredView cases={filtered} />}
 
-          {/* Default: full season-separated archive */}
           {!isFilteredView &&
             seasonGroups.map(({ season, cases, isAccessible, progress }) => (
               <SeasonSection
@@ -206,7 +218,7 @@ export default function CasesPage() {
               />
             ))}
         </div>
-      </div>
+      </main>
     </PageWrapper>
   );
 }
@@ -228,77 +240,50 @@ function SeasonSection({
   const isComplete = progress.solved === progress.total && progress.total > 0;
 
   return (
-    <div>
-      {/* Season header */}
-      <div className="mb-8">
-        <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
+    <section aria-label={`${season.subtitle} — ${season.title}`}>
+      <header className="mb-6 md:mb-8">
+        <div className="flex items-start justify-between gap-6 flex-wrap">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <p
-                className="label-caps"
-                style={{ color: "rgba(201,168,76,0.65)", fontSize: "9px", letterSpacing: "0.3em" }}
-              >
-                {season.subtitle}
-              </p>
-              {isComplete && (
-                <span
-                  className="label-caps px-2 py-0.5 rounded-full text-[9px]"
-                  style={{
-                    color: "rgba(201,168,76,0.8)",
-                    border: "1px solid rgba(201,168,76,0.25)",
-                    background: "rgba(201,168,76,0.05)",
-                  }}
-                >
-                  Season Complete
-                </span>
-              )}
+            <div className="flex items-center gap-2 mb-2">
+              <p className="text-eyebrow">{season.subtitle}</p>
+              {isComplete && <span className="badge badge-success badge-dot">Complete</span>}
             </div>
-            <h2 className="font-serif text-3xl md:text-4xl text-parchment leading-tight">
+            <h2
+              className="font-serif leading-[1.1] text-[color:var(--color-text)]"
+              style={{ fontSize: "var(--fz-title-lg)" }}
+            >
               {season.title}
             </h2>
             <p
-              className="font-serif italic mt-2"
-              style={{ color: "rgba(168,165,192,0.45)", fontSize: "14px" }}
+              className="mt-2 text-[color:var(--color-text-secondary)]"
+              style={{ fontSize: "var(--fz-body)" }}
             >
               {season.tone}
             </p>
           </div>
 
           {isAccessible && (
-            <div className="text-right shrink-0">
+            <div className="shrink-0 text-right">
+              <p className="text-eyebrow mb-1">Progress</p>
               <p
-                className="label-caps mb-1"
-                style={{ color: "rgba(92,90,120,0.5)", fontSize: "9px" }}
+                className="font-serif leading-none text-[color:var(--color-text)]"
+                style={{ fontSize: "22px" }}
               >
-                Season Progress
-              </p>
-              <p className="font-serif" style={{ color: "rgba(201,168,76,0.75)", fontSize: "24px" }}>
                 {progress.solved}
-                <span style={{ color: "rgba(92,90,120,0.5)", fontSize: "14px" }}>
-                  {" "}/ {progress.total}
-                </span>
+                <span className="text-[color:var(--color-text-tertiary)]"> / {progress.total}</span>
               </p>
             </div>
           )}
         </div>
+        <div className="divider mt-5" />
+      </header>
 
-        {/* Accent line */}
-        <div
-          className="h-px"
-          style={{
-            background: "linear-gradient(to right, rgba(201,168,76,0.25), rgba(201,168,76,0.08), transparent)",
-          }}
-        />
-      </div>
-
-      {/* Locked season banner */}
       {!isAccessible && season.number > 1 && (
         <SeasonLockedCard seasonNumber={season.number as 2 | 3} className="mb-6" />
       )}
 
-      {/* Case cards — show for season 1 always, and for accessible seasons */}
       {(isAccessible || season.number === 1) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
           {cases.map(({ manifest, unlocked, progress, unlockInfo }, i) => (
             <div
               key={manifest.id}
@@ -322,7 +307,7 @@ function SeasonSection({
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
@@ -331,12 +316,17 @@ function SeasonSection({
 function FilteredView({ cases }: { cases: EnrichedCase[] }) {
   if (cases.length === 0) {
     return (
-      <div
-        className="rounded-2xl p-14 text-center"
-        style={{ border: "1px solid rgba(42,42,69,0.35)", background: "rgba(7,7,14,0.25)" }}
-      >
-        <p className="font-serif text-2xl text-parchment mb-3">No cases match this filter.</p>
-        <p className="font-serif italic text-mist max-w-sm mx-auto leading-relaxed">
+      <div className="surface p-10 md:p-14 text-center">
+        <p
+          className="font-serif mb-2 text-[color:var(--color-text)]"
+          style={{ fontSize: "var(--fz-title-sm)" }}
+        >
+          No cases match this filter
+        </p>
+        <p
+          className="text-[color:var(--color-text-secondary)] max-w-sm mx-auto"
+          style={{ fontSize: "var(--fz-body)" }}
+        >
           Additional cases in this category are in development and will appear in future seasons.
         </p>
       </div>
@@ -349,22 +339,16 @@ function FilteredView({ cases }: { cases: EnrichedCase[] }) {
   })).filter((g) => g.cases.length > 0);
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-12 md:space-y-16">
       {bySeason.map(({ season, cases: seasonCases }) => (
         <div key={season.number}>
-          <div className="flex items-center gap-3 mb-6">
-            <p
-              className="label-caps shrink-0"
-              style={{ color: "rgba(201,168,76,0.55)", fontSize: "9px", letterSpacing: "0.25em" }}
-            >
-              {season.subtitle} — {season.title}
+          <div className="flex items-center gap-3 mb-5">
+            <p className="text-eyebrow shrink-0">
+              {season.subtitle} · {season.title}
             </p>
-            <div
-              className="h-px flex-1"
-              style={{ background: "rgba(42,42,69,0.4)" }}
-            />
+            <div className="divider flex-1" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
             {seasonCases.map(({ manifest, unlocked, progress, unlockInfo }, i) => (
               <div
                 key={manifest.id}
@@ -390,31 +374,5 @@ function FilteredView({ cases }: { cases: EnrichedCase[] }) {
         </div>
       ))}
     </div>
-  );
-}
-
-// ─── Filter Pill ──────────────────────────────────────────────────────────────
-
-function FilterPill({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "label-caps px-4 py-2 rounded-full border whitespace-nowrap transition-colors duration-200 shrink-0",
-        active
-          ? "border-gold/60 bg-gold/10 text-gold"
-          : "border-[#2a2a45] text-shadow hover:border-[#5c5a78] hover:text-mist"
-      )}
-    >
-      {label}
-    </button>
   );
 }
