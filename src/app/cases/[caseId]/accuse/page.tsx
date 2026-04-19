@@ -332,3 +332,27 @@ export default function AccusePage({
     </div>
   );
 }
+
+function getAvatarBg(index: number): string {
+  const palette = ["#2a1a1a", "#1a1a2a", "#1a2a1a", "#2a2a1a", "#1a2a2a", "#2a1a2a"];
+  return palette[index % palette.length];
+}
+
+function SuspectAvatar({ index, name }: { index: number; name: string }) {
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("");
+  return (
+    <div
+      className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-xs font-semibold"
+      style={{
+        background: `radial-gradient(circle at 30% 30%, ${getAvatarBg(index)}cc, ${getAvatarBg(index)})`,
+        border: "1px solid rgba(255,255,255,0.1)",
+        color: "#ffffff",
+      }}
+    >
+      {initials}
+    </div>
+  );
+}
