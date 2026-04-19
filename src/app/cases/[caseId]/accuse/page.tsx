@@ -313,7 +313,7 @@ export default function AccusePage({
                   cursor: loading ? "not-allowed" : "pointer",
                 }}
                 onMouseEnter={(e) => {
-                  if (\!loading) {
+                  if (!loading) {
                     e.currentTarget.style.color = "#ffffff";
                     e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
                   }
