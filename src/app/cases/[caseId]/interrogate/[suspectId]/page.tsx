@@ -518,10 +518,10 @@ function SidebarContent({
                 border: isActive ? "1px solid rgba(229,9,20,0.3)" : "1px solid transparent",
               }}
               onMouseEnter={(e) => {
-                if (\!isActive) e.currentTarget.style.backgroundColor = "#222";
+                if (!isActive) e.currentTarget.style.backgroundColor = "#222";
               }}
               onMouseLeave={(e) => {
-                if (\!isActive) e.currentTarget.style.backgroundColor = "transparent";
+                if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
               <span className="text-[10px]" style={{ color: isActive ? "#E50914" : "#aaa" }}>
