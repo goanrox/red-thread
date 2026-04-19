@@ -53,16 +53,18 @@ export default function AccusePage({
     <div
       className="min-h-[80vh] max-w-5xl mx-auto px-4 sm:px-6 pb-24 pt-6"
       style={{
-        background: "radial-gradient(ellipse at center, rgba(139,34,50,0.06) 0%, transparent 60%)",
+        backgroundColor: "#141414",
+        color: "#ffffff",
+        background: "linear-gradient(135deg, #141414 0%, rgba(229,9,20,0.03) 50%, #141414 100%)",
       }}
     >
       {/* Header */}
       <div className="text-center mb-12">
-        <p className="label-caps text-crimson-light mb-3 tracking-[0.3em]">The Accusation</p>
-        <h1 className="font-serif text-5xl md:text-6xl text-parchment leading-tight mb-4">
+        <p className="text-red-500 mb-3 tracking-[0.3em] text-[12px] uppercase" style={{ color: "#E50914" }}>The Accusation</p>
+        <h1 className="text-5xl md:text-6xl text-white leading-tight mb-4">
           Who Killed {caseData.victim.name}?
         </h1>
-        <p className="font-serif italic text-mist text-xl max-w-xl mx-auto leading-relaxed">
+        <p className="text-xl max-w-xl mx-auto leading-relaxed" style={{ color: "#aaa" }}>
           This accusation is final. There is no recall. Choose with conviction.
         </p>
       </div>
@@ -76,13 +78,18 @@ export default function AccusePage({
             .map((clue) => (
               <span
                 key={clue.id}
-                className="label-caps text-[10px] text-mist border border-[#2a2a45] px-3 py-1 rounded-full bg-surface"
+                className="text-[10px] uppercase px-3 py-1 rounded-full transition-all duration-200"
+                style={{
+                  backgroundColor: "#222",
+                  color: "#aaa",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
               >
                 {clue.title}
               </span>
             ))}
           {discovered.length > 6 && (
-            <span className="label-caps text-[10px] text-shadow border border-[#2a2a45] px-3 py-1 rounded-full">
+            <span className="text-[10px] uppercase px-3 py-1 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.08)", color: "#666" }}>
               +{discovered.length - 6} more
             </span>
           )}
@@ -113,39 +120,51 @@ export default function AccusePage({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.07 }}
                     onClick={() => handleSelect(suspect)}
-                    className="text-left card rounded-2xl p-5 transition-all duration-300 card-hover group"
+                    className="text-left rounded-2xl p-5 transition-all duration-300 group"
+                    style={{
+                      backgroundColor: "#1a1a1a",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#222";
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#1a1a1a";
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                    }}
                   >
                     <div className="flex items-start gap-3 mb-4">
                       <SuspectAvatar index={i} name={suspect.name} />
                       <div className="flex-1 min-w-0">
-                        <p className="font-serif text-lg text-parchment">{suspect.name}</p>
-                        <p className="label-caps text-shadow text-[10px] mt-0.5">{suspect.relation}</p>
+                        <p className="text-lg text-white">{suspect.name}</p>
+                        <p className="text-[10px] mt-0.5" style={{ color: "#666" }}>{suspect.relation}</p>
                       </div>
                     </div>
-                    <p className="font-serif italic text-mist text-xs leading-relaxed mb-4 line-clamp-2">
+                    <p className="text-xs leading-relaxed mb-4 line-clamp-2" style={{ color: "#aaa" }}>
                       {suspect.alibi}
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex-1 mr-3">
-                        <div className="h-1 bg-[#2a2a45] rounded-full overflow-hidden">
+                        <div className="h-1 rounded-full overflow-hidden" style={{ backgroundColor: "#333" }}>
                           <div
-                            className={cn(
-                              "h-full rounded-full transition-all duration-500",
-                              level >= 60 ? "bg-crimson-light" : level >= 30 ? "bg-gold" : "bg-[#5c5a78]"
-                            )}
-                            style={{ width: `${level}%` }}
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${level}%`,
+                              backgroundColor: level >= 60 ? "#E50914" : level >= 30 ? "#E50914" : "#aaa",
+                            }}
                           />
                         </div>
                       </div>
                       {linkedClues > 0 && (
-                        <span className="label-caps text-shadow text-[9px] shrink-0">
+                        <span className="text-[9px] shrink-0" style={{ color: "#666" }}>
                           {linkedClues} clue{linkedClues !== 1 ? "s" : ""}
                         </span>
                       )}
                     </div>
                     <div className="mt-3 flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <span className="label-caps text-crimson-light text-[9px]">Accuse</span>
-                      <ChevronRight size={11} className="text-crimson-light" />
+                      <span className="text-[9px] uppercase" style={{ color: "#E50914" }}>Accuse</span>
+                      <ChevronRight size={11} style={{ color: "#E50914" }} />
                     </div>
                   </motion.button>
                 );
@@ -164,15 +183,15 @@ export default function AccusePage({
             transition={{ duration: 0.25 }}
             className="max-w-md mx-auto"
           >
-            <div className="card rounded-2xl p-6 mb-6" style={{ borderColor: "rgba(139,34,50,0.35)" }}>
+            <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(229,9,20,0.2)" }}>
               <div className="flex items-center gap-4 mb-4">
                 <SuspectAvatar index={caseData.suspects.findIndex(s => s.id === selected.id)} name={selected.name} />
                 <div>
-                  <p className="font-serif text-2xl text-parchment">{selected.name}</p>
-                  <p className="label-caps text-shadow text-[10px]">{selected.relation}</p>
+                  <p className="text-2xl text-white">{selected.name}</p>
+                  <p className="text-[10px]" style={{ color: "#666" }}>{selected.relation}</p>
                 </div>
               </div>
-              <p className="font-serif italic text-mist text-sm leading-relaxed">
+              <p className="text-sm leading-relaxed" style={{ color: "#aaa" }}>
                 {selected.description}
               </p>
             </div>
@@ -180,17 +199,35 @@ export default function AccusePage({
             <div className="flex gap-3">
               <button
                 onClick={handleBack}
-                className="flex-1 py-3 rounded-xl border border-[#2a2a45] text-mist label-caps hover:border-gold/40 hover:text-parchment transition-colors duration-200"
+                className="flex-1 py-3 rounded-xl transition-colors duration-200"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "#aaa",
+                  backgroundColor: "#222",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+                  e.currentTarget.style.color = "#ffffff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                  e.currentTarget.style.color = "#aaa";
+                }}
               >
                 ← Reconsider
               </button>
               <button
                 onClick={() => setStep("confirm2")}
-                className="flex-1 py-3 rounded-xl text-parchment label-caps transition-all duration-200 flex items-center justify-center gap-2"
+                className="flex-1 py-3 rounded-xl uppercase text-white transition-all duration-200 flex items-center justify-center gap-2"
                 style={{
-                  background: "linear-gradient(135deg, #8b2232, #6b1a26)",
-                  border: "1px solid rgba(193,50,72,0.4)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 16px rgba(139,34,50,0.35)",
+                  backgroundColor: "#E50914",
+                  border: "1px solid #E50914",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#cc0811";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#E50914";
                 }}
               >
                 I&apos;m Certain <ChevronRight size={13} />
@@ -210,20 +247,23 @@ export default function AccusePage({
             className="max-w-md mx-auto text-center"
           >
             <div
-              className="card-glass rounded-2xl p-8 mb-6"
-              style={{ borderColor: "rgba(139,34,50,0.4)" }}
+              className="rounded-2xl p-8 mb-6"
+              style={{
+                backgroundColor: "#1a1a1a",
+                border: "1px solid rgba(229,9,20,0.25)",
+              }}
             >
               <div className="flex items-center justify-center gap-3 mb-6">
-                <AlertTriangle size={18} className="text-crimson-light" />
-                <p className="label-caps text-crimson-light tracking-[0.2em]">Final Warning</p>
-                <AlertTriangle size={18} className="text-crimson-light" />
+                <AlertTriangle size={18} style={{ color: "#E50914" }} />
+                <p className="uppercase tracking-[0.2em] text-[12px]" style={{ color: "#E50914" }}>Final Warning</p>
+                <AlertTriangle size={18} style={{ color: "#E50914" }} />
               </div>
-              <p className="font-serif text-3xl text-parchment mb-4 leading-tight">
+              <p className="text-3xl text-white mb-4 leading-tight">
                 This accusation is final.
               </p>
-              <p className="font-serif italic text-mist leading-relaxed">
+              <p className="leading-relaxed" style={{ color: "#aaa" }}>
                 You are about to accuse{" "}
-                <span className="text-parchment not-italic">{selected.name}</span>{" "}
+                <span style={{ color: "#ffffff" }}>{selected.name}</span>{" "}
                 of the murder of {caseData.victim.name}. There is no second chance.
               </p>
             </div>
@@ -232,55 +272,21 @@ export default function AccusePage({
               <button
                 onClick={handleFinalAccuse}
                 disabled={loading}
-                className="w-full py-4 rounded-xl label-caps text-parchment transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                style={loading ? {
-                  background: "rgba(139,34,50,0.4)",
-                  border: "1px solid rgba(139,34,50,0.3)",
-                } : {
-                  background: "linear-gradient(135deg, #a82840 0%, #8b2232 55%, #6b1a26 100%)",
-                  border: "1px solid rgba(193,50,72,0.5)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 6px 24px rgba(139,34,50,0.5), 0 2px 8px rgba(0,0,0,0.4)",
+                className="w-full py-4 rounded-xl uppercase text-white transition-all duration-200 flex items-center justify-center gap-2"
+                style={{
+                  backgroundColor: loading ? "rgba(229,9,20,0.3)" : "#E50914",
+                  border: loading ? "1px solid rgba(229,9,20,0.2)" : "1px solid #E50914",
+                  opacity: loading ? 0.7 : 1,
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  if (!loading) e.currentTarget.style.backgroundColor = "#cc0811";
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading) e.currentTarget.style.backgroundColor = "#E50914";
                 }}
               >
                 {loading ? (
                   <>
                     <motion.div
-                      className="w-4 h-4 border-2 border-parchment/30 border-t-parchment rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                    />
-                    Reviewing the evidence…
-                  </>
-                ) : (
-                  <>
-                    <Skull size={15} />
-                    Make Final Accusation
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleBack}
-                className="w-full py-3 rounded-xl border border-[#2a2a45] text-mist label-caps hover:border-gold/40 hover:text-parchment transition-all duration-200"
-                style={{ background: "rgba(7,7,14,0.3)" }}
-              >
-                Wait — I need more time
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function SuspectAvatar({ index, name }: { index: number; name: string }) {
-  const bgs = ["#2a2a45","#1f1f35","#181828","#111120","#2a2a45","#1f1f35"];
-  return (
-    <div
-      className="w-12 h-12 rounded-full flex items-center justify-center font-serif text-base text-mist shrink-0"
-      style={{ backgroundColor: bgs[index % bgs.length] }}
-    >
-      {name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
-    </div>
-  );
-}
+                      className="w-4 h-4 border-2 border-white/30 border-t-

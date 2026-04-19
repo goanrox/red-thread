@@ -1,33 +1,54 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { PageWrapper } from "@/components/layout/PageWrapper";
-import { CaseCard, SeasonLockedCard } from "@/components/case/CaseCard";
-import type { CaseCardProgress } from "@/components/case/CaseCard";
+import { CaseCard } from "@/components/case/CaseCard";
 import { useGameStore } from "@/store/gameStore";
-import {
-  getAllCases,
-  CATEGORIES,
-  CASE_MANIFEST,
-  SEASONS,
-  isCaseUnlocked,
-  isSeasonAccessible,
-  getArchiveClearanceLevel,
-  getSeasonProgress,
-} from "@/data";
+import { getAllCases, CATEGORIES } from "@/data";
 import { cn } from "@/lib/utils";
-import type { CaseCategory, CaseManifest, SeasonInfo } from "@/types";
+import type { CaseCategory } from "@/types";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Locked placeholder cases ─────────────────────────────────────────────────
+
+const LOCKED_CASES = [
+  {
+    id: "bellamy-gala",
+    title: "The Bellamy Gala",
+    subtitle: "Champagne, poison, and a room full of perfect alibis.",
+    setting: "Paris, 1928",
+    category: "noir" as CaseCategory,
+    difficulty: 3 as const,
+    estimatedMinutes: 50,
+    suspectCount: 6,
+    clueCount: 10,
+  },
+  {
+    id: "coldwater-file",
+    title: "The Coldwater File",
+    subtitle: "A case from 1978. Someone remembers. Someone wishes they didn't.",
+    setting: "Yorkshire Moors, 1978",
+    category: "cold-case" as CaseCategory,
+    difficulty: 4 as const,
+    estimatedMinutes: 60,
+    suspectCount: 5,
+    clueCount: 14,
+  },
+  {
+    id: "ashford-merger",
+    title: "The Ashford Merger",
+    subtitle: "A CFO found dead. The deal closes in 48 hours.",
+    setting: "London, Present Day",
+    category: "conspiracy" as CaseCategory,
+    difficulty: 4 as const,
+    estimatedMinutes: 55,
+    suspectCount: 7,
+    clueCount: 12,
+  },
+];
+
+// ─── Filter config ────────────────────────────────────────────────────────────
 
 type FilterId = "all" | CaseCategory;
-
-interface EnrichedCase {
-  manifest: CaseManifest;
-  unlocked: boolean;
-  progress?: CaseCardProgress;
-  unlockInfo?: string;
-}
 
 const FILTERS: Array<{ id: FilterId; label: string }> = [
   { id: "all", label: "All Cases" },
@@ -38,341 +59,177 @@ const FILTERS: Array<{ id: FilterId; label: string }> = [
 
 export default function CasesPage() {
   const [activeFilter, setActiveFilter] = useState<FilterId>("all");
-  const caseStates = useGameStore((s) => s.cases);
+  const gameState = useGameStore((s) => s.cases);
+  const stats = useGameStore((s) => s.stats);
+
+  const season2Unlocked = stats.totalCasesSolved >= 1;
   const liveCases = getAllCases();
 
-  const solvedCaseIds = useMemo(
-    () =>
-      Object.values(caseStates)
-        .filter((c) => c.isComplete && c.isCorrect)
-        .map((c) => c.caseId),
-    [caseStates]
-  );
+  const allCards = [
+    ...liveCases.map((c) => ({
+      id: c.id,
+      title: c.title,
+      subtitle: c.subtitle,
+      category: c.category,
+      difficulty: c.difficulty,
+      estimatedMinutes: c.estimatedMinutes,
+      setting: c.setting,
+      isNew: c.isNew,
+      suspectCount: c.suspects.length,
+      clueCount: c.clues.length,
+      isLocked: false,
+      progress: gameState[c.id]
+        ? {
+            cluesFound: gameState[c.id].discoveredClueIds.length,
+            totalClues: c.clues.length,
+            isComplete: gameState[c.id].isComplete,
+            isCorrect: gameState[c.id].isCorrect,
+          }
+        : undefined,
+    })),
+    ...LOCKED_CASES.map((c) => ({ ...c, isLocked: true, season2Unlocked, isNew: false, progress: undefined })),
+  ];
 
-  const clearanceLevel = getArchiveClearanceLevel(solvedCaseIds.length);
-
-  const enriched: EnrichedCase[] = useMemo(() => {
-    return CASE_MANIFEST.map((manifest) => {
-      const unlocked = isCaseUnlocked(manifest.id, solvedCaseIds);
-      const caseState = caseStates[manifest.id];
-      const liveCase = liveCases.find((c) => c.id === manifest.id);
-
-      let progress: CaseCardProgress | undefined;
-      if (caseState) {
-        const totalClues = liveCase?.clues.length ?? manifest.clueCount;
-        const totalSuspects = liveCase?.suspects.length ?? manifest.suspectCount;
-        const perfectDeduction =
-          caseState.isCorrect === true &&
-          caseState.discoveredClueIds.length >= totalClues;
-
-        progress = {
-          cluesFound: caseState.discoveredClueIds.length,
-          totalClues,
-          suspectsInterviewed: caseState.interrogatedSuspectIds.length,
-          totalSuspects,
-          isComplete: caseState.isComplete,
-          isCorrect: caseState.isCorrect,
-          score: caseState.score,
-          perfectDeduction,
-        };
-      }
-
-      let unlockInfo: string | undefined;
-      if (!unlocked) {
-        if (manifest.unlockRequires) {
-          const prev = CASE_MANIFEST.find((m) => m.id === manifest.unlockRequires);
-          if (prev) unlockInfo = `Complete "${prev.title}" to unlock`;
-        } else if (manifest.unlockRequiresSeason) {
-          const s = SEASONS.find((s) => s.number === manifest.unlockRequiresSeason);
-          if (s) unlockInfo = `Complete ${s.subtitle} to unlock`;
-        }
-      }
-
-      return { manifest, unlocked, progress, unlockInfo };
-    });
-  }, [caseStates, solvedCaseIds, liveCases]);
-
-  const filtered = useMemo(
-    () =>
-      activeFilter === "all"
-        ? enriched
-        : enriched.filter((e) => e.manifest.category === activeFilter),
-    [enriched, activeFilter]
-  );
-
-  const seasonGroups = useMemo(
-    () =>
-      SEASONS.map((season) => ({
-        season,
-        cases: filtered.filter((e) => e.manifest.season === season.number),
-        isAccessible: isSeasonAccessible(season.number as 1 | 2 | 3, solvedCaseIds),
-        progress: getSeasonProgress(season.number as 1 | 2 | 3, solvedCaseIds),
-      })),
-    [filtered, solvedCaseIds]
-  );
-
-  const isFilteredView = activeFilter !== "all";
-  const solvedPct = Math.round((solvedCaseIds.length / CASE_MANIFEST.length) * 100);
+  const filtered =
+    activeFilter === "all"
+      ? allCards
+      : allCards.filter((c) => c.category === activeFilter);
 
   return (
     <PageWrapper>
-      {/* Top nav offset — exactly --nav-h, no guesswork */}
-      <main style={{ paddingTop: "var(--nav-h)" }}>
+      <div className="min-h-screen pt-16">
 
-        {/* ── Header ───────────────────────────────────────────────────── */}
-        <section
-          className="border-b"
-          style={{ borderColor: "var(--color-border)", background: "var(--color-bg)" }}
+        {/* ── Archive Header ────────────────────────────────────────── */}
+        <div
+          className="relative overflow-hidden"
+          style={{ background: "#141414", borderBottom: "0.5px solid rgba(255,255,255,0.08)" }}
         >
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 animate-fade-up">
-              <div className="max-w-2xl">
-                <p className="text-eyebrow mb-3">The Archive</p>
-                <h1
-                  className="font-serif leading-[1.05] text-[color:var(--color-text)]"
-                  style={{ fontSize: "var(--fz-display)" }}
-                >
-                  Case Browser
-                </h1>
-                <p
-                  className="mt-4 text-[color:var(--color-text-secondary)]"
-                  style={{ fontSize: "var(--fz-body-lg)", lineHeight: 1.55 }}
-                >
-                  Every case is a closed world. One killer. One truth. Everything else is misdirection.
-                </p>
+          <div className="max-w-6xl mx-auto px-6 py-24 relative z-10">
+            <div className="flex items-start gap-8">
+              {/* Left accent line */}
+              <div className="hidden md:flex flex-col items-center gap-3 pt-3 shrink-0">
+                <div className="w-[0.5px] h-14 bg-gradient-to-b from-transparent to-white/20" />
+                <span className="text-[7px] font-mono text-white/25 rotate-90 tracking-[0.35em] uppercase mt-8">Archive</span>
               </div>
 
-              {/* Clearance card */}
-              <div
-                className="surface p-5 w-full lg:w-[260px] shrink-0"
-                aria-label="Archive clearance"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-eyebrow">Clearance</p>
-                  <p className="text-meta">
-                    {solvedCaseIds.length}/{CASE_MANIFEST.length}
-                  </p>
-                </div>
-                <p
-                  className="mt-2 font-serif leading-none"
-                  style={{ fontSize: "32px", color: "var(--color-text)" }}
+              <div>
+                <div className="text-[9px] font-bold tracking-[0.6em] uppercase text-white/50 mb-7">Case Registry</div>
+                <h1
+                  className="font-bold text-white leading-tight mb-5"
+                  style={{
+                    fontSize: "clamp(2.8rem, 7vw, 5rem)",
+                  }}
                 >
-                  Level {clearanceLevel}
+                  Case Files
+                </h1>
+                <p className="font-normal text-xl leading-relaxed text-white/45 max-w-480">
+                  Each case is a closed world. One killer. One truth. Everything else is misdirection.
                 </p>
-                <div
-                  className="mt-4 h-1 w-full rounded-full overflow-hidden"
-                  style={{ background: "var(--color-surface-3)" }}
-                >
-                  <div
-                    className="h-full rounded-full transition-[width] duration-500"
-                    style={{ width: `${solvedPct}%`, background: "var(--color-accent)" }}
-                  />
-                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* ── Sticky filter bar ────────────────────────────────────────── */}
-        <div
-          className="sticky z-30 nav-glass"
-          style={{
-            top: "var(--nav-h)",
-            height: "var(--subnav-h)",
-            borderBottom: "1px solid var(--color-border)",
-          }}
-        >
-          <div
-            className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center gap-2 overflow-x-auto scrollbar-none"
-            role="tablist"
-            aria-label="Filter cases by category"
-          >
-            {FILTERS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                role="tab"
-                aria-selected={activeFilter === f.id}
-                aria-pressed={activeFilter === f.id}
-                onClick={() => setActiveFilter(f.id)}
-                className={cn("chip", activeFilter === f.id && "is-active")}
-              >
-                {f.label}
-              </button>
-            ))}
+        {/* ── Classification Filters ────────────────────────────────── */}
+        <div style={{ background: "rgba(20,20,20,0.95)", borderBottom: "0.5px solid rgba(255,255,255,0.07)" }} className="sticky top-16 z-40 backdrop-blur-2xl">
+          <div className="max-w-6xl mx-auto px-6 py-4">
+            <div className="flex items-center gap-2 overflow-x-auto pb-0.5" style={{ scrollbarWidth: "none" }}>
+              {FILTERS.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setActiveFilter(f.id)}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.4em] transition-all duration-300 whitespace-nowrap",
+                    activeFilter === f.id
+                      ? "bg-white text-black"
+                      : "bg-white/10 text-white/60 hover:bg-white/20"
+                  )}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* ── Content ──────────────────────────────────────────────────── */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16 space-y-16 md:space-y-20">
-          {isFilteredView && <FilteredView cases={filtered} />}
+        {/* ── Case Grid ────────────────────────────────────────────── */}
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          {filtered.length === 0 ? (
+            <EmptyState category={activeFilter} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filtered.map((c, i) => (
+                <div
+                  key={c.id}
+                  className="animate-fade-up"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  <CaseCard {...c} className="h-full" />
+                </div>
+              ))}
+            </div>
+          )}
 
-          {!isFilteredView &&
-            seasonGroups.map(({ season, cases, isAccessible, progress }) => (
-              <SeasonSection
-                key={season.number}
-                season={season}
-                cases={cases}
-                isAccessible={isAccessible}
-                progress={progress}
-              />
-            ))}
+          {/* Season 2 Teaser */}
+          <div className="mt-20">
+            <div
+              className="rounded-[4px] p-10 text-center relative overflow-hidden"
+              style={season2Unlocked ? {
+                background: "#1a1a1a",
+                border: "0.5px solid rgba(255,255,255,0.15)",
+              } : {
+                background: "#0f0f0f",
+                border: "0.5px dashed rgba(255,255,255,0.1)",
+              }}
+            >
+              {season2Unlocked ? (
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center gap-4 mb-6">
+                    <div className="h-[0.5px] w-12 bg-white/30" />
+                    <span className="text-[9px] font-bold tracking-[0.6em] uppercase text-white/60">Clearance Granted</span>
+                    <div className="h-[0.5px] w-12 bg-white/30" />
+                  </div>
+                  <p className="font-bold text-white text-2xl mb-3">Season Two is unlocked.</p>
+                  <p className="font-normal leading-relaxed text-white/40 max-w-440 mx-auto">
+                    Assembled for detectives of your calibre. The cases above will be the first to drop.
+                  </p>
+                </div>
+              ) : (
+                <div className="relative z-10">
+                  <div className="w-[0.5px] h-6 bg-white/20 mx-auto mb-5" />
+                  <span className="text-[9px] font-bold tracking-[0.6em] uppercase text-white/30 block mb-4">In Production</span>
+                  <p className="font-normal leading-relaxed text-white/30 max-w-400 mx-auto">
+                    Season Two is being assembled. More cases. More categories. More truth to uncover.
+                  </p>
+                  <div className="w-[0.5px] h-6 bg-white/20 mx-auto mt-5" />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </main>
+      </div>
     </PageWrapper>
   );
 }
 
-// ─── Season Section ───────────────────────────────────────────────────────────
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
-function SeasonSection({
-  season,
-  cases,
-  isAccessible,
-  progress,
-}: {
-  season: SeasonInfo;
-  cases: EnrichedCase[];
-  isAccessible: boolean;
-  progress: { solved: number; total: number };
-}) {
-  if (cases.length === 0) return null;
-  const isComplete = progress.solved === progress.total && progress.total > 0;
-
+function EmptyState({ category }: { category: FilterId }) {
   return (
-    <section aria-label={`${season.subtitle} — ${season.title}`}>
-      <header className="mb-6 md:mb-8">
-        <div className="flex items-start justify-between gap-6 flex-wrap">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <p className="text-eyebrow">{season.subtitle}</p>
-              {isComplete && <span className="badge badge-success badge-dot">Complete</span>}
-            </div>
-            <h2
-              className="font-serif leading-[1.1] text-[color:var(--color-text)]"
-              style={{ fontSize: "var(--fz-title-lg)" }}
-            >
-              {season.title}
-            </h2>
-            <p
-              className="mt-2 text-[color:var(--color-text-secondary)]"
-              style={{ fontSize: "var(--fz-body)" }}
-            >
-              {season.tone}
-            </p>
-          </div>
-
-          {isAccessible && (
-            <div className="shrink-0 text-right">
-              <p className="text-eyebrow mb-1">Progress</p>
-              <p
-                className="font-serif leading-none text-[color:var(--color-text)]"
-                style={{ fontSize: "22px" }}
-              >
-                {progress.solved}
-                <span className="text-[color:var(--color-text-tertiary)]"> / {progress.total}</span>
-              </p>
-            </div>
-          )}
-        </div>
-        <div className="divider mt-5" />
-      </header>
-
-      {!isAccessible && season.number > 1 && (
-        <SeasonLockedCard seasonNumber={season.number as 2 | 3} className="mb-6" />
-      )}
-
-      {(isAccessible || season.number === 1) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
-          {cases.map(({ manifest, unlocked, progress, unlockInfo }, i) => (
-            <div
-              key={manifest.id}
-              className={cn("animate-fade-up", `stagger-${Math.min(i + 1, 6)}`)}
-            >
-              <CaseCard
-                id={manifest.id}
-                title={manifest.title}
-                subtitle={manifest.subtitle}
-                category={manifest.category}
-                difficulty={manifest.difficulty}
-                estimatedMinutes={manifest.estimatedMinutes}
-                isNew={manifest.isNew}
-                manifest={manifest}
-                isLocked={!unlocked}
-                progress={progress}
-                unlockInfo={unlockInfo}
-                className="h-full"
-              />
-            </div>
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
-// ─── Filtered view ────────────────────────────────────────────────────────────
-
-function FilteredView({ cases }: { cases: EnrichedCase[] }) {
-  if (cases.length === 0) {
-    return (
-      <div className="surface p-10 md:p-14 text-center">
-        <p
-          className="font-serif mb-2 text-[color:var(--color-text)]"
-          style={{ fontSize: "var(--fz-title-sm)" }}
-        >
-          No cases match this filter
-        </p>
-        <p
-          className="text-[color:var(--color-text-secondary)] max-w-sm mx-auto"
-          style={{ fontSize: "var(--fz-body)" }}
-        >
-          Additional cases in this category are in development and will appear in future seasons.
-        </p>
-      </div>
-    );
-  }
-
-  const bySeason = SEASONS.map((season) => ({
-    season,
-    cases: cases.filter((e) => e.manifest.season === season.number),
-  })).filter((g) => g.cases.length > 0);
-
-  return (
-    <div className="space-y-12 md:space-y-16">
-      {bySeason.map(({ season, cases: seasonCases }) => (
-        <div key={season.number}>
-          <div className="flex items-center gap-3 mb-5">
-            <p className="text-eyebrow shrink-0">
-              {season.subtitle} · {season.title}
-            </p>
-            <div className="divider flex-1" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
-            {seasonCases.map(({ manifest, unlocked, progress, unlockInfo }, i) => (
-              <div
-                key={manifest.id}
-                className={cn("animate-fade-up", `stagger-${Math.min(i + 1, 6)}`)}
-              >
-                <CaseCard
-                  id={manifest.id}
-                  title={manifest.title}
-                  subtitle={manifest.subtitle}
-                  category={manifest.category}
-                  difficulty={manifest.difficulty}
-                  estimatedMinutes={manifest.estimatedMinutes}
-                  isNew={manifest.isNew}
-                  manifest={manifest}
-                  isLocked={!unlocked}
-                  progress={progress}
-                  unlockInfo={unlockInfo}
-                  className="h-full"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+    <div className="flex flex-col items-center justify-center py-28 text-center">
+      <div className="w-[0.5px] h-10 bg-white/20 mx-auto mb-8" />
+      <p className="font-bold text-white/70 text-2xl mb-3">
+        No cases in this classification yet.
+      </p>
+      <p className="font-normal leading-relaxed text-white/30 max-w-320 mx-auto">
+        The{" "}
+        {category !== "all"
+          ? CATEGORIES.find((c) => c.id === category)?.label ?? category
+          : ""}{" "}
+        archive is still being assembled. Check back in Season Two.
+      </p>
+      <div className="w-[0.5px] h-10 bg-white/20 mx-auto mt-8" />
     </div>
   );
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             

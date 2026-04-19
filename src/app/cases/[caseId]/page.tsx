@@ -66,7 +66,7 @@ export default function InvestigationHub({
   if (!caseData) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-mist font-serif italic">Case not found.</p>
+        <p className="text-white/60 font-normal">Case not found.</p>
       </div>
     );
   }
@@ -172,20 +172,21 @@ export default function InvestigationHub({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="pointer-events-auto"
           >
             <Link
               href={`/cases/${caseId}/accuse`}
-              className="flex items-center gap-3 px-7 py-3.5 rounded-xl text-parchment font-sans font-semibold text-sm transition-all duration-200 hover:scale-[1.02]"
+              className="flex items-center gap-4 px-8 py-4 transition-all duration-300 hover:scale-[1.02] rounded-[4px]"
               style={{
-                background: "linear-gradient(135deg, #8b2232 0%, #6b1a26 100%)",
-                border: "1px solid rgba(193,50,72,0.35)",
-                boxShadow: "0 8px 32px rgba(139,34,50,0.45), 0 2px 8px rgba(0,0,0,0.6)",
+                background: "#E50914",
+                boxShadow: "0 12px 40px rgba(229, 9, 20, 0.5), 0 2px 12px rgba(0,0,0,0.7)",
               }}
             >
-              <Skull size={15} className="shrink-0" />
-              The evidence is mounting. Make your accusation.
+              <Skull size={14} style={{ color: "#fff", flexShrink: 0 }} />
+              <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-white">
+                The evidence is mounting. Make your accusation.
+              </span>
             </Link>
           </motion.div>
         </div>
@@ -204,20 +205,28 @@ function DesktopTabBar({
   onTabChange: (t: Tab) => void;
 }) {
   return (
-    <div className="hidden sm:block sticky top-28 z-30 glass border-b border-[#2a2a45] -mx-4 sm:-mx-6 px-4 sm:px-6 mb-2">
-      <div className="max-w-6xl mx-auto flex items-center gap-0.5">
+    <div
+      className="hidden sm:block sticky top-28 z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 mb-2 backdrop-blur-2xl"
+      style={{
+        background: "rgba(20,20,20,0.96)",
+        borderBottom: "0.5px solid rgba(255,255,255,0.1)",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.5)",
+      }}
+    >
+      <div className="max-w-6xl mx-auto flex items-center">
         {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
             onClick={() => onTabChange(id)}
             className={cn(
-              "flex items-center gap-1.5 label-caps px-4 py-3.5 border-b-2 whitespace-nowrap transition-colors duration-200 text-[10px]",
+              "flex items-center gap-2 px-5 py-4 border-b-2 whitespace-nowrap transition-all duration-400",
+              "text-[8.5px] font-bold uppercase tracking-[0.4em]",
               activeTab === id
-                ? "border-gold text-gold"
-                : "border-transparent text-shadow hover:text-mist"
+                ? "border-[#E50914] text-white"
+                : "border-transparent text-white/40 hover:text-white/70"
             )}
           >
-            <Icon size={12} />
+            <Icon size={10} />
             {label}
           </button>
         ))}
@@ -236,19 +245,20 @@ function MobileTabBar({
   onTabChange: (t: Tab) => void;
 }) {
   return (
-    <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-[#2a2a45]">
+    <div
+      className="sm:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-2xl"
+      style={{ background: "rgba(20,20,20,0.96)", borderTop: "0.5px solid rgba(255,255,255,0.08)" }}
+    >
       <div className="flex items-center justify-around h-14 px-2">
         {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
             onClick={() => onTabChange(id)}
-            className={cn(
-              "flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors duration-200",
-              activeTab === id ? "text-gold" : "text-shadow"
-            )}
+            className="flex flex-col items-center gap-1 px-3 py-1 transition-all duration-300"
+            style={{ color: activeTab === id ? "#E50914" : "rgba(255,255,255,0.3)" }}
           >
-            <Icon size={17} />
-            <span className="label-caps text-[9px]">{label}</span>
+            <Icon size={16} />
+            <span className="text-[8px] font-bold uppercase tracking-[0.3em]">{label}</span>
           </button>
         ))}
       </div>
@@ -278,92 +288,123 @@ function OverviewTab({
   if (!caseData) return null;
 
   return (
-    <div className="pt-8 space-y-10">
+    <div className="pt-10 space-y-12">
+
       {/* Victim card */}
       <section>
         <SectionHeader label="The Victim" />
         <div
-          className="border border-[#2a2a45] rounded-2xl p-6 flex gap-6 items-start"
-          style={{ background: "linear-gradient(135deg, #181828 0%, #111120 60%)" }}
+          className="rounded-[4px] overflow-hidden relative bg-[#1a1a1a] border border-white/10"
         >
-          <div
-            className="w-16 h-16 rounded-full flex items-center justify-center shrink-0 border border-crimson/20"
-            style={{ background: "radial-gradient(circle, rgba(139,34,50,0.18) 0%, #111120 70%)" }}
-          >
-            <Skull size={22} className="text-crimson-light/70" />
+          {/* Cinematic image strip at top */}
+          <div className="relative h-36 overflow-hidden" style={{ borderBottom: "0.5px solid rgba(255,255,255,0.08)" }}>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(https://picsum.photos/seed/${caseId}victim/700/300?grayscale)` }}
+            />
+            <div className="absolute inset-0" style={{ background: "rgba(10, 10, 10, 0.65)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(20,20,20,0.95) 100%)" }} />
+            <div className="absolute top-4 left-5">
+              <span className="text-[8px] font-bold uppercase tracking-[0.45em] text-white/60">
+                Deceased
+              </span>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-serif text-2xl text-parchment leading-tight">{caseData.victim.name}</h2>
-            <p className="label-caps text-shadow mt-1">{caseData.victim.occupation}</p>
-            <p className="text-mist text-sm mt-3 leading-relaxed font-serif italic">
-              {caseData.victim.description}
-            </p>
+
+          <div className="flex gap-5 items-start p-6 relative z-10">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-[#E50914]/10 border border-[#E50914]/20"
+            >
+              <Skull size={18} style={{ color: "#E50914", opacity: 0.65 }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[8px] font-bold uppercase tracking-[0.4em] mb-1 text-white/60">Victim</p>
+              <h2 className="font-bold text-2xl mb-1 text-white">{caseData.victim.name}</h2>
+              <p className="text-[8px] font-bold uppercase tracking-[0.3em] mb-3 text-white/30">{caseData.victim.occupation}</p>
+              <div className="h-[0.5px] mb-3 bg-white/10" />
+              <p className="font-normal text-sm leading-relaxed text-white/50">
+                {caseData.victim.description}
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Stats bar */}
       <section>
-        <SectionHeader label="Investigation Progress" />
-        <div className="grid grid-cols-3 gap-4">
-          <StatCard
-            value={discoveredClues.length}
-            total={caseData.clues.length}
-            label="Clues Found"
-            color="gold"
-          />
-          <StatCard
-            value={visitedScenes.length}
-            total={caseData.scenes.length}
-            label="Scenes Explored"
-            color="iris"
-          />
-          <StatCard
-            value={gameState?.interrogatedSuspectIds.length ?? 0}
-            total={caseData.suspects.length}
-            label="Interrogated"
-            color="crimson"
-          />
+        <SectionHeader label="Investigation Status" />
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard value={discoveredClues.length} total={caseData.clues.length} label="Clues Found" color="red" />
+          <StatCard value={visitedScenes.length} total={caseData.scenes.length} label="Scenes Explored" color="white" />
+          <StatCard value={gameState?.interrogatedSuspectIds.length ?? 0} total={caseData.suspects.length} label="Interrogated" color="red" />
         </div>
       </section>
 
       {/* Scenes */}
       <section>
-        <SectionHeader label="Scenes" />
+        <SectionHeader label="Locations" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {caseData.scenes.map((scene) => {
             const visited = visitedScenes.includes(scene.id);
             const locked = scene.isLocked && discoveredClues.length < 3;
+            const sceneSeed = scene.id.replace(/-/g, "");
             return (
               <button
                 key={scene.id}
                 onClick={() => !locked && onSceneClick(scene)}
                 className={cn(
-                  "text-left card rounded-xl p-5 w-full transition-all duration-300",
-                  locked
-                    ? "opacity-45 cursor-not-allowed"
-                    : "card-hover cursor-pointer"
+                  "text-left w-full transition-all duration-500 relative overflow-hidden group rounded-[4px]",
+                  locked ? "cursor-not-allowed opacity-55" : "cursor-pointer"
                 )}
+                style={{
+                  background: "#1a1a1a",
+                  border: `0.5px solid ${visited ? "rgba(229,9,20,0.3)" : locked ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.1)"}`,
+                }}
+                onMouseEnter={e => {
+                  if (!locked) (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)";
+                }}
+                onMouseLeave={e => {
+                  if (!locked) (e.currentTarget as HTMLElement).style.borderColor = visited ? "rgba(229,9,20,0.3)" : "rgba(255,255,255,0.1)";
+                }}
               >
-                <div className="flex items-start justify-between gap-3 mb-2">
-                  <div className="flex items-center gap-2">
-                    <MapPin size={14} className={locked ? "text-shadow" : "text-gold"} />
-                    <span className="font-serif text-lg text-parchment">{scene.name}</span>
+                {/* Scene image panel */}
+                <div className="h-36 w-full" style={{ borderBottom: "0.5px solid rgba(255,255,255,0.08)" }}>
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-600 group-hover:scale-[1.04]"
+                    style={{ backgroundImage: `url(https://picsum.photos/seed/${sceneSeed}/500/240?grayscale)` }}
+                  />
+                  <div className="absolute inset-0" style={{ background: "rgba(5,5,12,0.5)" }} />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0) 20%, rgba(20,20,20,0.95) 100%)" }} />
+                  {/* Status indicators on image */}
+                  <div className="absolute top-3 right-3 z-10">
+                    {visited ? (
+                      <CheckCircle2 size={14} style={{ color: "#E50914" }} />
+                    ) : locked ? (
+                      <Lock size={13} style={{ color: "rgba(255,255,255,0.3)" }} />
+                    ) : null}
                   </div>
-                  {visited ? (
-                    <CheckCircle2 size={14} className="text-gold shrink-0 mt-0.5" />
-                  ) : locked ? (
-                    <Lock size={14} className="text-shadow shrink-0 mt-0.5" />
-                  ) : null}
+                  <div className="absolute bottom-3 left-4 z-10 flex items-center gap-2">
+                    <MapPin size={11} style={{ color: locked ? "rgba(255,255,255,0.25)" : "#E50914" }} />
+                    <span className="font-bold text-base text-white">{scene.name}</span>
+                  </div>
                 </div>
-                <p className="text-mist text-sm leading-relaxed line-clamp-2 font-serif italic">
-                  {scene.description.split("\n")[0]}
-                </p>
-                {locked && (
-                  <p className="label-caps text-shadow mt-2 text-[10px]">
-                    Find {3 - discoveredClues.length} more clue{3 - discoveredClues.length !== 1 ? "s" : ""} to unlock
+
+                {/* Body */}
+                <div className="relative z-10 px-5 py-4">
+                  <p className="font-normal text-sm leading-relaxed line-clamp-2 text-white/45">
+                    {scene.description.split("\n")[0]}
                   </p>
-                )}
+                  {locked && (
+                    <p className="text-[7.5px] font-bold uppercase tracking-[0.4em] mt-2.5 text-white/30">
+                      {3 - discoveredClues.length} more clue{3 - discoveredClues.length !== 1 ? "s" : ""} required
+                    </p>
+                  )}
+                  {!locked && !visited && (
+                    <p className="text-[7.5px] font-bold uppercase tracking-[0.4em] mt-2.5 text-white/40">
+                      Enter Scene →
+                    </p>
+                  )}
+                </div>
               </button>
             );
           })}
@@ -372,36 +413,50 @@ function OverviewTab({
 
       {/* Quick suspects grid */}
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <SectionHeader label="Suspects" inline />
+        <div className="flex items-center justify-between mb-6">
+          <SectionHeader label="Persons of Interest" inline />
           <Link
             href={`/cases/${caseId}/interrogate/${caseData.suspects[0]?.id}`}
-            className="label-caps text-gold hover:text-gold-light transition-colors duration-200 text-[10px]"
+            className="text-[9px] font-bold uppercase tracking-[0.35em] transition-colors duration-300 text-white/40 hover:text-white"
           >
             Begin Interrogations →
           </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {caseData.suspects.map((suspect, i) => {
-            const level = gameState
-              ? suspicionLevel(suspect.id, caseData, gameState)
-              : 0;
+            const level = gameState ? suspicionLevel(suspect.id, caseData, gameState) : 0;
+            const suspectSeed = suspect.id.replace(/-/g, "");
             return (
               <Link
                 key={suspect.id}
                 href={`/cases/${caseId}/interrogate/${suspect.id}`}
-                className="flex items-center gap-3 card rounded-xl p-3 card-hover"
+                className="rounded-[4px] overflow-hidden transition-all duration-500 group"
+                style={{
+                  background: "#1a1a1a",
+                  border: "0.5px solid rgba(255,255,255,0.1)",
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 30px rgba(0,0,0,0.7), 0 0 20px rgba(229,9,20,0.05)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
               >
-                <Avatar index={i} name={suspect.name} size="sm" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-parchment text-sm font-serif truncate">{suspect.name}</p>
-                  <div className="mt-1 h-1 bg-[#2a2a45] rounded-full overflow-hidden">
+                {/* Portrait image */}
+                <div className="h-24 w-full relative">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-600 group-hover:scale-[1.06]"
+                    style={{ backgroundImage: `url(https://picsum.photos/seed/${suspectSeed}portrait/300/200?grayscale)` }}
+                  />
+                  <div className="absolute inset-0" style={{ background: "rgba(5,5,12,0.55)" }} />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0) 30%, rgba(20,20,20,0.98) 100%)" }} />
+                </div>
+                {/* Info */}
+                <div className="px-3 py-3">
+                  <p className="font-bold text-sm truncate text-white">{suspect.name}</p>
+                  <div className="mt-2 h-[1px] overflow-hidden bg-white/10">
                     <div
-                      className={cn(
-                        "h-full rounded-full transition-all duration-700",
-                        level >= 60 ? "bg-crimson-light" : level >= 30 ? "bg-gold" : "bg-[#5c5a78]"
-                      )}
-                      style={{ width: `${level}%` }}
+                      className="h-full transition-all duration-700"
+                      style={{
+                        width: `${level}%`,
+                        background: level >= 60 ? "#E50914" : level >= 30 ? "#E50914" : "rgba(255,255,255,0.18)",
+                      }}
                     />
                   </div>
                 </div>
@@ -426,66 +481,94 @@ function SuspectsTab({
   gameState: ReturnType<typeof useGameStore.getState>["cases"][string] | undefined;
 }) {
   return (
-    <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <div className="pt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
       {caseData.suspects.map((suspect, i) => {
-        const level = gameState
-          ? suspicionLevel(suspect.id, caseData, gameState)
-          : 0;
+        const level = gameState ? suspicionLevel(suspect.id, caseData, gameState) : 0;
         const asked = gameState?.askedQuestions[suspect.id]?.length ?? 0;
         const available = gameState
           ? availableQuestions(suspect.questions, gameState, suspect.id).length
           : suspect.questions.length;
+        const suspectSeed = suspect.id.replace(/-/g, "");
 
         return (
           <motion.div
             key={suspect.id}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: i * 0.07 }}
-            className="card rounded-2xl p-5 flex flex-col gap-4 card-hover"
+            transition={{ duration: 0.35, delay: i * 0.07 }}
+            className="relative rounded-[4px] overflow-hidden flex flex-col bg-[#1a1a1a] border border-white/10"
           >
-            <div className="flex items-start gap-4">
-              <Avatar index={i} name={suspect.name} size="lg" />
-              <div className="flex-1 min-w-0">
-                <h3 className="font-serif text-xl text-parchment">{suspect.name}</h3>
-                <p className="label-caps text-shadow text-[10px] mt-0.5">{suspect.relation}</p>
-                <p className="font-serif italic text-mist text-sm mt-2 leading-relaxed line-clamp-2">
-                  {suspect.description}
-                </p>
+            {/* Portrait image panel */}
+            <div className="relative h-48 w-full" style={{ borderBottom: "0.5px solid rgba(255,255,255,0.1)" }}>
+              <div
+                className="absolute inset-0 bg-cover bg-top"
+                style={{ backgroundImage: `url(https://picsum.photos/seed/${suspectSeed}full/500/350?grayscale)` }}
+              />
+              <div className="absolute inset-0" style={{ background: "rgba(5,5,12,0.48)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0) 30%, rgba(20,20,20,0.96) 100%)" }} />
+              {/* Risk badge on image */}
+              <div className="absolute top-3 right-3 z-10">
+                <div
+                  className="text-[7px] font-bold uppercase tracking-widest px-2 py-0.5 border rounded-[4px]"
+                  style={{
+                    backdropFilter: "blur(8px)",
+                    ...(level >= 60
+                      ? { borderColor: "rgba(229,9,20,0.5)", color: "#E50914", background: "rgba(10,5,10,0.7)" }
+                      : level >= 30
+                      ? { borderColor: "rgba(229,9,20,0.3)", color: "rgba(229,9,20,0.7)", background: "rgba(10,8,5,0.7)" }
+                      : { borderColor: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.4)", background: "rgba(10,10,20,0.7)" })
+                  }}
+                >
+                  {level >= 60 ? "High" : level >= 30 ? "Medium" : "Low"} risk
+                </div>
+              </div>
+              {/* Name overlay at bottom of image */}
+              <div className="absolute bottom-4 left-5 z-10">
+                <p className="text-[8px] font-bold uppercase tracking-[0.4em] mb-1 text-white/60">{suspect.relation}</p>
+                <h3 className="font-bold text-xl text-white">{suspect.name}</h3>
               </div>
             </div>
 
-            {/* Suspicion meter */}
-            <div>
-              <div className="flex justify-between mb-1.5">
-                <span className="label-caps text-shadow text-[10px]">Suspicion</span>
-                <span className={cn("label-caps text-[10px]",
-                  level >= 60 ? "text-crimson-light" : level >= 30 ? "text-gold" : "text-shadow"
-                )}>{level}%</span>
-              </div>
-              <div className="h-1.5 bg-[#2a2a45] rounded-full overflow-hidden">
-                <motion.div
-                  className={cn(
-                    "h-full rounded-full",
-                    level >= 60 ? "bg-crimson-light" : level >= 30 ? "bg-gold" : "bg-[#5c5a78]"
-                  )}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${level}%` }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                />
-              </div>
-            </div>
+            {/* Card body */}
+            <div className="flex flex-col gap-4 p-5">
+              <p className="font-normal text-sm leading-relaxed line-clamp-2 text-white/45">
+                {suspect.description}
+              </p>
 
-            <div className="flex items-center justify-between">
-              <span className="label-caps text-shadow text-[10px]">
-                {asked} asked · {available} available
-              </span>
-              <Link
-                href={`/cases/${caseId}/interrogate/${suspect.id}`}
-                className="label-caps text-gold border border-gold/55 hover:bg-gold hover:text-void px-3 py-1.5 rounded-lg text-[10px] transition-colors duration-200"
-              >
-                Interrogate
-              </Link>
+              {/* Suspicion meter */}
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-[7.5px] font-bold uppercase tracking-[0.4em] text-white/45">Suspicion Index</span>
+                  <span className="text-[8px] font-mono" style={{ color: level >= 60 ? "#E50914" : level >= 30 ? "#E50914" : "rgba(255,255,255,0.25)" }}>{level}%</span>
+                </div>
+                <div className="h-[1px] overflow-hidden bg-white/10">
+                  <motion.div
+                    className="h-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${level}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    style={{
+                      background: level >= 60 ? "#E50914" : level >= 30 ? "#E50914" : "rgba(255,255,255,0.2)",
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between" style={{ borderTop: "0.5px solid rgba(255,255,255,0.08)", paddingTop: "14px" }}>
+                <span className="text-[7.5px] font-mono text-white/25">
+                  {asked} asked · {available} available
+                </span>
+                <Link
+                  href={`/cases/${caseId}/interrogate/${suspect.id}`}
+                  className="text-[7.5px] font-bold uppercase tracking-[0.35em] px-4 py-1.5 transition-all duration-400 rounded-[3px]"
+                  style={{ border: "0.5px solid rgba(229,9,20,0.4)", color: "#E50914", background: "transparent" }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(229,9,20,0.1)"; el.style.borderColor = "rgba(229,9,20,0.7)"; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.borderColor = "rgba(229,9,20,0.4)"; }}
+                >
+                  Interrogate
+                </Link>
+              </div>
             </div>
           </motion.div>
         );
@@ -521,17 +604,17 @@ function EvidenceTab({
 
   return (
     <div className="pt-8 space-y-8">
-      {/* Filter pills */}
+      {/* Filter tags */}
       <div className="flex gap-2 flex-wrap">
         {FILTERS.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
             className={cn(
-              "label-caps px-3 py-1.5 rounded-full border text-[10px] transition-colors duration-200 capitalize",
+              "px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.4em] transition-all duration-300",
               filter === f
-                ? "border-gold/60 bg-gold/10 text-gold"
-                : "border-[#2a2a45] text-shadow hover:border-[#5c5a78] hover:text-mist"
+                ? "bg-white text-black"
+                : "bg-white/10 text-white/60 hover:bg-white/20"
             )}
           >
             {f === "all" ? `All (${collected.length})` : f}
@@ -541,7 +624,7 @@ function EvidenceTab({
 
       {/* Collected clues */}
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {filtered.map((clue, i) => (
             <motion.button
               key={clue.id}
@@ -549,23 +632,25 @@ function EvidenceTab({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, delay: i * 0.05 }}
               onClick={() => setSelectedClue(clue)}
-              className="text-left card rounded-xl p-4 card-hover"
+              className="text-left p-4 rounded-[4px] bg-[#1a1a1a] border border-white/10 hover:border-white/20 transition-all duration-300"
             >
               <div className="flex items-start justify-between gap-3 mb-2">
-                <span className="font-serif text-base text-parchment">{clue.title}</span>
-                <span className={cn(
-                  "label-caps px-2 py-0.5 rounded-full border text-[9px] shrink-0",
-                  clue.severity === "critical"
-                    ? "text-crimson-light border-crimson/30 bg-crimson/10"
-                    : clue.severity === "high"
-                    ? "text-gold border-gold/30 bg-gold/10"
-                    : "text-shadow border-[#2a2a45]"
-                )}>
+                <span className="font-bold text-sm text-white">{clue.title}</span>
+                <span
+                  className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 border rounded-[3px] shrink-0"
+                  style={{
+                    ...(clue.severity === "critical"
+                      ? { color: "#E50914", borderColor: "rgba(229,9,20,0.3)", background: "rgba(229,9,20,0.06)" }
+                      : clue.severity === "high"
+                      ? { color: "#E50914", borderColor: "rgba(229,9,20,0.3)", background: "rgba(229,9,20,0.06)" }
+                      : { color: "rgba(255,255,255,0.3)", borderColor: "rgba(255,255,255,0.08)", background: "transparent" })
+                  }}
+                >
                   {clue.severity}
                 </span>
               </div>
-              <p className="label-caps text-shadow text-[10px] mb-2 capitalize">{clue.type}</p>
-              <p className="text-mist text-sm leading-relaxed line-clamp-2 font-serif italic">
+              <p className="text-[8px] font-bold uppercase tracking-[0.3em] mb-2 capitalize text-white/40">{clue.type}</p>
+              <p className="font-normal text-xs leading-relaxed line-clamp-2 text-white/45">
                 {clue.description.slice(0, 120)}…
               </p>
             </motion.button>
@@ -573,25 +658,21 @@ function EvidenceTab({
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="font-serif italic text-mist">No {filter !== "all" ? filter : ""} clues collected yet.</p>
+          <p className="font-normal text-white/40">No {filter !== "all" ? filter : ""} clues collected yet.</p>
         </div>
       )}
 
       {/* Locked count */}
       {locked.length > 0 && (
-        <div className="border-t border-[#2a2a45] pt-6">
-          <p className="label-caps text-shadow mb-4">
-            {locked.length} undiscovered clue{locked.length !== 1 ? "s" : ""}
+        <div className="pt-6" style={{ borderTop: "0.5px solid rgba(255,255,255,0.1)" }}>
+          <p className="text-[8px] font-bold uppercase tracking-[0.4em] mb-4 text-white/40">
+            {locked.length} undiscovered
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {locked.map((clue) => (
-              <div
-                key={clue.id}
-                className="card rounded-xl p-4 flex items-center gap-3"
-                style={{ opacity: 0.45 }}
-              >
-                <Lock size={14} className="text-shadow shrink-0" />
-                <span className="label-caps text-shadow text-[10px]">Unknown clue</span>
+              <div key={clue.id} className="p-4 rounded-[4px] bg-[#0f0f0f] border border-white/5 flex items-center justify-center gap-2">
+                <Lock size={11} style={{ color: "rgba(255,255,255,0.2)", flexShrink: 0 }} />
+                <span className="text-[8px] font-bold uppercase tracking-[0.3em] text-white/20">Redacted</span>
               </div>
             ))}
           </div>
@@ -602,7 +683,7 @@ function EvidenceTab({
       <div className="pt-4">
         <Link
           href={`/cases/${caseId}/evidence`}
-          className="label-caps text-gold hover:text-gold-light transition-colors duration-200"
+          className="text-[9px] font-bold uppercase tracking-[0.4em] transition-colors duration-300 text-white/40 hover:text-white"
         >
           View Full Evidence Board →
         </Link>
@@ -630,20 +711,18 @@ function TimelineTab({
   const sorted = [...caseData.timeline].sort((a, b) => a.sortKey - b.sortKey);
 
   return (
-    <div className="pt-8 max-w-2xl">
+    <div className="pt-10 max-w-2xl">
       <div className="relative">
-        {/* Vertical gold line */}
+        {/* Vertical connector */}
         <div
-          className="absolute left-[88px] top-0 bottom-0 w-px"
-          style={{ background: "linear-gradient(to bottom, transparent, #c9a84c44, transparent)" }}
+          className="absolute left-[88px] top-0 bottom-0 w-[0.5px]"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent)" }}
         />
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           {sorted.map((event, i) => {
             const isKey = event.isKeyEvent;
-            const hasDiscoveredClue = event.clueIds?.some((id) =>
-              discoveredClues.includes(id)
-            );
+            const hasDiscoveredClue = event.clueIds?.some((id) => discoveredClues.includes(id));
 
             return (
               <motion.div
@@ -654,37 +733,44 @@ function TimelineTab({
                 className="flex gap-6 relative"
               >
                 {/* Time */}
-                <div className="w-20 shrink-0 pt-0.5 text-right">
-                  <span className="font-serif text-gold text-sm">{event.time}</span>
+                <div className="w-20 shrink-0 pt-1 text-right">
+                  <span className="text-sm font-mono font-bold" style={{ color: isKey ? "#E50914" : "rgba(255,255,255,0.4)" }}>{event.time}</span>
                 </div>
 
                 {/* Dot */}
                 <div
-                  className={cn(
-                    "absolute left-[82px] top-1 w-3 h-3 rounded-full border-2 z-10",
-                    isKey
-                      ? "border-gold bg-gold/30"
-                      : "border-[#2a2a45] bg-void"
-                  )}
+                  className="absolute top-2 z-10"
+                  style={{
+                    left: "82px",
+                    width: "12px", height: "12px",
+                    borderRadius: "50%",
+                    border: `1.5px solid ${isKey ? "#E50914" : "rgba(255,255,255,0.2)"}`,
+                    background: isKey ? "rgba(229,9,20,0.2)" : "#141414",
+                  }}
                 />
 
-                {/* Content */}
+                {/* Content card */}
                 <div
-                  className={cn(
-                    "flex-1 rounded-xl p-4 ml-6",
-                    isKey ? "card-gold" : "card"
-                  )}
-                  style={isKey ? { borderRadius: "12px" } : { borderRadius: "12px" }}
+                  className="flex-1 ml-6 p-4 relative overflow-hidden rounded-[3px]"
+                  style={{
+                    background: isKey ? "#1a1a1a" : "#0f0f0f",
+                    border: `0.5px solid ${isKey ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)"}`,
+                  }}
                 >
-                  <p className="text-parchment text-sm leading-relaxed font-serif">
+                  <p className="font-normal text-sm leading-relaxed" style={{ color: isKey ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.6)" }}>
                     {event.description}
                   </p>
-                  {hasDiscoveredClue && (
-                    <div className="flex items-center gap-1.5 mt-2">
-                      <FileText size={11} className="text-iris" />
-                      <span className="label-caps text-iris text-[10px]">Linked to evidence</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-3 mt-2.5">
+                    {hasDiscoveredClue && (
+                      <div className="flex items-center gap-1.5">
+                        <FileText size={10} style={{ color: "#E50914" }} />
+                        <span className="text-[8px] font-bold uppercase tracking-[0.3em] text-[#E50914]">Evidence linked</span>
+                      </div>
+                    )}
+                    {isKey && (
+                      <span className="text-[8px] font-bold uppercase tracking-[0.3em] text-white/40">Key event</span>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             );
@@ -726,30 +812,37 @@ function NotesTab({
   );
 
   return (
-    <div className="pt-8 max-w-2xl">
-      <div className="flex items-center justify-between mb-4">
-        <p className="font-serif italic text-mist text-lg">Your private investigation notes.</p>
+    <div className="pt-10 max-w-2xl">
+      <div className="flex items-center justify-between mb-5">
+        <p className="font-normal text-white/45">Private investigation notes.</p>
         <AnimatePresence>
           {saved && (
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="label-caps text-gold text-[10px]"
+              className="text-[8px] font-bold uppercase tracking-[0.4em] text-white/60"
             >
               Saved
             </motion.span>
           )}
         </AnimatePresence>
       </div>
-      <textarea
-        value={value}
-        onChange={handleChange}
-        placeholder="Record your observations, suspicions, and theories here. Your notes are saved automatically."
-        className="input-field w-full h-80 p-5 text-sm leading-relaxed resize-none font-serif placeholder:italic"
-        style={{ color: "#f0ece0" }}
-      />
-      <p className="label-caps text-shadow text-[10px] mt-2">Notes are saved automatically as you type.</p>
+      <div className="relative">
+        <textarea
+          value={value}
+          onChange={handleChange}
+          placeholder="Record your observations, suspicions, and theories here. Your notes are saved automatically."
+          className="w-full h-80 p-6 text-sm leading-relaxed resize-none font-normal placeholder:font-normal outline-none rounded-[4px]"
+          style={{
+            background: "#1a1a1a",
+            border: "0.5px solid rgba(255,255,255,0.1)",
+            color: "rgba(255,255,255,0.75)",
+            caretColor: "#E50914",
+          }}
+        />
+      </div>
+      <p className="text-[8px] font-mono mt-2 text-white/30">Auto-saved</p>
     </div>
   );
 }
@@ -783,72 +876,72 @@ function SceneModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="card-glass rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto"
+        className="rounded-[8px] max-w-2xl w-full max-h-[85vh] overflow-y-auto bg-[#1a1a1a] border border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
-              <p className="label-caps text-gold mb-1">Scene</p>
-              <h2 className="font-serif text-2xl text-parchment">{scene.name}</h2>
+              <p className="text-[8px] font-bold uppercase tracking-[0.5em] mb-1 text-white/55">Location</p>
+              <h2 className="font-bold text-2xl text-white">{scene.name}</h2>
             </div>
-            <button
-              onClick={onClose}
-              className="text-shadow hover:text-parchment transition-colors p-1"
+            <button onClick={onClose} className="transition-colors p-1 text-white/30 hover:text-white/70"
             >
-              <XCircle size={20} />
+              <XCircle size={18} />
             </button>
           </div>
 
           <div className="space-y-3 mb-8">
             {scene.description.split("\n\n").map((para, i) => (
-              <p key={i} className="font-serif italic text-mist leading-relaxed">
+              <p key={i} className="font-normal text-sm leading-relaxed text-white/55">
                 {para}
               </p>
             ))}
           </div>
 
           {sceneClues.length > 0 && (
-            <div className="border-t border-[#2a2a45] pt-6">
-              <p className="label-caps text-shadow mb-4">Discoverable Clues</p>
-              <div className="space-y-3">
-                {sceneClues.map((clue) => {
-                  const found = discoveredClues.includes(clue.id);
-                  return (
-                    <div
-                      key={clue.id}
-                      className={cn(
-                        "flex items-center justify-between gap-4 p-4 rounded-xl",
-                        found ? "card-gold" : "card"
-                      )}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="font-serif text-parchment">{clue.title}</p>
-                        {found && (
-                          <p className="text-mist text-sm mt-1 leading-relaxed font-serif italic line-clamp-2">
-                            {clue.description.slice(0, 100)}…
-                          </p>
-                        )}
-                      </div>
-                      {found ? (
-                        <CheckCircle2 size={16} className="text-gold shrink-0" />
-                      ) : (
-                        <button
-                          onClick={() => onDiscover(clue.id)}
-                          className="label-caps text-[10px] text-gold border border-gold/40 hover:bg-gold hover:text-void px-3 py-1.5 rounded-lg transition-colors duration-200 shrink-0"
-                        >
-                          Examine
-                        </button>
+            <div className="pt-6 space-y-3" style={{ borderTop: "0.5px solid rgba(255,255,255,0.1)" }}>
+              <p className="text-[8px] font-bold uppercase tracking-[0.5em] mb-4 text-white/45">Discoverable Evidence</p>
+              {sceneClues.map((clue) => {
+                const found = discoveredClues.includes(clue.id);
+                return (
+                  <div
+                    key={clue.id}
+                    className="flex items-center justify-between gap-4 p-4 rounded-[4px]"
+                    style={{
+                      background: found ? "#0a0a0a" : "#141414",
+                      border: `0.5px solid ${found ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)"}`,
+                    }}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-white">{clue.title}</p>
+                      {found && (
+                        <p className="font-normal text-sm mt-1 leading-relaxed line-clamp-2 text-white/50">
+                          {clue.description.slice(0, 100)}…
+                        </p>
                       )}
                     </div>
-                  );
-                })}
-              </div>
+                    {found ? (
+                      <CheckCircle2 size={14} style={{ color: "#E50914", flexShrink: 0 }} />
+                    ) : (
+                      <button
+                        onClick={() => onDiscover(clue.id)}
+                        className="text-[8px] font-bold uppercase tracking-[0.35em] px-3 py-1.5 transition-all duration-300 shrink-0 rounded-[2px]"
+                        style={{ border: "0.5px solid rgba(229,9,20,0.3)", color: "#E50914" }}
+                        onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(229,9,20,0.08)"; }}
+                        onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; }}
+                      >
+                        Examine
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
 
           <div className="mt-8 flex justify-end">
-            <button onClick={onMarkComplete} className="btn-gold">
+            <button onClick={onMarkComplete} className="px-6 py-2 rounded-[4px] bg-white text-black font-bold text-[9px] uppercase tracking-[0.4em] hover:bg-white/90 transition-colors">
               Mark Scene Complete
             </button>
           </div>
@@ -874,29 +967,35 @@ function BriefingModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.94 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="card-glass rounded-2xl max-w-xl w-full"
+        className="rounded-[8px] max-w-xl w-full bg-[#1a1a1a] border border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 sm:p-8">
-          <p className="label-caps text-gold mb-4 tracking-[0.25em]">Case Briefing</p>
-          <h2 className="font-serif text-3xl text-parchment mb-1">{caseData.title}</h2>
-          <p className="font-serif italic text-mist mb-6">{caseData.setting}</p>
+        <div className="p-6 sm:p-8 relative">
+          <div className="relative z-10">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-[0.5px] w-8 bg-white/30" />
+              <span className="text-[9px] font-bold uppercase tracking-[0.6em] text-white/60">Case Briefing</span>
+              <div className="h-[0.5px] flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+            </div>
+            <h2 className="font-bold text-3xl mb-1 text-white">{caseData.title}</h2>
+            <p className="font-normal text-sm mb-6 text-white/40">{caseData.setting}</p>
 
-          <div className="divider-gold mb-6" />
+            <div className="h-[0.5px] mb-6 bg-white/10" />
 
-          <div className="space-y-4 max-h-60 overflow-y-auto pr-1">
-            {caseData.briefing.split("\n\n").map((para, i) => (
-              <p key={i} className="font-serif italic text-mist leading-relaxed text-sm">
-                {para}
-              </p>
-            ))}
+            <div className="space-y-4 max-h-60 overflow-y-auto pr-1">
+              {caseData.briefing.split("\n\n").map((para, i) => (
+                <p key={i} className="font-normal text-sm leading-relaxed text-white/55">
+                  {para}
+                </p>
+              ))}
+            </div>
+
+            <div className="h-[0.5px] mt-6 mb-6 bg-white/10" />
+
+            <button onClick={onClose} className="w-full py-2 rounded-[4px] bg-white text-black font-bold text-[9px] uppercase tracking-[0.4em] hover:bg-white/90 transition-colors">
+              Begin Investigation
+            </button>
           </div>
-
-          <div className="divider-gold mt-6 mb-6" />
-
-          <button onClick={onClose} className="btn-gold w-full">
-            Begin Investigation
-          </button>
         </div>
       </motion.div>
     </Overlay>
@@ -913,7 +1012,7 @@ function ClueModal({ clue, onClose }: { clue: Clue; onClose: () => void }) {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
-        className="card-glass rounded-2xl max-w-lg w-full"
+        className="rounded-[8px] max-w-lg w-full bg-[#1a1a1a] border border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
@@ -921,20 +1020,20 @@ function ClueModal({ clue, onClose }: { clue: Clue; onClose: () => void }) {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className={cn(
-                  "label-caps px-2 py-0.5 rounded-full border text-[9px]",
+                  "px-2 py-0.5 rounded-full border text-[9px] font-bold uppercase",
                   clue.severity === "critical"
-                    ? "text-crimson-light border-crimson/30 bg-crimson/10"
-                    : "text-gold border-gold/30 bg-gold/10"
+                    ? "text-[#E50914] border-[#E50914]/30 bg-[#E50914]/10"
+                    : "text-white/60 border-white/30 bg-white/10"
                 )}>{clue.severity}</span>
-                <span className="label-caps text-shadow text-[9px] capitalize">{clue.type}</span>
+                <span className="text-white/60 text-[9px] font-bold uppercase capitalize">{clue.type}</span>
               </div>
-              <h3 className="font-serif text-xl text-parchment">{clue.title}</h3>
+              <h3 className="font-bold text-xl text-white">{clue.title}</h3>
             </div>
-            <button onClick={onClose} className="text-shadow hover:text-parchment">
+            <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
               <XCircle size={18} />
             </button>
           </div>
-          <p className="font-serif italic text-mist text-sm leading-relaxed">{clue.description}</p>
+          <p className="font-normal text-white/60 text-sm leading-relaxed">{clue.description}</p>
         </div>
       </motion.div>
     </Overlay>
@@ -956,7 +1055,7 @@ function Overlay({ children, onClose }: { children: React.ReactNode; onClose: ()
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-void/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
       {children}
@@ -965,47 +1064,41 @@ function Overlay({ children, onClose }: { children: React.ReactNode; onClose: ()
 }
 
 function Avatar({ index, name, size }: { index: number; name: string; size: "sm" | "lg" }) {
-  const colors = ["#2a2a45", "#1f1f35", "#181828", "#111120", "#2a2a45", "#1f1f35"];
-  const bg = colors[index % colors.length];
   const dim = size === "lg" ? "w-12 h-12 text-sm" : "w-9 h-9 text-xs";
   const initials = name.split(" ").map((n) => n[0]).slice(0, 2).join("");
   return (
-    <div
-      className={cn("rounded-full flex items-center justify-center font-serif font-medium text-mist shrink-0", dim)}
-      style={{ backgroundColor: bg }}
-    >
+    <div className={cn("rounded-full bg-[#E50914]/20 border border-[#E50914]/30 font-bold text-white flex items-center justify-center shrink-0", dim)}>
       {initials}
     </div>
   );
 }
 
-function StatCard({
-  value,
-  total,
-  label,
-  color,
-}: {
-  value: number;
-  total: number;
-  label: string;
-  color: "gold" | "iris" | "crimson";
-}) {
-  const colorMap = {
-    gold: "text-gold",
-    iris: "text-iris",
-    crimson: "text-crimson-light",
-  };
+function StatCard({ value, total, label, color }: { value: number; total: number; label: string; color: "red" | "white" }) {
+  const colorMap = { red: "#E50914", white: "#fff" };
+  const glowMap = { red: "rgba(229,9,20,0.15)", white: "rgba(255,255,255,0.15)" };
   return (
-    <div className="card rounded-xl p-4 text-center">
-      <p className={cn("font-serif text-3xl", colorMap[color])}>
-        {value}<span className="text-xl" style={{ color: "rgba(92,90,120,0.7)" }}>/{total}</span>
+    <div className="p-4 rounded-[4px] bg-[#1a1a1a] border border-white/10">
+      <p
+        className="font-bold text-3xl"
+        style={{ color: colorMap[color], filter: `drop-shadow(0 0 12px ${glowMap[color]})` }}
+      >
+        {value}<span className="text-base text-white/18" style={{ color: "rgba(255,255,255,0.18)" }}>/{total}</span>
       </p>
-      <p className="label-caps text-[10px] mt-1.5" style={{ color: "rgba(92,90,120,0.75)" }}>{label}</p>
+      <p className="text-[7.5px] font-bold uppercase tracking-[0.4em] mt-2 text-white/40">{label}</p>
     </div>
   );
 }
 
 function SectionHeader({ label, inline }: { label: string; inline?: boolean }) {
-  if (inline) return <p className="label-caps text-shadow">{label}</p>;
-  return <p className="label-caps text-shadow mb-4">{label}</p>;
+  if (inline) return (
+    <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-white/55">{label}</span>
+  );
+  return (
+    <div className="flex items-center gap-4 mb-6">
+      <div className="h-[0.5px] w-5 shrink-0 bg-white/30" />
+      <span className="text-[9px] font-bold uppercase tracking-[0.5em] shrink-0 text-white/55">{label}</span>
+      <div className="h-[0.5px] flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+    </div>
+  );
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

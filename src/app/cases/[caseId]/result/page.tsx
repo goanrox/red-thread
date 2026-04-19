@@ -76,9 +76,9 @@ export default function ResultPage({
 
   if (!caseData || !accused || !killer) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-mist font-serif italic">No accusation on record.</p>
-        <Link href={`/cases/${caseId}`} className="ml-4 label-caps text-gold">
+      <div className="flex items-center justify-center min-h-[60vh]" style={{ backgroundColor: "#141414", color: "#ffffff" }}>
+        <p>No accusation on record.</p>
+        <Link href={`/cases/${caseId}`} className="ml-4 uppercase" style={{ color: "#E50914" }}>
           Return to Investigation
         </Link>
       </div>
@@ -97,9 +97,11 @@ export default function ResultPage({
     <div
       className="min-h-[80vh] max-w-3xl mx-auto px-4 sm:px-6 pb-24 pt-6"
       style={{
+        backgroundColor: "#141414",
+        color: "#ffffff",
         background: isCorrect
-          ? "radial-gradient(ellipse at center top, rgba(201,168,76,0.06) 0%, transparent 55%)"
-          : "radial-gradient(ellipse at center top, rgba(139,34,50,0.08) 0%, transparent 55%)",
+          ? "linear-gradient(135deg, #141414 0%, rgba(76,221,138,0.03) 50%, #141414 100%)"
+          : "linear-gradient(135deg, #141414 0%, rgba(229,9,20,0.03) 50%, #141414 100%)",
       }}
     >
       {/* Phase 0: Loading */}
@@ -112,11 +114,12 @@ export default function ResultPage({
             className="flex flex-col items-center justify-center min-h-[50vh] gap-6"
           >
             <motion.div
-              className="w-8 h-8 border-2 border-[#2a2a45] border-t-gold rounded-full"
+              className="w-8 h-8 border-2 border-gray-700 border-t-red-500 rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+              style={{ borderTopColor: "#E50914" }}
             />
-            <p className="font-serif italic text-mist text-xl">
+            <p className="text-xl" style={{ color: "#aaa" }}>
               Reviewing the evidence…
             </p>
           </motion.div>
@@ -134,18 +137,17 @@ export default function ResultPage({
             className="text-center mb-12"
           >
             {isCorrect ? (
-              <CheckCircle2 size={48} className="text-gold mx-auto mb-4" />
+              <CheckCircle2 size={48} style={{ color: "#4cdd8a", margin: "0 auto 16px" }} />
             ) : (
-              <XCircle size={48} className="text-crimson-light mx-auto mb-4" />
+              <XCircle size={48} style={{ color: "#E50914", margin: "0 auto 16px" }} />
             )}
-            <h1 className={cn(
-              "font-serif leading-none mb-4",
-              "text-[clamp(56px,10vw,96px)]",
-              isCorrect ? "text-gold" : "text-crimson-light"
-            )}>
+            <h1 className="leading-none mb-4" style={{
+              fontSize: "clamp(56px,10vw,96px)",
+              color: isCorrect ? "#4cdd8a" : "#E50914",
+            }}>
               {isCorrect ? "Correct." : "Wrong."}
             </h1>
-            <p className="font-serif italic text-mist text-xl max-w-lg mx-auto leading-relaxed">
+            <p className="text-xl max-w-lg mx-auto leading-relaxed" style={{ color: "#aaa" }}>
               {isCorrect
                 ? "Your deduction was sound. Justice is served."
                 : "An innocent person has been accused. The real killer remains free."}
@@ -191,20 +193,24 @@ export default function ResultPage({
             className="space-y-8"
           >
             {/* Ending narrative */}
-            <div className="card rounded-2xl p-6">
-              <p className="label-caps text-shadow mb-3">{ending.title}</p>
-              <p className="font-serif italic text-mist text-base leading-relaxed">
+            <div className="rounded-2xl p-6" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <p className="text-[10px] uppercase mb-3" style={{ color: "#aaa" }}>{ending.title}</p>
+              <p className="text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
                 {ending.narrative}
               </p>
             </div>
 
             {/* Hidden truth */}
             <div
-              className="card rounded-2xl p-6"
-              style={{ borderColor: "rgba(201,168,76,0.28)", background: "linear-gradient(160deg, #191913 0%, #111110 55%)" }}
+              className="rounded-2xl p-6"
+              style={{
+                backgroundColor: "#1a1a1a",
+                border: "1px solid rgba(76,221,138,0.2)",
+                background: "linear-gradient(160deg, #0a1814 0%, #0a0f0d 55%)",
+              }}
             >
-              <p className="label-caps text-gold mb-3">The Hidden Truth</p>
-              <p className="font-serif italic text-mist text-sm leading-relaxed">
+              <p className="text-[10px] uppercase mb-3" style={{ color: "#4cdd8a" }}>The Hidden Truth</p>
+              <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
                 {caseData.solution.twist ?? caseData.solution.narrativeReveal}
               </p>
             </div>
@@ -217,37 +223,37 @@ export default function ResultPage({
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="rounded-2xl p-6 text-center"
                 style={{
-                  background: "radial-gradient(ellipse at center, rgba(201,168,76,0.08) 0%, transparent 70%)",
-                  border: "1px solid rgba(201,168,76,0.3)",
+                  backgroundColor: "rgba(76,221,138,0.08)",
+                  border: "1px solid rgba(76,221,138,0.2)",
                 }}
               >
-                <p className="label-caps text-gold mb-2 tracking-[0.25em]">Season 2 — Unlocked</p>
-                <h3 className="font-serif text-2xl text-parchment mb-3">
+                <p className="text-[10px] uppercase mb-2 tracking-[0.25em]" style={{ color: "#4cdd8a" }}>Season 2 — Unlocked</p>
+                <h3 className="text-2xl text-white mb-3">
                   The archive grows.
                 </h3>
-                <p className="font-serif italic text-mist text-sm leading-relaxed max-w-md mx-auto">
+                <p className="text-sm leading-relaxed max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.6)" }}>
                   You&apos;ve earned access to Season Two. Three new cases are being assembled for detectives of your calibre. They&apos;ll be waiting in the Case Browser when they&apos;re ready.
                 </p>
               </motion.div>
             )}
 
             {/* The killer's tell */}
-            <div className="card rounded-2xl p-6">
-              <p className="label-caps text-shadow mb-3">The Killer&apos;s Tell</p>
-              <p className="font-serif italic text-mist text-sm leading-relaxed mb-4">
+            <div className="rounded-2xl p-6" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <p className="text-[10px] uppercase mb-3" style={{ color: "#aaa" }}>The Killer&apos;s Tell</p>
+              <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.6)" }}>
                 {killer.tells.join(" ")}
               </p>
-              <p className="font-serif text-parchment text-sm leading-relaxed">
+              <p className="text-sm leading-relaxed text-white">
                 {caseData.solution.method}
               </p>
             </div>
 
             {/* Score breakdown */}
             {score > 0 && (
-              <div className="card rounded-2xl p-6">
+              <div className="rounded-2xl p-6" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div className="flex items-center gap-2 mb-5">
-                  <Trophy size={16} className="text-gold" />
-                  <p className="label-caps text-gold">Case Report</p>
+                  <Trophy size={16} style={{ color: "#E50914" }} />
+                  <p className="text-[10px] uppercase" style={{ color: "#E50914" }}>Case Report</p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
                   <ScoreStat label="Total Score" value={score.toString()} accent />
@@ -269,19 +275,17 @@ export default function ResultPage({
 
                 {/* Rank progression */}
                 <div>
-                  <p className="label-caps text-shadow mb-3 text-[10px]">Detective Rank</p>
+                  <p className="text-[10px] uppercase mb-3" style={{ color: "#666" }}>Detective Rank</p>
                   <div className="flex items-center gap-2 flex-wrap">
                     {RANK_ORDER.map((r) => (
                       <span
                         key={r}
-                        className={cn(
-                          "label-caps px-3 py-1.5 rounded-lg border text-[9px] transition-colors",
-                          r === rank
-                            ? "border-gold bg-gold/15 text-gold"
-                            : RANK_ORDER.indexOf(r) < RANK_ORDER.indexOf(rank)
-                            ? "border-[#2a2a45] text-shadow"
-                            : "border-[#2a2a45] text-[#2a2a45]"
-                        )}
+                        className="px-3 py-1.5 rounded-lg border text-[9px] uppercase transition-colors"
+                        style={{
+                          borderColor: r === rank ? "#E50914" : "rgba(255,255,255,0.08)",
+                          backgroundColor: r === rank ? "rgba(229,9,20,0.15)" : "transparent",
+                          color: r === rank ? "#E50914" : RANK_ORDER.indexOf(r) < RANK_ORDER.indexOf(rank) ? "#aaa" : "#444",
+                        }}
                       >
                         {r}
                       </span>
@@ -295,25 +299,36 @@ export default function ResultPage({
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/cases"
-                className="flex-1 py-3 rounded-xl label-caps text-center transition-all duration-200 flex items-center justify-center gap-2 text-mist hover:text-parchment hover:border-gold/40"
-                style={{ border: "1px solid rgba(42,42,69,0.8)", background: "rgba(7,7,14,0.3)" }}
+                className="flex-1 py-3 rounded-xl uppercase text-center transition-all duration-200 flex items-center justify-center gap-2"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "#aaa",
+                  backgroundColor: "#222",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+                  e.currentTarget.style.color = "#ffffff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                  e.currentTarget.style.color = "#aaa";
+                }}
               >
                 <BookOpen size={13} />
                 Back to Cases
               </Link>
               <button
                 onClick={handlePlayAgain}
-                className="flex-1 py-3 rounded-xl label-caps transition-all duration-200 flex items-center justify-center gap-2 text-gold hover:text-void"
+                className="flex-1 py-3 rounded-xl uppercase transition-all duration-200 flex items-center justify-center gap-2 text-white"
                 style={{
-                  border: "1px solid rgba(201,168,76,0.4)",
-                  background: "rgba(201,168,76,0.06)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+                  border: "1px solid #E50914",
+                  background: "rgba(229,9,20,0.1)",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(201,168,76,0.18)";
+                  e.currentTarget.style.background = "rgba(229,9,20,0.2)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(201,168,76,0.06)";
+                  e.currentTarget.style.background = "rgba(229,9,20,0.1)";
                 }}
               >
                 <RotateCcw size={13} />
@@ -340,67 +355,39 @@ function ResultCard({
   index: number;
   status: "correct" | "wrong" | "escaped";
 }) {
-  const bgs = ["#2a2a45","#1f1f35","#181828","#111120","#2a2a45","#1f1f35"];
+  const bgs = ["#2a2a2a","#1f1f1f","#181818","#111111","#2a2a2a","#1f1f1f"];
   return (
     <div
-      className="card rounded-2xl p-5 text-center"
-      style={status === "correct" ? { borderColor: "rgba(201,168,76,0.32)", background: "linear-gradient(160deg, #191913 0%, #111110 55%)" }
-        : status === "escaped" ? { borderColor: "rgba(139,34,50,0.35)", background: "linear-gradient(160deg, #191014 0%, #110c10 55%)" }
-        : undefined}
+      className="rounded-2xl p-5 text-center"
+      style={{
+        backgroundColor: "#1a1a1a",
+        border: status === "correct" ? "1px solid rgba(76,221,138,0.2)" : status === "escaped" ? "1px solid rgba(229,9,20,0.2)" : "1px solid rgba(255,255,255,0.08)",
+        background: status === "correct" ? "linear-gradient(160deg, #0a1814 0%, #0a0f0d 55%)" : status === "escaped" ? "linear-gradient(160deg, #1a0a0c 0%, #0d0608 55%)" : "#1a1a1a",
+      }}
     >
-      <p className="label-caps text-shadow text-[10px] mb-3">{label}</p>
+      <p className="text-[10px] uppercase mb-3" style={{ color: "#aaa" }}>{label}</p>
       <div
-        className="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center font-serif text-base text-mist"
+        className="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center text-base"
         style={{
-          background: `radial-gradient(circle at 40% 35%, ${bgs[index % bgs.length]}, #0c0c1a)`,
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 8px rgba(0,0,0,0.4)",
+          backgroundColor: bgs[index % bgs.length],
+          color: "#aaa",
+          border: "1px solid rgba(255,255,255,0.08)",
         }}
       >
         {suspect.name.split(" ").map((n) => n[0]).join("")}
       </div>
-      <p className="font-serif text-parchment">{suspect.name}</p>
-      <p className="label-caps text-shadow text-[10px] mt-1">{suspect.relation}</p>
+      <p className="text-white">{suspect.name}</p>
+      <p className="text-[10px] mt-1" style={{ color: "#666" }}>{suspect.relation}</p>
       <div className="mt-3">
         {status === "correct" && (
-          <span className="label-caps text-gold border border-gold/30 bg-gold/10 px-2 py-0.5 rounded-full text-[9px]">
+          <span className="text-[9px] uppercase px-2 py-0.5 rounded-full" style={{ color: "#4cdd8a", border: "1px solid #4cdd8a", backgroundColor: "rgba(76,221,138,0.1)" }}>
             Guilty
           </span>
         )}
         {status === "wrong" && (
-          <span className="label-caps text-shadow border border-[#2a2a45] px-2 py-0.5 rounded-full text-[9px]">
+          <span className="text-[9px] uppercase px-2 py-0.5 rounded-full" style={{ color: "#aaa", border: "1px solid rgba(255,255,255,0.08)" }}>
             Innocent
           </span>
         )}
         {status === "escaped" && (
-          <span className="label-caps text-crimson-light border border-crimson/30 bg-crimson/10 px-2 py-0.5 rounded-full text-[9px]">
-            Escaped Justice
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ScoreStat({
-  label,
-  value,
-  accent,
-  danger,
-}: {
-  label: string;
-  value: string;
-  accent?: boolean;
-  danger?: boolean;
-}) {
-  return (
-    <div className="text-center">
-      <p className={cn(
-        "font-serif text-2xl",
-        accent ? "text-gold" : danger ? "text-crimson-light" : "text-parchment"
-      )}>
-        {value}
-      </p>
-      <p className="label-caps text-shadow text-[10px] mt-1">{label}</p>
-    </div>
-  );
-}
+          <span className="text-[9px] uppercase px-2 py-0.5 rounded-full" style={{ color

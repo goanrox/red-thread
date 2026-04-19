@@ -1,448 +1,351 @@
 @import "tailwindcss";
 
-/* ─── Design Tokens ──────────────────────────────────────────────────────────── */
-
+/* ─── Netflix Design Tokens ─────────────────────────────────────────────────── */
 @theme inline {
-  /* Surface system — soft, near-monochrome dark */
-  --color-bg:              #0a0a0c;
-  --color-surface:         #111114;
-  --color-surface-2:       #16161b;
-  --color-surface-3:       #1d1d23;
-  --color-overlay:         rgba(10, 10, 12, 0.72);
+  --color-nf-bg:      #141414;
+  --color-nf-bg2:     #1a1a1a;
+  --color-nf-bg3:     #222222;
+  --color-nf-bg4:     #2a2a2a;
+  --color-nf-red:     #E50914;
+  --color-nf-red2:    #F40612;
+  --color-nf-white:   #ffffff;
+  --color-nf-gray1:   #e5e5e5;
+  --color-nf-gray2:   #aaaaaa;
+  --color-nf-gray3:   #666666;
 
-  /* Borders — hairline, restrained */
-  --color-border:          rgba(255, 255, 255, 0.08);
-  --color-border-strong:   rgba(255, 255, 255, 0.14);
-  --color-divider:         rgba(255, 255, 255, 0.06);
+  /* Legacy aliases — keep so old className refs compile */
+  --color-void:        #141414;
+  --color-abyss:       #141414;
+  --color-surface:     #1a1a1a;
+  --color-surface2:    #222222;
+  --color-surface3:    #2a2a2a;
+  --color-border:      rgba(255,255,255,0.08);
+  --color-gold:        #E50914;
+  --color-gold-light:  #F40612;
+  --color-crimson:     #E50914;
+  --color-crimson-light: #F40612;
+  --color-iris:        #aaaaaa;
+  --color-parchment:   #ffffff;
+  --color-mist:        #aaaaaa;
+  --color-shadow:      #666666;
+  --color-brass:       #E50914;
+  --color-brass-light: #F40612;
+  --color-ivory:       #e5e5e5;
+  --color-navy-deep:   #141414;
+  --color-charcoal:    #1a1a1a;
 
-  /* Text — ≥ WCAG AA on bg/surface */
-  --color-text:            #ededf0;
-  --color-text-secondary:  rgba(237, 237, 240, 0.70);
-  --color-text-tertiary:   rgba(237, 237, 240, 0.50);
-  --color-text-quaternary: rgba(237, 237, 240, 0.36);
-
-  /* Single accent — used sparsely */
-  --color-accent:          #d4b36a;
-  --color-accent-soft:     rgba(212, 179, 106, 0.14);
-  --color-accent-ring:     rgba(212, 179, 106, 0.32);
-
-  /* Status */
-  --color-success:         #6fbf8f;
-  --color-warning:         #d4b36a;
-  --color-danger:          #d96a73;
-
-  /* Focus ring (keyboard only) */
-  --color-focus:           #9ab7ff;
-
-  /* Legacy aliases (kept minimal for external refs) */
-  --color-void:            #0a0a0c;
-  --color-ivory:           #ededf0;
-  --color-parchment:       #ededf0;
-  --color-mist:            rgba(237, 237, 240, 0.70);
-  --color-shadow:          rgba(237, 237, 240, 0.40);
-  --color-gold:            #d4b36a;
-  --color-brass:           #d4b36a;
-  --color-crimson:         #d96a73;
-  --color-iris:            #9ab7ff;
-
-  /* Typography */
-  --font-sans:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-serif:   'Playfair Display', Georgia, serif;
+  --font-serif:   'Inter', system-ui, sans-serif;
+  --font-sans:    'Inter', system-ui, sans-serif;
   --font-display: 'Inter', system-ui, sans-serif;
-
-  /* Type scale (px — intentional, not rem, to keep minimums absolute) */
-  --fz-eyebrow:   12px;
-  --fz-meta:      13px;
-  --fz-label:     14px;
-  --fz-body:      15px;
-  --fz-body-lg:   17px;
-  --fz-title-sm:  20px;
-  --fz-title:     24px;
-  --fz-title-lg:  32px;
-  --fz-display:   clamp(40px, 5.5vw, 56px);
-
-  /* Layout */
-  --nav-h:        64px;
-  --subnav-h:     56px;
-
-  /* Radii */
-  --radius-sm:    6px;
-  --radius:       10px;
-  --radius-lg:    14px;
-  --radius-xl:    20px;
-
-  /* Shadows — soft, not theatrical */
-  --shadow-1: 0 1px 2px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04) inset;
-  --shadow-2: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05) inset;
-
-  /* Easing */
-  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-/* ─── Base ───────────────────────────────────────────────────────────────────── */
 
 *, *::before, *::after { box-sizing: border-box; }
-
-html {
-  color-scheme: dark;
-  scroll-padding-top: calc(var(--nav-h) + var(--subnav-h) + 8px);
-}
-
+html { color-scheme: dark; }
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  font-size: var(--fz-body);
-  line-height: 1.5;
+  background-color: #141414;
+  color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
-h1, h2, h3, h4 { text-wrap: balance; letter-spacing: -0.01em; }
-p              { text-wrap: pretty; }
-
-/* ─── Typography utilities ─────────────────────────────────────────────────── */
-
-.text-eyebrow {
-  font-family: var(--font-sans);
-  font-size: var(--fz-eyebrow);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
+/* Typography — all headings use Inter */
+.font-serif { font-family: 'Inter', system-ui, sans-serif; font-style: normal; }
+.font-display { font-family: 'Inter', system-ui, sans-serif; font-weight: 600; }
+.text-narrative { font-family: 'Inter', system-ui, sans-serif; color: #e5e5e5; line-height: 1.7; }
+.label-caps {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: #aaaaaa;
 }
+h1, h2, h3 { text-wrap: balance; }
 
-.text-meta {
-  font-size: var(--fz-meta);
-  color: var(--color-text-secondary);
-  letter-spacing: 0;
-}
-
-.text-label {
-  font-size: var(--fz-label);
-  font-weight: 500;
-  letter-spacing: 0;
-}
-
-/* Legacy — remaps old classes to the new scale so existing pages don't break */
-.label-caps,
-.label-brass {
-  font-family: var(--font-sans);
-  font-size: var(--fz-eyebrow);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-}
-.metadata-text {
-  font-family: var(--font-sans);
-  font-size: var(--fz-meta);
-  color: var(--color-text-tertiary);
-  letter-spacing: 0;
-}
-
-.font-serif { font-family: var(--font-serif); font-feature-settings: "liga","kern"; }
-.font-display { font-family: var(--font-sans); font-weight: 500; }
-
-/* ─── Surfaces ──────────────────────────────────────────────────────────────── */
-
-.surface {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-}
-
-.surface-2 {
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-}
-
-.divider {
-  height: 1px;
-  background: var(--color-divider);
-  width: 100%;
-}
-
-/* ─── Focus state ──────────────────────────────────────────────────────────── */
-
-:where(a, button, [role="button"], input, select, textarea):focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
-/* ─── Buttons ──────────────────────────────────────────────────────────────── */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 18px;
-  font-family: var(--font-sans);
-  font-size: var(--fz-label);
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
-  border-radius: var(--radius);
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--color-text);
-  cursor: pointer;
-  transition: background 140ms var(--ease-standard),
-              border-color 140ms var(--ease-standard),
-              color 140ms var(--ease-standard),
-              transform 140ms var(--ease-standard);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border-color: var(--color-text);
-}
-.btn-primary:hover { background: #fff; border-color: #fff; }
-.btn-primary:active { transform: translateY(1px); }
-
-.btn-secondary {
-  background: var(--color-surface-2);
-  border-color: var(--color-border-strong);
-  color: var(--color-text);
-}
-.btn-secondary:hover {
-  background: var(--color-surface-3);
-  border-color: var(--color-border-strong);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--color-text-secondary);
-}
-.btn-ghost:hover {
-  color: var(--color-text);
-  background: var(--color-surface);
-}
-
-.btn-disabled,
-.btn[aria-disabled="true"] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* Legacy gold buttons — remapped to primary so nothing breaks visually */
-.btn-gold,
-.btn-outline-gold {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 18px;
-  font-family: var(--font-sans);
-  font-size: var(--fz-label);
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: background 140ms var(--ease-standard), border-color 140ms var(--ease-standard);
-  text-decoration: none;
-}
-.btn-gold {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border: 1px solid var(--color-text);
-}
-.btn-gold:hover { background: #fff; border-color: #fff; }
-.btn-outline-gold {
-  background: transparent;
-  color: var(--color-text);
-  border: 1px solid var(--color-border-strong);
-}
-.btn-outline-gold:hover {
-  background: var(--color-surface);
-  border-color: var(--color-border-strong);
-}
-
-/* ─── Chips / filter pills ─────────────────────────────────────────────────── */
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 36px;
-  padding: 0 14px;
-  font-size: var(--fz-label);
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 140ms var(--ease-standard),
-              border-color 140ms var(--ease-standard),
-              color 140ms var(--ease-standard);
-}
-.chip:hover {
-  color: var(--color-text);
-  border-color: var(--color-border-strong);
-  background: var(--color-surface-2);
-}
-.chip[aria-pressed="true"],
-.chip.is-active {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border-color: var(--color-text);
-}
-
-/* ─── Badge ────────────────────────────────────────────────────────────────── */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
-  font-size: var(--fz-eyebrow);
-  font-weight: 500;
-  letter-spacing: 0;
-  border-radius: 999px;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  text-transform: none;
-}
-.badge-dot::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: currentColor;
-  display: inline-block;
-}
-.badge-accent  { color: var(--color-accent); border-color: var(--color-accent-ring); background: var(--color-accent-soft); }
-.badge-success { color: var(--color-success); }
-.badge-danger  { color: var(--color-danger); }
-.badge-muted   { color: var(--color-text-tertiary); }
-
-/* ─── Glass — used by header only ──────────────────────────────────────────── */
-
-.nav-glass {
-  background: rgba(10, 10, 12, 0.72);
-  backdrop-filter: saturate(140%) blur(14px);
-  -webkit-backdrop-filter: saturate(140%) blur(14px);
-  border-bottom: 1px solid var(--color-border);
-}
-
-/* ─── Motion ──────────────────────────────────────────────────────────────── */
-
+/* ─── Keyframes ─────────────────────────────────────────────────────────────── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-.animate-fade-up   { animation: fadeUp 360ms var(--ease-standard) both; }
-.animate-fade-in   { animation: fadeIn 280ms var(--ease-standard) both; }
-.animate-scale-in  { animation: fadeUp 320ms var(--ease-standard) both; }
-
-.stagger-1 { animation-delay:  40ms; }
-.stagger-2 { animation-delay:  80ms; }
-.stagger-3 { animation-delay: 120ms; }
-.stagger-4 { animation-delay: 160ms; }
-.stagger-5 { animation-delay: 200ms; }
-.stagger-6 { animation-delay: 240ms; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0ms !important;
-    scroll-behavior: auto !important;
-  }
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes typing {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%            { opacity: 1;   transform: translateY(-4px); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-22px); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 1; transform: scale(1.2); }
+}
+@keyframes ambient-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(2%, 1%) scale(1.05); }
+  66%       { transform: translate(-1%, 2%) scale(0.95); }
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(1.1); }
+}
+@keyframes pulseGold {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
 }
 
-/* ─── Scrollbar ────────────────────────────────────────────────────────────── */
+/* ─── Animation Classes ─────────────────────────────────────────────────────── */
+.animate-fade-up   { animation: fadeUp  500ms cubic-bezier(0.16,1,0.3,1) both; }
+.animate-fade-in   { animation: fadeIn  400ms ease-out both; }
+.animate-scale-in  { animation: scaleIn 400ms cubic-bezier(0.16,1,0.3,1) both; }
+.animate-pulse-gold      { animation: pulseGold     2s    ease-in-out infinite; }
+.animate-float           { animation: float         6s    ease-in-out infinite; }
+.animate-slide-in-right  { animation: slideInRight  350ms cubic-bezier(0.16,1,0.3,1) both; }
+.animate-pulse-soft      { animation: pulse-soft    3s    infinite ease-in-out; }
+.animate-ambient-float   { animation: ambient-float 20s   infinite ease-in-out; }
+.animate-glow-breathe    { animation: glow-breathe  10s   ease-in-out infinite; }
+.animate-glow-breathe-slow { animation: glow-breathe 16s  ease-in-out infinite; animation-delay: 4s; }
 
-::-webkit-scrollbar             { width: 10px; height: 10px; }
-::-webkit-scrollbar-track       { background: transparent; }
-::-webkit-scrollbar-thumb       { background: rgba(255,255,255,0.08); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); background-clip: padding-box; border: 2px solid transparent; }
+.stagger-1 { animation-delay:  80ms; }
+.stagger-2 { animation-delay: 160ms; }
+.stagger-3 { animation-delay: 240ms; }
+.stagger-4 { animation-delay: 320ms; }
+.stagger-5 { animation-delay: 400ms; }
+.stagger-6 { animation-delay: 480ms; }
 
-.scrollbar-none::-webkit-scrollbar { display: none; }
-.scrollbar-none { scrollbar-width: none; }
-
-::selection {
-  background-color: var(--color-accent-soft);
-  color: var(--color-text);
+/* ─── Card System ────────────────────────────────────────────────────────────── */
+.card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.card-elevated {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+}
+.card-glass {
+  background: rgba(20,20,20,0.92);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  box-shadow: 0 16px 56px rgba(0,0,0,0.75);
+}
+.card-gold {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+}
+.card-hover {
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  border-color: rgba(255,255,255,0.15);
 }
 
-/* ─── Legacy class compatibility (kept minimal) ────────────────────────────── */
-
-.card,
-.card-elevated,
-.framed-module {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-1);
+/* ─── Netflix Card (main case card) ─────────────────────────────────────────── */
+.card-cinema {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
 }
-.card-hover { transition: border-color 140ms var(--ease-standard), background 140ms var(--ease-standard); }
-.card-hover:hover { border-color: var(--color-border-strong); background: var(--color-surface-2); }
-
-.divider-gold,
-.divider-subtle {
-  height: 1px;
-  background: var(--color-divider);
+.card-cinema:hover {
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.8);
+  border-color: rgba(255,255,255,0.15);
 }
 
-.glass { /* legacy — used only by old sticky, kept neutral */
-  background: rgba(10,10,12,0.72);
-  backdrop-filter: saturate(140%) blur(14px);
-  -webkit-backdrop-filter: saturate(140%) blur(14px);
-  border-bottom: 1px solid var(--color-border);
+/* ─── Buttons ─────────────────────────────────────────────────────────────────── */
+.btn-gold {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem; font-weight: 700; letter-spacing: 0.01em;
+  color: #000000; text-decoration: none;
+  background: #ffffff;
+  border: none; border-radius: 4px; padding: 12px 28px; cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+.btn-gold:hover { background: rgba(255,255,255,0.85); transform: scale(1.02); }
+.btn-gold:active { transform: scale(1); }
+
+.btn-outline-gold {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem; font-weight: 600; letter-spacing: 0.01em;
+  color: #ffffff; text-decoration: none;
+  background: rgba(109,109,110,0.7); backdrop-filter: blur(4px);
+  border: none; border-radius: 4px; padding: 12px 28px; cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+.btn-outline-gold:hover { background: rgba(109,109,110,0.9); transform: scale(1.02); }
+.btn-gold-shimmer { background: #ffffff; }
+.btn-gold-shimmer:hover { background: rgba(255,255,255,0.85); }
+
+/* ─── Glassmorphism ──────────────────────────────────────────────────────────── */
+.glass {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(20,20,20,0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-/* No-op the old atmospheric layers — we keep the classes so old refs compile
-   but they render nothing. PageWrapper no longer emits these. */
-.grain-overlay,
-.blueprint-grid,
-.bloom-glow { display: none !important; }
 
-.animate-ambient-float,
-.animate-float,
-.animate-border-pulse,
-.animate-pulse-gold,
-.animate-shimmer,
-.animate-slide-in-right { animation: none; }
-
-.glow-gold, .glow-crimson, .glow-iris { box-shadow: none; }
-
-.text-gradient-gold,
-.text-gold-rich {
-  background: none;
-  -webkit-background-clip: initial;
-  -webkit-text-fill-color: currentColor;
-  background-clip: initial;
-  color: var(--color-text);
+/* ─── Archive / Filter Tags ──────────────────────────────────────────────────── */
+.filter-tag {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em;
+  padding: 7px 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px; background: transparent; color: #aaaaaa;
+  cursor: pointer; transition: all 150ms ease; white-space: nowrap;
+}
+.filter-tag:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
+.filter-tag.active {
+  background: #ffffff; color: #000000; border-color: #ffffff;
 }
 
+.archive-section-header {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+}
+.archive-section-header::before {
+  content: ""; display: block; width: 24px; height: 1px;
+  background: rgba(229,9,20,0.5); flex-shrink: 0;
+}
+.archive-section-header::after {
+  content: ""; display: block; flex: 1; height: 1px;
+  background: linear-gradient(to right, rgba(229,9,20,0.3), transparent);
+}
+
+/* ─── Stat Components ────────────────────────────────────────────────────────── */
+.stat-compartment {
+  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px; padding: 20px; text-align: center;
+}
+.stat-compartment-v2 {
+  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px; padding: 20px 16px; text-align: center;
+}
+.dossier-card {
+  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  transition: border-color 250ms ease, background 250ms ease, box-shadow 250ms ease;
+  overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.dossier-card:hover {
+  border-color: rgba(255,255,255,0.14);
+  background: #222222;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.7);
+}
+
+/* ─── Evidence Cards ─────────────────────────────────────────────────────────── */
+.evidence-card {
+  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px; padding: 16px; cursor: pointer;
+  transition: border-color 200ms ease, background 200ms ease;
+  text-align: left; width: 100%;
+}
+.evidence-card:hover {
+  border-color: rgba(255,255,255,0.14); background: #222222;
+}
+.evidence-redacted {
+  background: rgba(20,20,20,0.6); border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 4px; padding: 16px; display: flex; align-items: center; gap: 10px;
+}
+
+/* ─── Classified / Lock ──────────────────────────────────────────────────────── */
+.classified-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+}
+
+/* ─── Tab System ─────────────────────────────────────────────────────────────── */
+.tab-gold-active { color: #E50914; border-bottom-color: #E50914; }
+
+/* ─── Glow ───────────────────────────────────────────────────────────────────── */
+.glow-gold    { box-shadow: 0 0 32px rgba(229,9,20,0.2); }
+.glow-crimson { box-shadow: 0 0 32px rgba(229,9,20,0.3); }
+.glow-iris    { box-shadow: 0 0 32px rgba(255,255,255,0.1); }
+
+/* ─── Text Utilities ─────────────────────────────────────────────────────────── */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.text-gold-rich { color: #ffffff; }
+
+/* ─── Dividers ───────────────────────────────────────────────────────────────── */
+.divider-gold  { height: 1px; background: rgba(229,9,20,0.3); }
+.divider-subtle { height: 1px; background: rgba(255,255,255,0.06); }
+.gold-divider  { height: 1px; background: rgba(255,255,255,0.06); }
+
+/* ─── Misc Legacy ────────────────────────────────────────────────────────────── */
+.glass-panel {
+  background: rgba(255,255,255,0.02); backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.label-brass { font-family: 'Inter', system-ui, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #E50914; }
+.metadata-text { font-family: 'Inter', system-ui, sans-serif; font-size: 0.7rem; color: #666666; letter-spacing: 0.05em; }
+.monogram-circle { background: rgba(229,9,20,0.1); border: 1px solid rgba(229,9,20,0.2); display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; color: #E50914; }
+.section-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Inter', system-ui, sans-serif; font-size: 0.65rem;
+  font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #E50914;
+}
+.section-eyebrow::before { content: ''; display: block; width: 16px; height: 1px; background: #E50914; flex-shrink: 0; }
+.section-panel { background: #1a1a1a; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.section-atmo { position: relative; isolation: isolate; }
+.section-atmo::before {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%,-50%); width: 800px; height: 400px;
+  background: radial-gradient(ellipse, rgba(229,9,20,0.04) 0%, transparent 65%);
+  pointer-events: none; z-index: -1;
+}
 .input-field {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  font-size: var(--fz-body);
-  transition: border-color 140ms var(--ease-standard), box-shadow 140ms var(--ease-standard);
+  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+  color: #ffffff; font-family: 'Inter', system-ui, sans-serif;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
-.input-field:focus {
-  outline: none;
-  border-color: var(--color-border-strong);
-  box-shadow: 0 0 0 3px rgba(154, 183, 255, 0.18);
-}
+.input-field:focus { outline: none; border-color: rgba(229,9,20,0.5); box-shadow: 0 0 0 3px rgba(229,9,20,0.08); }
+.img-to-dark { background: linear-gradient(to bottom, rgba(20,20,20,0.05) 0%, rgba(20,20,20,0.45) 55%, rgba(20,20,20,0.97) 100%); }
+.scene-img-panel { position: relative; overflow: hidden; background: #1a1a1a; }
+.scene-img-panel::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,20,20,0) 20%, rgba(20,20,20,0.85) 100%); pointer-events: none; }
+.suspect-portrait { position: relative; overflow: hidden; background: #1a1a1a; }
+.suspect-portrait::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(229,9,20,0.04) 0%, transparent 60%); pointer-events: none; }
+.gold-button-gradient { background: #ffffff; transition: all 250ms ease; }
+.gold-button-gradient:hover { background: rgba(255,255,255,0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.paper-texture { background-image: none; }
+.fingerprint-texture { background-image: none; }
+.particles-bg { background-image: none; }
+.blueprint-grid { background-image: none; }
+.grain-overlay { display: none; }
+.inner-glow { box-shadow: none; }
+.corner-frame { position: relative; }
+.corner-frame::before, .corner-frame::after { content: ''; position: absolute; width: 14px; height: 14px; border-color: rgba(255,255,255,0.12); border-style: solid; pointer-events: none; z-index: 2; }
+.corner-frame::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.corner-frame::after  { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+.portrait-mask { mask-image: radial-gradient(circle at center, black 30%, transparent 70%); -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 70%); }
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #141414; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+::selection { background-color: rgba(229,9,20,0.25); color: #ffffff; }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

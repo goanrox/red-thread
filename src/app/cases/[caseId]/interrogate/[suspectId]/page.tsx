@@ -13,21 +13,21 @@ import type { Question, SuspectTone } from "@/types";
 // ─── Tone indicators ──────────────────────────────────────────────────────────
 
 const TONE_CONFIG: Record<SuspectTone, { label: string; color: string }> = {
-  hostile:      { label: "Hostile",      color: "#8b2232" },
-  nervous:      { label: "Nervous",      color: "#c9a84c" },
+  hostile:      { label: "Hostile",      color: "#E50914" },
+  nervous:      { label: "Nervous",      color: "#E50914" },
   evasive:      { label: "Evasive",      color: "#6b63d4" },
-  cooperative:  { label: "Cooperative",  color: "#5c5a78" },
-  cold:         { label: "Cold",         color: "#a8a5c0" },
-  "grief-stricken": { label: "Grief-stricken", color: "#5c5a78" },
+  cooperative:  { label: "Cooperative",  color: "#aaaaaa" },
+  cold:         { label: "Cold",         color: "#aaaaaa" },
+  "grief-stricken": { label: "Grief-stricken", color: "#aaaaaa" },
 };
 
 const TONE_CATEGORY_COLORS: Record<string, string> = {
-  Alibi:         "#c9a84c",
-  Motive:        "#8b2232",
+  Alibi:         "#E50914",
+  Motive:        "#E50914",
   Relationship:  "#6b63d4",
-  Evidence:      "#f0ece0",
-  Behavior:      "#a8a5c0",
-  Accusation:    "#c13248",
+  Evidence:      "#ffffff",
+  Behavior:      "#aaaaaa",
+  Accusation:    "#E50914",
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -84,7 +84,7 @@ export default function InterrogationPage({
   if (!caseData || !suspect) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-mist font-serif italic">Suspect not found.</p>
+        <p className="text-aaa">Suspect not found.</p>
       </div>
     );
   }
@@ -127,7 +127,7 @@ export default function InterrogationPage({
     caseData.suspects[(suspectIndex - 1 + caseData.suspects.length) % caseData.suspects.length];
 
   return (
-    <div className="flex h-[calc(100vh-7rem)] max-w-6xl mx-auto px-4 sm:px-6 gap-5 pb-4">
+    <div className="flex h-[calc(100vh-7rem)] max-w-6xl mx-auto px-4 sm:px-6 gap-5 pb-4" style={{ backgroundColor: "#141414" }}>
       {/* ── Sidebar ─────────────────────────────────────────────────── */}
       <>
         {/* Mobile backdrop */}
@@ -137,7 +137,8 @@ export default function InterrogationPage({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="sm:hidden fixed inset-0 z-30 bg-void/80"
+              style={{ backgroundColor: "rgba(0,0,0,0.8)" }}
+              className="sm:hidden fixed inset-0 z-30"
               onClick={() => setSidebarOpen(false)}
             />
           )}
@@ -149,10 +150,11 @@ export default function InterrogationPage({
             <motion.aside
               initial={false}
               className={cn(
-                "card-elevated rounded-2xl flex-col gap-5 overflow-y-auto",
+                "rounded-2xl flex-col gap-5 overflow-y-auto",
                 "hidden sm:flex w-72 shrink-0 p-5",
                 sidebarOpen && "fixed bottom-0 left-0 right-0 z-40 flex sm:relative sm:z-auto"
               )}
+              style={{ backgroundColor: "#1a1a1a" }}
             >
               <SidebarContent
                 suspect={suspect}
@@ -172,11 +174,14 @@ export default function InterrogationPage({
       <div className="flex flex-col flex-1 min-w-0">
         {/* Mobile profile toggle */}
         <button
-          className="sm:hidden flex items-center gap-2 mb-3 text-mist hover:text-parchment transition-colors duration-200"
+          className="sm:hidden flex items-center gap-2 mb-3 transition-colors duration-200"
+          style={{ color: "#aaa" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#aaa")}
           onClick={() => setSidebarOpen((v) => !v)}
         >
           <User size={14} />
-          <span className="label-caps text-[10px]">
+          <span className="text-[10px]">
             {suspect.name} · View Profile
           </span>
         </button>
@@ -213,11 +218,12 @@ export default function InterrogationPage({
                 className="flex items-center gap-3"
               >
                 <SuspectAvatar index={suspectIndex} name={suspect.name} />
-                <div className="card flex gap-1.5 rounded-2xl px-4 py-3">
+                <div className="flex gap-1.5 rounded-2xl px-4 py-3" style={{ backgroundColor: "#222" }}>
                   {[0, 1, 2].map((i) => (
                     <motion.span
                       key={i}
-                      className="w-1.5 h-1.5 bg-mist rounded-full"
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: "#aaa" }}
                       animate={{ opacity: [0.3, 1, 0.3], y: [0, -4, 0] }}
                       transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
                     />
@@ -231,29 +237,66 @@ export default function InterrogationPage({
         </div>
 
         {/* ── Question panel ──────────────────────────────────────── */}
-        <div className="mt-4 border-t border-[#2a2a45] pt-4">
+        <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
           {allExhausted ? (
             <div className="text-center py-4">
-              <p className="font-serif italic text-mist mb-4">
+              <p className="text-aaa mb-4">
                 All questions have been asked.
               </p>
               <div className="flex justify-center gap-3">
                 <Link
                   href={`/cases/${caseId}/interrogate/${prevSuspect.id}`}
-                  className="label-caps text-[10px] text-shadow hover:text-mist border border-[#2a2a45] px-3 py-2 rounded-lg transition-colors duration-200 flex items-center gap-1.5"
+                  className="text-[10px] px-3 py-2 rounded-lg transition-colors duration-200 flex items-center gap-1.5"
+                  style={{
+                    color: "#aaa",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#ffffff";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#aaa";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                  }}
                 >
                   <ChevronLeft size={11} />
                   {prevSuspect.name.split(" ")[0]}
                 </Link>
                 <Link
                   href={`/cases/${caseId}`}
-                  className="label-caps text-[10px] text-gold border border-gold/40 px-3 py-2 rounded-lg hover:bg-gold hover:text-void transition-colors duration-200"
+                  className="text-[10px] px-3 py-2 rounded-lg transition-colors duration-200"
+                  style={{
+                    color: "#000",
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #ffffff",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#e5e5e5";
+                    e.currentTarget.style.borderColor = "#e5e5e5";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#ffffff";
+                    e.currentTarget.style.borderColor = "#ffffff";
+                  }}
                 >
                   Back to Hub
                 </Link>
                 <Link
                   href={`/cases/${caseId}/interrogate/${nextSuspect.id}`}
-                  className="label-caps text-[10px] text-shadow hover:text-mist border border-[#2a2a45] px-3 py-2 rounded-lg transition-colors duration-200 flex items-center gap-1.5"
+                  className="text-[10px] px-3 py-2 rounded-lg transition-colors duration-200 flex items-center gap-1.5"
+                  style={{
+                    color: "#aaa",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#ffffff";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#aaa";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                  }}
                 >
                   {nextSuspect.name.split(" ")[0]}
                   <ChevronRight size={11} />
@@ -262,7 +305,7 @@ export default function InterrogationPage({
             </div>
           ) : (
             <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-              <p className="label-caps text-shadow text-[10px] mb-3">
+              <p className="text-[10px] mb-3" style={{ color: "#666" }}>
                 {available.length} question{available.length !== 1 ? "s" : ""} available
               </p>
               {available.map((q) => (
@@ -271,19 +314,31 @@ export default function InterrogationPage({
                   onClick={() => !typing && handleAsk(q)}
                   disabled={typing}
                   className={cn(
-                    "w-full text-left px-4 py-3 rounded-xl card",
-                    "font-serif text-parchment text-sm leading-snug",
-                    "transition-all duration-300",
-                    q.isKeyQuestion && "card-gold",
-                    typing
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:border-gold/40 cursor-pointer"
+                    "w-full text-left px-4 py-3 rounded-xl text-sm leading-snug transition-all duration-300"
                   )}
+                  style={{
+                    backgroundColor: "#222",
+                    color: "#ffffff",
+                    border: `1px solid ${q.isKeyQuestion ? "#E50914" : "rgba(255,255,255,0.08)"}`,
+                    opacity: typing ? 0.5 : 1,
+                    cursor: typing ? "not-allowed" : "pointer",
+                    borderLeft: `3px solid ${TONE_CATEGORY_COLORS[q.category] || "#E50914"}`,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!typing) {
+                      e.currentTarget.style.backgroundColor = "#333";
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#222";
+                    e.currentTarget.style.borderColor = q.isKeyQuestion ? "#E50914" : "rgba(255,255,255,0.08)";
+                  }}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <span>{q.text}</span>
                     {q.isKeyQuestion && (
-                      <span className="label-caps text-gold text-[9px] shrink-0 mt-0.5">Key</span>
+                      <span className="text-[9px] shrink-0 mt-0.5" style={{ color: "#E50914" }}>Key</span>
                     )}
                   </div>
                 </button>
@@ -302,11 +357,12 @@ function PlayerBubble({ text }: { text: string }) {
   return (
     <div className="flex justify-end">
       <div
-        className="max-w-sm px-4 py-3 rounded-2xl rounded-tr-sm text-parchment text-sm leading-relaxed font-serif"
+        className="max-w-sm px-4 py-3 rounded-2xl rounded-tr-sm text-sm leading-relaxed"
         style={{
-          background: "linear-gradient(135deg, rgba(201,168,76,0.16) 0%, rgba(201,168,76,0.10) 100%)",
-          border: "1px solid rgba(201,168,76,0.28)",
-          boxShadow: "inset 0 1px 0 rgba(201,168,76,0.12), 0 2px 12px rgba(0,0,0,0.4)",
+          background: "rgba(229,9,20,0.12)",
+          border: "1px solid rgba(229,9,20,0.3)",
+          boxShadow: "inset 0 1px 0 rgba(229,9,20,0.15), 0 2px 12px rgba(0,0,0,0.4)",
+          color: "#ffffff",
         }}
       >
         {text}
@@ -338,13 +394,13 @@ function SuspectBubble({
               className="w-1.5 h-1.5 rounded-full"
               style={{ backgroundColor: toneConfig.color }}
             />
-            <span className="label-caps text-[9px]" style={{ color: toneConfig.color }}>
+            <span className="text-[9px]" style={{ color: toneConfig.color }}>
               {toneConfig.label}
             </span>
           </div>
         )}
-        <div className="card rounded-2xl rounded-tl-sm px-4 py-3">
-          <p className="font-serif italic text-parchment text-sm leading-relaxed">{text}</p>
+        <div className="rounded-2xl rounded-tl-sm px-4 py-3" style={{ backgroundColor: "#222", color: "#ffffff" }}>
+          <p className="text-sm leading-relaxed">{text}</p>
         </div>
       </div>
     </div>
@@ -375,95 +431,43 @@ function SidebarContent({
       {/* Avatar + name */}
       <div className="text-center">
         <div
-          className="w-18 h-18 rounded-full mx-auto mb-3 flex items-center justify-center font-serif text-xl text-mist"
+          className="w-18 h-18 rounded-full mx-auto mb-3 flex items-center justify-center text-xl"
           style={{
             width: "72px", height: "72px",
             background: `radial-gradient(circle at 30% 30%, ${getAvatarBg(suspectIndex)}cc, ${getAvatarBg(suspectIndex)})`,
-            border: "1px solid rgba(42,42,69,0.8)",
+            border: "1px solid rgba(255,255,255,0.08)",
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 4px 16px rgba(0,0,0,0.5)",
+            color: "#aaa",
           }}
         >
           {suspect.name.split(" ").map((n) => n[0]).join("")}
         </div>
-        <h3 className="font-serif text-lg text-parchment">{suspect.name}</h3>
-        <p className="label-caps text-shadow text-[10px] mt-0.5">{suspect.relation}</p>
+        <h3 className="text-lg" style={{ color: "#ffffff" }}>{suspect.name}</h3>
+        <p className="text-[10px] mt-0.5" style={{ color: "#666" }}>{suspect.relation}</p>
       </div>
 
-      <div className="divider-gold" />
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
 
       {/* Suspicion meter */}
       <div>
         <div className="flex justify-between mb-1.5">
-          <span className="label-caps text-shadow text-[10px]">Suspicion</span>
-          <span className={cn("label-caps text-[10px]",
-            suspicion >= 60 ? "text-crimson-light" : suspicion >= 30 ? "text-gold" : "text-shadow"
-          )}>{suspicion}%</span>
+          <span className="text-[10px]" style={{ color: "#666" }}>Suspicion</span>
+          <span className="text-[10px]" style={{
+            color: suspicion >= 60 ? "#E50914" : suspicion >= 30 ? "#E50914" : "#666"
+          }}>{suspicion}%</span>
         </div>
-        <div className="h-1.5 bg-[#2a2a45] rounded-full overflow-hidden">
+        <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#222" }}>
           <motion.div
-            className={cn(
-              "h-full rounded-full",
-              suspicion >= 60 ? "bg-crimson-light" : suspicion >= 30 ? "bg-gold" : "bg-[#5c5a78]"
-            )}
+            className="h-full rounded-full"
+            style={{
+              backgroundColor: suspicion >= 60 ? "#E50914" : suspicion >= 30 ? "#E50914" : "#aaa"
+            }}
             initial={{ width: 0 }}
             animate={{ width: `${suspicion}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
           />
         </div>
-        <p className="label-caps text-shadow text-[10px] mt-1.5">{asked}/{total} questions asked</p>
+        <p className="text-[10px] mt-1.5" style={{ color: "#666" }}>{asked}/{total} questions asked</p>
       </div>
 
-      <div className="divider-gold" />
-
-      {/* Alibi */}
-      <div>
-        <p className="label-caps text-shadow text-[10px] mb-2">Known Alibi</p>
-        <p className="font-serif italic text-mist text-xs leading-relaxed">{suspect.alibi}</p>
-      </div>
-
-      {/* Other suspects */}
-      <div>
-        <p className="label-caps text-shadow text-[10px] mb-2">Other Suspects</p>
-        <div className="flex flex-col gap-1">
-          {caseData.suspects
-            .filter((s) => s.id !== suspect.id)
-            .map((s, i) => (
-              <Link
-                key={s.id}
-                href={`/cases/${caseId}/interrogate/${s.id}`}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-surface2 transition-colors duration-150"
-              >
-                <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-serif text-mist"
-                  style={{ backgroundColor: getAvatarBg(i >= suspectIndex ? i + 1 : i) }}
-                >
-                  {s.name.split(" ").map((n) => n[0]).join("")}
-                </div>
-                <span className="text-mist text-xs font-serif truncate">{s.name}</span>
-              </Link>
-            ))}
-        </div>
-      </div>
-    </>
-  );
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const AVATAR_BG = ["#2a2a45", "#1f1f35", "#181828", "#111120", "#2a2a45", "#1f1f35"];
-
-function getAvatarBg(index: number) {
-  return AVATAR_BG[index % AVATAR_BG.length];
-}
-
-function SuspectAvatar({ index, name }: { index: number; name: string }) {
-  const initials = name.split(" ").map((n) => n[0]).slice(0, 2).join("");
-  return (
-    <div
-      className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-serif text-mist shrink-0"
-      style={{ backgroundColor: getAvatarBg(index) }}
-    >
-      {initials}
-    </div>
-  );
-}
+      <div 
