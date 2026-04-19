@@ -289,4 +289,46 @@ export default function AccusePage({
                 {loading ? (
                   <>
                     <motion.div
-                      className="w-4 h-4 border-2 border-white/30 border-t-
+                      className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                    />
+                    Accusing…
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle size={15} />
+                    Yes — Accuse {selected.name}
+                  </>
+                )}
+              </button>
+              <button
+                onClick={() => setStep("confirm1")}
+                disabled={loading}
+                className="w-full py-3 rounded-xl uppercase transition-all duration-200"
+                style={{
+                  color: "#aaa",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  backgroundColor: "transparent",
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  if (\!loading) {
+                    e.currentTarget.style.color = "#ffffff";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#aaa";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                }}
+              >
+                ← Go Back
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
