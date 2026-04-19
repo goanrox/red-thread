@@ -322,7 +322,7 @@ export default function InterrogationPage({
                     border: `1px solid ${q.isKeyQuestion ? "#E50914" : "rgba(255,255,255,0.08)"}`,
                     opacity: typing ? 0.5 : 1,
                     cursor: typing ? "not-allowed" : "pointer",
-                    borderLeft: `3px solid ${TONE_CATEGORY_COLORS[q.category] || "#E50914"}`,
+                    borderLeft: `3px solid ${TONE_CATEGORY_COLORS[q.tone] || "#E50914"}`,
                   }}
                   onMouseEnter={(e) => {
                     if (!typing) {
