@@ -1,2 +1,2 @@
-export { CaseCard, SeasonLockedCard } from "./CaseCard";
+export { CaseCard } from "./CaseCard";
 export type { CaseCardProps, CaseCardProgress } from "./CaseCard";

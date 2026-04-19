@@ -476,15 +476,15 @@ function SidebarContent({
       <div>
         <p className="text-[9px] uppercase tracking-widest mb-2" style={{ color: "#666" }}>Background</p>
         <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
-          {suspect.background}
+          {suspect.description}
         </p>
       </div>
 
-      {suspect.traits && suspect.traits.length > 0 && (
+      {suspect.tells && suspect.tells.length > 0 && (
         <div>
           <p className="text-[9px] uppercase tracking-widest mb-2" style={{ color: "#666" }}>Traits</p>
           <div className="flex flex-wrap gap-1.5">
-            {suspect.traits.map((trait) => (
+            {suspect.tells.map((trait) => (
               <span
                 key={trait}
                 className="text-[9px] px-2 py-0.5 rounded capitalize"
