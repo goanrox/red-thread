@@ -119,7 +119,7 @@ export default function EvidencePage({
 
       {collectedClues.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-28 text-center">
-          <div className="w-[0.5px] h-10" style={{ backgroundColor: "rgba(255,255,255,0.08)" }} style={{ margin: "0 auto 32px" }} />
+          <div className="w-[0.5px] h-10" style={{ backgroundColor: "rgba(255,255,255,0.08)", margin: "0 auto 32px" }} />
           <p className="text-2xl mb-3">No evidence collected yet.</p>
           <p className="text-sm leading-relaxed mb-10" style={{ color: "#aaa", maxWidth: "320px" }}>
             Explore the scenes and interrogate suspects to uncover the truth.
