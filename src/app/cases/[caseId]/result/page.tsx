@@ -390,4 +390,51 @@ function ResultCard({
           </span>
         )}
         {status === "escaped" && (
-          <span className="text-[9px] uppercase px-2 py-0.5 rounded-full" style={{ color
+          <span className="text-[9px] uppercase px-2 py-0.5 rounded-full" style={{ color: "#E50914", border: "1px solid #E50914", backgroundColor: "rgba(229,9,20,0.1)" }}>
+            Escaped
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── ScoreStat ────────────────────────────────────────────────────────────────
+
+function ScoreStat({
+  label,
+  value,
+  accent,
+  danger,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+  danger?: boolean;
+}) {
+  return (
+    <div
+      className="rounded-xl p-4 text-center"
+      style={{
+        backgroundColor: accent
+          ? "rgba(229,9,20,0.08)"
+          : danger
+          ? "rgba(229,9,20,0.05)"
+          : "#222",
+        border: accent
+          ? "1px solid rgba(229,9,20,0.2)"
+          : "1px solid rgba(255,255,255,0.06)",
+      }}
+    >
+      <p
+        className="text-2xl font-semibold mb-1"
+        style={{ color: accent ? "#E50914" : danger ? "#E50914" : "#ffffff" }}
+      >
+        {value}
+      </p>
+      <p className="text-[9px] uppercase tracking-widest" style={{ color: "#666" }}>
+        {label}
+      </p>
+    </div>
+  );
+}

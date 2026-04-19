@@ -386,4 +386,59 @@ function ClueModal({
           <div className="flex items-start justify-between gap-4 mb-5">
             <div>
               <div className="flex items-center gap-2 mb-2">
-     
+                <span
+                  className="text-[8px] uppercase tracking-widest px-2 py-0.5 rounded"
+                  style={clue.severity === "critical"
+                    ? { color: "#E50914", border: "1px solid #E50914", backgroundColor: "rgba(229,9,20,0.1)" }
+                    : { color: "#aaa", border: "1px solid rgba(255,255,255,0.08)", backgroundColor: "transparent" }}
+                >
+                  {clue.severity}
+                </span>
+                <span className="text-[8px] uppercase tracking-widest capitalize" style={{ color: "#aaa" }}>
+                  {clue.type}
+                </span>
+              </div>
+              <h2 className="text-xl text-white">{clue.title}</h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-1 rounded transition-colors duration-200 shrink-0 mt-0.5"
+              style={{ color: "#666" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#666")}
+            >
+              <XCircle size={18} />
+            </button>
+          </div>
+
+          <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.6)" }}>
+            {clue.description}
+          </p>
+
+          {linkedSuspects.length > 0 && (
+            <div className="pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+              <p className="text-[9px] uppercase tracking-widest mb-3" style={{ color: "#666" }}>
+                Related Suspects
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                {linkedSuspects.map((s) => (
+                  <span
+                    key={s.id}
+                    className="text-[10px] px-2.5 py-1.5 rounded"
+                    style={{
+                      backgroundColor: "#222",
+                      color: "#aaa",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    {s.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}

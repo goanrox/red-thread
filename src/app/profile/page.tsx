@@ -215,4 +215,63 @@ export default function ProfilePage() {
           transition={{ duration: 0.4, delay: 0.3 }}
           className="mt-8 text-center"
         >
-          <p className="text-lg mb-6" style={{ co
+          <p className="text-lg mb-6" style={{ color: "#aaa" }}>
+            No cases on record. Your story starts now.
+          </p>
+          <Link
+            href="/cases"
+            className="inline-block px-6 py-3 rounded-xl uppercase tracking-[0.1em] transition-all duration-200 text-white"
+            style={{
+              backgroundColor: "#E50914",
+              border: "1px solid #E50914",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#cc0811";
+              e.currentTarget.style.borderColor = "#cc0811";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#E50914";
+              e.currentTarget.style.borderColor = "#E50914";
+            }}
+          >
+            Browse Cases
+          </Link>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+// ─── StatCard ─────────────────────────────────────────────────────────────────
+
+function StatCard({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string | number;
+  accent?: boolean;
+}) {
+  return (
+    <div
+      className="rounded-2xl p-5 text-center"
+      style={{
+        backgroundColor: "#1a1a1a",
+        border: accent
+          ? "1px solid rgba(229,9,20,0.2)"
+          : "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <p
+        className="text-3xl font-semibold mb-1"
+        style={{ color: accent ? "#E50914" : "#ffffff" }}
+      >
+        {value}
+      </p>
+      <p className="text-[9px] uppercase tracking-widest" style={{ color: "#666" }}>
+        {label}
+      </p>
+    </div>
+  );
+}

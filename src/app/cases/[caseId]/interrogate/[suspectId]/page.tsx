@@ -470,4 +470,92 @@ function SidebarContent({
         <p className="text-[10px] mt-1.5" style={{ color: "#666" }}>{asked}/{total} questions asked</p>
       </div>
 
-      <div 
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
+
+      {/* Background */}
+      <div>
+        <p className="text-[9px] uppercase tracking-widest mb-2" style={{ color: "#666" }}>Background</p>
+        <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+          {suspect.background}
+        </p>
+      </div>
+
+      {suspect.traits && suspect.traits.length > 0 && (
+        <div>
+          <p className="text-[9px] uppercase tracking-widest mb-2" style={{ color: "#666" }}>Traits</p>
+          <div className="flex flex-wrap gap-1.5">
+            {suspect.traits.map((trait) => (
+              <span
+                key={trait}
+                className="text-[9px] px-2 py-0.5 rounded capitalize"
+                style={{
+                  backgroundColor: "#222",
+                  color: "#aaa",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                {trait}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
+
+      {/* Suspect navigation */}
+      <div className="flex gap-2">
+        {caseData.suspects.map((s) => {
+          const isActive = s.id === suspect.id;
+          const initials = s.name.split(" ").map((n) => n[0]).join("");
+          return (
+            <Link
+              key={s.id}
+              href={`/cases/${caseId}/interrogate/${s.id}`}
+              className="flex-1 flex flex-col items-center gap-1 py-2 rounded transition-all duration-200"
+              style={{
+                backgroundColor: isActive ? "rgba(229,9,20,0.1)" : "transparent",
+                border: isActive ? "1px solid rgba(229,9,20,0.3)" : "1px solid transparent",
+              }}
+              onMouseEnter={(e) => {
+                if (\!isActive) e.currentTarget.style.backgroundColor = "#222";
+              }}
+              onMouseLeave={(e) => {
+                if (\!isActive) e.currentTarget.style.backgroundColor = "transparent";
+              }}
+            >
+              <span className="text-[10px]" style={{ color: isActive ? "#E50914" : "#aaa" }}>
+                {initials}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+// ─── Suspect avatar ───────────────────────────────────────────────────────────
+
+function SuspectAvatar({ index, name }: { index: number; name: string }) {
+  const initials = name.split(" ").map((n) => n[0]).join("");
+  return (
+    <div
+      className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs"
+      style={{
+        background: `radial-gradient(circle at 30% 30%, ${getAvatarBg(index)}cc, ${getAvatarBg(index)})`,
+        border: "1px solid rgba(255,255,255,0.08)",
+        color: "#aaa",
+      }}
+    >
+      {initials}
+    </div>
+  );
+}
+
+// ─── Avatar background helper ─────────────────────────────────────────────────
+
+function getAvatarBg(index: number): string {
+  const palette = ["#2a1a1a", "#1a1a2a", "#1a2a1a", "#2a2a1a", "#1a2a2a", "#2a1a2a"];
+  return palette[index % palette.length];
+}
