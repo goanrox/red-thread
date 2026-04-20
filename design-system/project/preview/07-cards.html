@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #141414; font-family: 'Inter', sans-serif; padding: 24px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; }
+.lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 8px; }
+.card { border-radius: 4px; padding: 16px; width: 160px; }
+</style></head><body>
+
+<div>
+  <div class="lbl">Standard Card</div>
+  <div class="card" style="background:#1a1a1a;border:1px solid rgba(255,255,255,0.07);box-shadow:0 4px 20px rgba(0,0,0,0.5)">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px">Card Title</div>
+    <div style="font-size:12px;color:#aaaaaa;line-height:1.5">Secondary text goes here for context.</div>
+  </div>
+</div>
+
+<div>
+  <div class="lbl">Elevated Card</div>
+  <div class="card" style="background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 40px rgba(0,0,0,0.7)">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px">Elevated</div>
+    <div style="font-size:12px;color:#aaaaaa;line-height:1.5">Used for modals and panels.</div>
+  </div>
+</div>
+
+<div>
+  <div class="lbl">Hover State</div>
+  <div class="card" style="background:#222;border:1px solid rgba(255,255,255,0.15);box-shadow:0 16px 48px rgba(0,0,0,0.8);transform:translateY(-2px)">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:6px">On Hover</div>
+    <div style="font-size:12px;color:#aaaaaa;line-height:1.5">Border + shadow intensify.</div>
+  </div>
+</div>
+
+<div>
+  <div class="lbl">Stat Card</div>
+  <div class="card" style="background:#1a1a1a;border:1px solid rgba(255,255,255,0.07);text-align:center">
+    <div style="font-size:28px;font-weight:700;color:#E50914">4<span style="font-size:14px;color:rgba(255,255,255,0.18)">/12</span></div>
+    <div style="font-size:8px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#666;margin-top:6px">Clues Found</div>
+  </div>
+</div>
+
+<div>
+  <div class="lbl">Red Border Card</div>
+  <div class="card" style="background:#1a1a1a;border:1px solid rgba(229,9,20,0.25);background:linear-gradient(160deg,#0d0a0a,#0a0707)">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#666;margin-bottom:4px">Current Rank</div>
+    <div style="font-size:20px;font-weight:700;color:#E50914">Detective</div>
+  </div>
+</div>
+
+</body></html>

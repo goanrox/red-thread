@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Thread — UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #141414;
+    color: #ffffff;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  #rt-app {
+    height: 100vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #141414; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #555; }
+  ::selection { background: rgba(229,9,20,0.25); color: #fff; }
+
+  @keyframes typingDot {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-up { animation: fadeUp 500ms cubic-bezier(0.16,1,0.3,1) both; }
+</style>
+</head>
+<body>
+<div id="rt-app">
+  <div id="root"></div>
+</div>
+
+<script type="text/babel" src="Navigation.jsx"></script>
+<script type="text/babel" src="CaseCard.jsx"></script>
+<script type="text/babel" src="Screens.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#E50914",
+  "cardRadius": 4,
+  "fontScale": 1
+}/*EDITMODE-END*/;
+
+const { useState, useEffect } = React;
+
+// ── Tweaks panel ──────────────────────────────────────────────────────────────
+function TweaksPanel({ tweaks, setTweaks, visible }) {
+  if (!visible) return null;
+  const update = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    setTweaks(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: next }, '*');
+    document.documentElement.style.setProperty('--rt-red', next.accentColor);
+  };
+  return (
+    <div style={{
+      position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
+      background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)',
+      borderRadius: 4, padding: 20, width: 240,
+      boxShadow: '0 16px 48px rgba(0,0,0,0.8)',
+    }}>
+      <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#666', marginBottom: 16 }}>Tweaks</p>
+
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ fontSize: 10, color: '#aaa', display: 'block', marginBottom: 6 }}>Accent Color</label>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {['#E50914', '#4c6ef5', '#12b981', '#f59e0b'].map(c => (
+            <button key={c} onClick={() => update('accentColor', c)} style={{
+              width: 28, height: 28, borderRadius: 4, background: c, border: tweaks.accentColor === c ? '2px solid #fff' : '2px solid transparent', cursor: 'pointer'
+            }} />
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ fontSize: 10, color: '#aaa', display: 'block', marginBottom: 6 }}>Card Radius: {tweaks.cardRadius}px</label>
+        <input type="range" min="0" max="16" step="2" value={tweaks.cardRadius}
+          onChange={e => update('cardRadius', Number(e.target.value))}
+          style={{ width: '100%', accentColor: tweaks.accentColor }} />
+      </div>
+
+      <div>
+        <label style={{ fontSize: 10, color: '#aaa', display: 'block', marginBottom: 6 }}>Font Scale: {tweaks.fontScale}x</label>
+        <input type="range" min="0.85" max="1.2" step="0.05" value={tweaks.fontScale}
+          onChange={e => update('fontScale', Number(e.target.value))}
+          style={{ width: '100%', accentColor: tweaks.accentColor }} />
+      </div>
+    </div>
+  );
+}
+
+// ── Screen breadcrumb ─────────────────────────────────────────────────────────
+const SCREEN_LABELS = {
+  cases: 'Cases Library',
+  hub: 'Investigation Hub',
+  interrogate: 'Interrogation',
+  evidence: 'Evidence Board',
+  accuse: 'Accusation',
+  result: 'Result',
+  profile: 'Detective Profile',
+};
+
+// ── App root ──────────────────────────────────────────────────────────────────
+function App() {
+  const [screen, setScreen] = useState(() => localStorage.getItem('rt-screen') || 'cases');
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+  const [progress, setProgress] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('rt-progress') || 'null') || { cluesFound: 0, totalClues: 6, isComplete: false }; }
+    catch { return { cluesFound: 0, totalClues: 6, isComplete: false }; }
+  });
+
+  // Persist screen
+  useEffect(() => {
+    localStorage.setItem('rt-screen', screen);
+    document.getElementById('rt-app')?.scrollTo(0, 0);
+  }, [screen]);
+
+  // Persist progress
+  useEffect(() => {
+    localStorage.setItem('rt-progress', JSON.stringify(progress));
+  }, [progress]);
+
+  // Apply tweaks
+  useEffect(() => {
+    document.documentElement.style.setProperty('--rt-red', tweaks.accentColor);
+    document.documentElement.style.fontSize = `${tweaks.fontScale * 100}%`;
+  }, [tweaks]);
+
+  // Tweaks host integration
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const navigate = (to) => setScreen(to);
+
+  // Screen indicator bar
+  const screens = ['cases', 'hub', 'interrogate', 'accuse', 'result', 'profile'];
+
+  return (
+    <>
+      <Navigation screen={screen} navigate={navigate} />
+
+      {/* Screen selector pill bar */}
+      <div style={{
+        position: 'fixed', bottom: tweaksOpen ? 220 : 16, left: '50%', transform: 'translateX(-50%)',
+        zIndex: 999, display: 'flex', gap: 6, background: 'rgba(20,20,20,0.95)',
+        backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: 4, padding: '8px 12px', transition: 'bottom 300ms',
+      }}>
+        {screens.map(s => (
+          <button key={s} onClick={() => navigate(s)} style={{
+            padding: '5px 12px', borderRadius: 4, fontSize: 9, fontWeight: 700,
+            letterSpacing: '0.3em', textTransform: 'uppercase', cursor: 'pointer', border: 'none',
+            background: screen === s ? tweaks.accentColor : 'transparent',
+            color: screen === s ? '#fff' : 'rgba(255,255,255,0.35)',
+            transition: 'all 150ms',
+          }}>{SCREEN_LABELS[s]?.split(' ')[0]}</button>
+        ))}
+      </div>
+
+      {/* Screen rendering */}
+      {screen === 'cases' && <CasesScreen navigate={navigate} progress={progress} />}
+      {screen === 'hub' && <HubScreen navigate={navigate} progress={progress} setProgress={setProgress} />}
+      {screen === 'interrogate' && <InterrogationScreen navigate={navigate} />}
+      {screen === 'evidence' && <HubScreen navigate={navigate} progress={progress} setProgress={setProgress} />}
+      {screen === 'accuse' && <AccuseScreen navigate={navigate} progress={progress} />}
+      {screen === 'result' && <ResultScreen navigate={navigate} />}
+      {screen === 'profile' && <ProfileScreen navigate={navigate} progress={progress} />}
+
+      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksOpen} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

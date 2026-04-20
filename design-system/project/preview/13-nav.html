@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #141414; font-family: 'Inter', sans-serif; }
+nav { display: flex; align-items: center; justify-content: space-between; padding: 0 4%; height: 68px; background: rgba(20,20,20,0.97); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.logo { font-size: 24px; font-weight: 900; letter-spacing: -0.04em; }
+.logo span:first-child { color: #E50914; }
+.logo span:last-child { color: #fff; }
+.links { display: flex; gap: 24px; }
+.link { font-size: 13px; font-weight: 500; color: #aaaaaa; text-decoration: none; transition: color 150ms; cursor: pointer; }
+.link.active { color: #fff; font-weight: 600; }
+.right { display: flex; align-items: center; gap: 12px; }
+.bell { width: 20px; height: 20px; color: #e5e5e5; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: #E50914; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+/* Transparent (top of page) variant */
+.nav-top { background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); border-bottom: none; }
+</style></head><body>
+
+<!-- Scrolled state -->
+<nav>
+  <div class="logo"><span>RED</span> <span>THREAD</span></div>
+  <div class="links">
+    <span class="link active">Cases</span>
+    <span class="link">Detective</span>
+    <span class="link">About</span>
+  </div>
+  <div class="right">
+    <svg class="bell" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+    <div class="avatar">D</div>
+  </div>
+</nav>
+
+<div style="padding: 16px 4%; font-size: 9px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.25);">↑ Scrolled State &nbsp;·&nbsp; bg rgba(20,20,20,0.97) + border-bottom</div>
+
+<!-- Top of page state -->
+<nav class="nav-top" style="margin-top:8px">
+  <div class="logo"><span>RED</span> <span>THREAD</span></div>
+  <div class="links">
+    <span class="link">Cases</span>
+    <span class="link">Detective</span>
+    <span class="link">About</span>
+  </div>
+  <div class="right">
+    <svg class="bell" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+    <div class="avatar">D</div>
+  </div>
+</nav>
+<div style="padding: 8px 4%; font-size: 9px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.25);">↑ Hero/Top State &nbsp;·&nbsp; gradient to transparent</div>
+
+</body></html>

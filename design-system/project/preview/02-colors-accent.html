@@ -1,0 +1,39 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #141414; font-family: 'Inter', sans-serif; padding: 24px; }
+.row { display: flex; gap: 8px; margin-bottom: 8px; }
+.swatch { flex: 1; border-radius: 4px; padding: 14px 12px; }
+.label { font-size: 9px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+.value { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); }
+</style></head><body>
+<div class="row">
+  <div class="swatch" style="background:#E50914;">
+    <div class="label" style="color:rgba(255,255,255,0.7)">Red Primary</div><div class="value">#E50914</div>
+  </div>
+  <div class="swatch" style="background:#F40612;">
+    <div class="label" style="color:rgba(255,255,255,0.7)">Red Hover</div><div class="value">#F40612</div>
+  </div>
+  <div class="swatch" style="background:rgba(229,9,20,0.12); border:1px solid rgba(229,9,20,0.3);">
+    <div class="label" style="color:#E50914">Red Dim</div><div class="value" style="color:#E50914">rgba(229,9,20,.12)</div>
+  </div>
+  <div class="swatch" style="background:#4cdd8a;">
+    <div class="label" style="color:rgba(0,0,0,0.6)">Green Correct</div><div class="value" style="color:rgba(0,0,0,0.7)">#4cdd8a</div>
+  </div>
+</div>
+<div class="row">
+  <div class="swatch" style="background:#ffffff;">
+    <div class="label" style="color:rgba(0,0,0,0.5)">White</div><div class="value" style="color:#000">#ffffff</div>
+  </div>
+  <div class="swatch" style="background:#1a1a1a; border:1px solid rgba(255,255,255,0.08);">
+    <div class="label">Gray 1</div><div class="value" style="color:#e5e5e5">#e5e5e5</div>
+  </div>
+  <div class="swatch" style="background:#1a1a1a; border:1px solid rgba(255,255,255,0.08);">
+    <div class="label">Gray 2</div><div class="value" style="color:#aaaaaa">#aaaaaa</div>
+  </div>
+  <div class="swatch" style="background:#1a1a1a; border:1px solid rgba(255,255,255,0.08);">
+    <div class="label">Gray 3</div><div class="value" style="color:#666666">#666666</div>
+  </div>
+</div>
+</body></html>

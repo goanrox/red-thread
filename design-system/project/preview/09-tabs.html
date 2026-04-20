@@ -1,0 +1,41 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #141414; font-family: 'Inter', sans-serif; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+.lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 6px; }
+.tab-bar { display: flex; background:rgba(20,20,20,0.96); border-bottom: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(24px); border-radius: 4px 4px 0 0; }
+.tab { display: flex; align-items: center; gap: 6px; padding: 13px 18px; font-size: 9px; font-weight: 700; letter-spacing: 0.40em; text-transform: uppercase; border-bottom: 2px solid transparent; cursor: pointer; }
+.tab.active { color: #fff; border-bottom-color: #E50914; }
+.tab.inactive { color: rgba(255,255,255,0.35); }
+.tab-content { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.06); border-top: none; border-radius: 0 0 4px 4px; padding: 16px; }
+
+.filter-row { display: flex; gap: 6px; }
+.pill { display: inline-flex; padding: 7px 14px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
+</style></head><body>
+
+<div>
+  <div class="lbl">Tab Bar · Netflix Underline Style</div>
+  <div class="tab-bar">
+    <div class="tab active">Overview</div>
+    <div class="tab inactive">Suspects</div>
+    <div class="tab inactive">Evidence</div>
+    <div class="tab inactive">Timeline</div>
+    <div class="tab inactive">Notes</div>
+  </div>
+  <div class="tab-content">
+    <span style="font-size:12px;color:#666">Tab content area</span>
+  </div>
+</div>
+
+<div>
+  <div class="lbl">Filter Pills · Cases Library</div>
+  <div class="filter-row">
+    <div class="pill" style="background:#fff;color:#000;border:1px solid #fff">All Cases</div>
+    <div class="pill" style="background:rgba(255,255,255,0.08);color:#aaa;border:1px solid rgba(255,255,255,0.1)">Noir</div>
+    <div class="pill" style="background:rgba(255,255,255,0.08);color:#aaa;border:1px solid rgba(255,255,255,0.1)">Cold Case</div>
+    <div class="pill" style="background:rgba(255,255,255,0.08);color:#aaa;border:1px solid rgba(255,255,255,0.1)">Conspiracy</div>
+  </div>
+</div>
+
+</body></html>

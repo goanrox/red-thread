@@ -1,0 +1,95 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #141414; font-family: 'Inter', sans-serif; padding: 24px; display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.card { background:#1a1a1a; border:1px solid rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; width:220px; flex-shrink: 0; }
+.img-panel { position:relative; aspect-ratio:16/9; background:linear-gradient(135deg,#1a0e06,#2e1a08,#150c04); }
+.img-overlay { position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,26,1) 0%,rgba(26,26,26,0.3) 40%,transparent 70%); }
+.badge-top { position:absolute;top:10px;left:10px; }
+.badge-tr { position:absolute;top:10px;right:10px;display:flex;gap:6px; }
+.progress-bar { position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.08); }
+.progress-fill { height:100%;background:#E50914;width:45%; }
+.body { padding:12px 14px 14px; }
+.cat { font-size:8px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:#666;margin-bottom:2px; }
+.title { font-size:14px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:4px; }
+.subtitle { font-size:11px;color:#aaaaaa;line-height:1.4;margin-bottom:10px; }
+.meta { display:flex;gap:6px;align-items:center;margin-bottom:10px; }
+.dot { width:5px;height:5px;border-radius:50%; }
+.sep { width:1px;height:10px;background:rgba(255,255,255,0.1); }
+.meta-txt { font-size:10px;color:#666; }
+.divider { height:1px;background:rgba(255,255,255,0.06);margin-bottom:10px; }
+.cta { width:100%;padding:10px;text-align:center;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;border:none; }
+.badge { display:inline-flex;align-items:center;border-radius:4px;padding:2px 7px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase; }
+.dots { display:flex;gap:3px;align-items:center; }
+.difficulty-dot { width:5px;height:5px;border-radius:50%; }
+</style></head><body>
+
+<!-- Not started -->
+<div>
+  <div style="font-size:8px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:8px">CaseCard · Not Started</div>
+  <div class="card">
+    <div class="img-panel">
+      <div class="img-overlay"></div>
+      <div class="badge-top"><span class="badge" style="background:rgba(229,9,20,0.85);color:#fff">Country House</span></div>
+      <div class="badge-tr"><span class="badge" style="background:rgba(20,20,20,0.85);color:#e5e5e5;border:1px solid rgba(255,255,255,0.2)">NEW</span></div>
+    </div>
+    <div class="body">
+      <div class="title">The Thornwood Affair</div>
+      <div class="subtitle">A winter house party. A body in the library. Six suspects, no exits.</div>
+      <div class="meta">
+        <div class="dots">
+          <div class="difficulty-dot" style="background:#E50914"></div>
+          <div class="difficulty-dot" style="background:#E50914"></div>
+          <div class="difficulty-dot" style="background:rgba(255,255,255,0.15)"></div>
+          <div class="difficulty-dot" style="background:rgba(255,255,255,0.15)"></div>
+          <div class="difficulty-dot" style="background:rgba(255,255,255,0.15)"></div>
+        </div>
+        <div class="sep"></div><span class="meta-txt">45m</span>
+        <div class="sep"></div><span class="meta-txt">12 clues</span>
+        <div class="sep"></div><span class="meta-txt">5 suspects</span>
+      </div>
+      <div class="divider"></div>
+      <button class="cta" style="background:#fff;color:#000">Investigate</button>
+    </div>
+  </div>
+</div>
+
+<!-- In progress -->
+<div>
+  <div style="font-size:8px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:8px">CaseCard · In Progress</div>
+  <div class="card">
+    <div class="img-panel">
+      <div class="img-overlay"></div>
+      <div class="badge-top"><span class="badge" style="background:rgba(229,9,20,0.85);color:#fff">Country House</span></div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+    </div>
+    <div class="body">
+      <div class="title">The Thornwood Affair</div>
+      <div class="subtitle">A winter house party. A body in the library.</div>
+      <div class="meta"><span class="meta-txt">5/12 clues found</span></div>
+      <div class="divider"></div>
+      <button class="cta" style="background:rgba(229,9,20,0.15);color:#E50914;border:1px solid rgba(229,9,20,0.25)">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- Solved -->
+<div>
+  <div style="font-size:8px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:8px">CaseCard · Solved</div>
+  <div class="card">
+    <div class="img-panel">
+      <div class="img-overlay"></div>
+      <div class="badge-top"><span class="badge" style="background:rgba(229,9,20,0.85);color:#fff">Country House</span></div>
+      <div class="badge-tr"><span class="badge" style="background:rgba(30,180,60,0.2);color:#4cdd8a;border:1px solid rgba(76,221,138,0.3)">✓ SOLVED</span></div>
+    </div>
+    <div class="body">
+      <div class="title">The Thornwood Affair</div>
+      <div class="subtitle">A winter house party. A body in the library.</div>
+      <div class="divider"></div>
+      <button class="cta" style="background:transparent;color:#aaaaaa;border:1px solid rgba(255,255,255,0.15)">Reopen Case</button>
+    </div>
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #141414; font-family: 'Inter', sans-serif; padding: 24px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Inter', sans-serif; font-size: 13px; border-radius: 4px; padding: 11px 24px; cursor: pointer; border: none; white-space: nowrap; }
+.group { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.lbl { font-size: 8px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 2px; }
+</style></head><body>
+<div class="group">
+  <div class="lbl">Primary</div>
+  <button class="btn" style="background:#fff;color:#000;font-weight:700">Investigate</button>
+</div>
+<div class="group">
+  <div class="lbl">Secondary</div>
+  <button class="btn" style="background:rgba(109,109,110,0.7);color:#fff;font-weight:600;backdrop-filter:blur(4px)">Evidence</button>
+</div>
+<div class="group">
+  <div class="lbl">Danger</div>
+  <button class="btn" style="background:rgba(229,9,20,0.12);color:#E50914;font-weight:700;border:1px solid rgba(229,9,20,0.3)">Accuse</button>
+</div>
+<div class="group">
+  <div class="lbl">Ghost</div>
+  <button class="btn" style="background:transparent;color:#aaaaaa;font-weight:500;border:1px solid rgba(255,255,255,0.15)">Go Back</button>
+</div>
+<div class="group">
+  <div class="lbl">Red Fill</div>
+  <button class="btn" style="background:#E50914;color:#fff;font-weight:700">Make Accusation</button>
+</div>
+<div class="group">
+  <div class="lbl">In Progress CTA</div>
+  <button class="btn" style="background:rgba(229,9,20,0.15);color:#E50914;font-weight:700;border:1px solid rgba(229,9,20,0.25)">Continue</button>
+</div>
+<div class="group">
+  <div class="lbl">Restricted</div>
+  <button class="btn" style="border:1px dashed rgba(255,255,255,0.08);color:#444;background:transparent;font-weight:600">Restricted Access</button>
+</div>
+</body></html>
